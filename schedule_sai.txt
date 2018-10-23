@@ -1,0 +1,10 @@
+Tasks for first checkpoint
+	
+- Data Abstraction (Vacant lots, crimes, and safe passages; 3/6 datasets)
+- Task Abstraction
+- State of the Art Report
+	- Possible visual encodings
+	- Interaction techniques (structuring of datasets, user navigation)
+- Functional specifications
+- Rough sketch of layout
+- Create initial layout - to be based on the tasks, user navigation, structure decided earlier
