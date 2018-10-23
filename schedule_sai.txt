@@ -1,10 +1,10 @@
 Tasks for first checkpoint
 	
-- Data Abstraction (Vacant lots, crimes, and safe passages; 3/6 datasets)
-- Task Abstraction
+- Data Abstraction (Vacant lots, crimes, and safe passages; 3/6 datasets): 1 hour
+- Task Abstraction: 1 hour
 - State of the Art Report
-	- Possible visual encodings
-	- Interaction techniques (structuring of datasets, user navigation)
-- Functional specifications
-- Rough sketch of layout
-- Create initial layout - to be based on the tasks, user navigation, structure decided earlier
+	- Possible visual encodings: 3-5 hours 
+	- Interaction techniques (structuring of datasets, user navigation): 4 hours
+- Functional specifications: 2 hours
+- Rough sketch of layout: 2 hours
+- Create initial layout - to be based on the tasks, user navigation, structure decided earlier: to be updated
