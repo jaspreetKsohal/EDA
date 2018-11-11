@@ -1,16 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Englewood Data Hub (EDH)</title>
-    <link rel="stylesheet" type="text/css" href="style/main.css">
-</head>
-<body>
-    <div class="wrapper">
-        <div class="filters"></div>
-        <div class="map"></div>
-        <div class="details"></div>
-        <div class="timeline"></div>
-    </div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Englewood Data Hub (EDH)</title>
+
+        <!--stylesheets-->
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link href='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+        <link rel="stylesheet" type="text/css" href="style/main.css">
+        <link rel="stylesheet" type="text/css" href="style/icons/style.css">
+
+
+        <!--scripts-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+
+    <body onload="App.start();">
+        <div class="wrapper">
+            <div class="filters">
+                <ul>
+                    <li><span class="icon-services"></span> Services</li>
+                    <li><span class="icon-schools"></span> Schools</li>
+                    <li><span class="icon-crimes"></span> Crimes</li>
+                </ul>
+            </div>
+            <!--end filters-->
+
+            <div class="map" id="map">
+
+            </div>
+            <!--end map-->
+
+            <div class="details"></div>
+            <div class="timeline"></div>
+        </div>
+        <!--end wrapper-->
+
+
+        <!--scripts-->
+        <script src="js/main.js"></script>
+        <script src="js/Model.js"></script>
+        <script src="js/View.js"></script>
+        <script src="js/Controller.js"></script>
+    </body>
 </html>
