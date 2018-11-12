@@ -8,7 +8,7 @@ var View = function(){
 
     var self = this;
     var map;
-    var schoolGroup;
+    var schoolGroup, crimeGroup;
 
     self.displayMap = function() {
         // L.mapbox.accessToken = 'pk.eyJ1IjoiamFzcHJlZXQxM3NvaGFsIiwiYSI6ImNqZzlpNjFjeDFkdXgzNG10ZGxta3QxYjAifQ.OdfMrevmS4Az30DQCEHCFg';
@@ -30,11 +30,22 @@ var View = function(){
 
         schoolData.forEach(function(s, index){
             var latlng = L.latLng(s.Latitude, s.Longitude);
-            L.circle( latlng, {radius: 10, color: '#e74c3c'}).addTo(schoolGroup);
+            L.circle( latlng, {radius: 15, color: '#e74c3c'}).addTo(schoolGroup);
         });
 
-        // console.log(map.hasLayer(schoolGroup));
         map.addLayer(schoolGroup);
+    };
+
+
+    self.displayCrimes = function(crimeData) {
+        crimeGroup = L.featureGroup();
+
+        crimeData.forEach(function(c){
+           var latlng = L.latLng(c.latitude, c.longitude);
+           L.circle(latlng, {radius: 10, color: '#E78820'}).addTo(crimeGroup);
+        });
+
+        map.addLayer(crimeGroup);
     };
 
 
@@ -43,7 +54,7 @@ var View = function(){
             self.displayMap();
         },
 
-        plotSchools: function(schoolData){
+        addSchools: function(schoolData){
             self.displaySchools(schoolData);
         },
 
@@ -51,8 +62,19 @@ var View = function(){
           map.removeLayer(schoolGroup);
         },
 
-        isLayerActive: function(){
-            return map.hasLayer(schoolGroup);
+        addCrimes: function(crimeData){
+            self.displayCrimes(crimeData);
+        },
+
+        removeCrimes: function(){
+          map.removeLayer(crimeGroup);
+        },
+
+        isLayerActive: function(layer){
+            if(layer === 'school')
+                return map.hasLayer(schoolGroup);
+            else if(layer === 'crime')
+                return map.hasLayer(crimeGroup);
         }
     };
 
