@@ -7,10 +7,14 @@ var App = App || {};
 var Model = function() {
 
     var schoolData = [], crimeData = [];
+    var censusData = [];
 
     function loadData() {
         d3.csv("data/schools.csv", function(d){
             schoolData.push(d);
+        });
+        d3.json('censusData.geojson', function(error, mapData) {
+            var censusData = mapData.features;
         });
     }
 
@@ -38,12 +42,22 @@ var Model = function() {
     function getCrimeData(){
         return crimeData;
     }
+    
+    function getCensusData() {
+        return censusData;
+    }
+
+    function getTotalRaceDist() {
+        console.log(censusData);
+    }
 
     return {
         loadData: loadData,
         loadCrimesData: loadCrimesData,
         getSchoolData: getSchoolData,
-        getCrimeData: getCrimeData
+        getCrimeData: getCrimeData,
+        getCensusData: getCensusData,
+        getTotalRaceDist: getTotalRaceDist
     }
 
 };

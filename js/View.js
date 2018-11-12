@@ -36,6 +36,10 @@ var View = function(){
         map.addLayer(schoolGroup);
     };
 
+    self.displayRaceDist = function(raceDist) {
+        console.log('view')
+    } 
+
 
     self.displayCrimes = function(crimeData) {
         crimeGroup = L.featureGroup();
@@ -75,6 +79,10 @@ var View = function(){
                 return map.hasLayer(schoolGroup);
             else if(layer === 'crime')
                 return map.hasLayer(crimeGroup);
+        },
+
+        showRaceDist: function(raceDist) {
+            self.displayRaceDist(raceDist);
         }
     };
 
