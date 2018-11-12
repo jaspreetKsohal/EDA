@@ -6,35 +6,38 @@
 
         <!--stylesheets-->
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-        <link href='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+        <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
         <link rel="stylesheet" type="text/css" href="style/main.css">
         <link rel="stylesheet" type="text/css" href="style/icons/style.css">
-
+        <link rel="stylesheet" href="leaflet/leaflet.css" />
 
         <!--scripts-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src='https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+        <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
         <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="leaflet/leaflet.js"></script>
+
     </head>
 
     <body onload="App.start();">
         <div class="wrapper">
             <div class="filters">
-                <ul>
-                    <li><span class="icon-services"></span> Services</li>
-                    <li><span class="icon-schools"></span> Schools</li>
-                    <li><span class="icon-crimes"></span> Crimes</li>
+                <ul id="filter-options">
+                    <li><span class="icon-services filter-option" id="service"></span> Services</li>
+                    <li><span class="icon-schools filter-option" id="school"></span> Schools</li>
+                    <li><span class="icon-crimes filter-option" id="crime"></span> Crimes</li>
                 </ul>
             </div>
             <!--end filters-->
 
-            <div class="map" id="map">
-
-            </div>
+            <div class="map" id="map"></div>
             <!--end map-->
 
             <div class="details"></div>
+            <!--end details-->
+
             <div class="timeline"></div>
+            <!--end timeline-->
         </div>
         <!--end wrapper-->
 

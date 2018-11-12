@@ -11,9 +11,11 @@ var App = App || {};
 
         var model = new Model();
         var view = new View();
-        var controller = new Controller();
+        var controller = new Controller(model, view);
 
         view.initialize();
+        model.loadData();
+
     };
 
 }) ();
