@@ -136,10 +136,14 @@ var View = function(){
         var x = d3.scaleBand()
             .domain(crimeData.map(d => d.key))
             .range([margin.left, width - margin.right])
-            .padding(0.1)
+            .padding(0.1);
         var y = d3.scaleLinear()
             .domain([0, d3.max(crimeData, d => d.value)]).nice()
-            .range([height - margin.bottom, margin.top])
+            .range([height - margin.bottom, margin.top]);
+        
+        var div = d3.select(".chart_crime_cat").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
         d3.select(".chart_crime_cat")
             .append("div")
@@ -162,9 +166,21 @@ var View = function(){
             .attr("x", d => x(d.key))
             .attr("y", d => y(d.value))
             .attr("height", d => y(0) - y(d.value))
-            .attr("width", x.bandwidth());
+            .attr("width", x.bandwidth())
+            .on("mouseover", function(d) {
+                div.transition()
+                .duration(200)
+                .style("opacity", .9);
+                div.html(d.key + "<br/>" + d.value)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+                })
+            .on("mouseout", function(d) {
+                div.transition()
+                .duration(500)
+                .style("opacity", 0);
+                });
     }
-
 
     self.displayCensusBlocks = function(censusData){
         L.geoJSON(censusData, {weight: 0.2}).addTo(map);

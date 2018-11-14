@@ -99,4 +99,17 @@ ul span {
     height: 10px;
     width: 10px;
   }
+
+  div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 5px;
+    font: 0.5em sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 2px;
+    pointer-events: none;
+  }
   /* end charts*/
