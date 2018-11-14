@@ -31,8 +31,9 @@ var Controller = function(model, view){
         }//if-crime
     });
 
-    $(document).ready(function() {
+    $(document).on('loadCensus', function(e) {
         // total race dist from the model
-        view.showRaceDist(model.getTotalRaceDist())
+        
+        view.showRaceDist(model.getTotalRaceDist());
     });
 };

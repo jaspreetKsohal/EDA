@@ -37,7 +37,7 @@ var View = function(){
     };
 
     self.displayRaceDist = function(raceDist) {
-        console.log('view')
+        console.log(raceDist);
     } 
 
 

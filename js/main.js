@@ -16,6 +16,7 @@ var App = App || {};
         view.initialize();
         model.loadData();
         model.loadCrimesData();
+        model.loadCensusData();
     };
 
 }) ();

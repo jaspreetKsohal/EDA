@@ -13,9 +13,15 @@ var Model = function() {
         d3.csv("data/schools.csv", function(d){
             schoolData.push(d);
         });
-        d3.json('censusData.geojson', function(error, mapData) {
-            var censusData = mapData.features;
+    }
+
+    function loadCensusData() {
+        d3.json('data/censusData.geojson', function(error, mapData) {
+            censusData = mapData.features;
+            
+            $(document).trigger('loadCensus');
         });
+        
     }
 
 
@@ -42,18 +48,34 @@ var Model = function() {
     function getCrimeData(){
         return crimeData;
     }
-    
+
     function getCensusData() {
         return censusData;
     }
 
     function getTotalRaceDist() {
-        console.log(censusData);
+        //extract race distribution here
+        console.log(censusData)
+        var raceTotals = censusData[0].properties.census.RACE_TOTAL_TALLIED;
+        for(var item in raceTotals) {
+            raceTotals[item] = 0
+        }
+        censusData.forEach(function(block) {
+            // console.log(block);
+            var raceDetails = block.properties.census.RACE_TOTAL_TALLIED
+            for (var race in raceDetails) {
+                raceTotals[race] = raceDetails[race] + raceTotals[race] + 0;
+            }
+        });
+        
+        return raceTotals;
     }
+    
 
     return {
         loadData: loadData,
         loadCrimesData: loadCrimesData,
+        loadCensusData: loadCensusData,
         getSchoolData: getSchoolData,
         getCrimeData: getCrimeData,
         getCensusData: getCensusData,
