@@ -30,11 +30,28 @@ var View = function(){
 
         schoolData.forEach(function(s, index){
             var latlng = L.latLng(s.Latitude, s.Longitude);
-            L.circle( latlng, {radius: 30, color: '#5e8df7', weight: 0, fillOpacity: 1}).addTo(schoolGroup);
+            L.circle( latlng, {radius: 30, color: '#5e8df7', weight: 0, fillOpacity: 1}).addTo(schoolGroup)
+                .bindPopup("<b>" + s['Organization Name'] + " </b></br>Address: " + s['Address']);
         });
 
         map.addLayer(schoolGroup);
     };
+
+
+    self.displayRaceDist = function(raceDist) {
+        console.log(raceDist);
+        var waffle = new WaffleChart()
+            .selector(".chart_race")
+            .data(raceDist)
+            .useWidth(true)
+            .label("Race Distribution")
+            .size(10)
+            .gap(2)
+            .rows(10)
+            .rounded(true)();
+    };
+
+
 
     self.displayCrimes = function(crimeData) {
         // crimeGroup = L.featureGroup();
@@ -59,7 +76,9 @@ var View = function(){
 
         serviceData.forEach(function(s){
             var latlng = L.latLng(s.Latitude, s.Longitude);
-            L.circle(latlng, {radius: 25, color: '#f08a6b',weight: 0, fillOpacity: 1}).addTo(serviceGroup);
+            L.circle(latlng, {radius: 25, color: '#f08a6b',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
+                .bindPopup("<b>" + s['Organization Name'] + "</b></br>" + "Address: " + s['Address'] + "</br>" + "<a href='" + s['Website'] + "' target='_blank'>Website</a></br>"
+                + "Phone Number: " + "<a href='tel:" + s['Phone Number'] + "' target='_blank'>" + s['Phone Number'] + "</a>");
         });
 
         map.addLayer(serviceGroup);
@@ -78,7 +97,8 @@ var View = function(){
             var loc = str.split(',');
 
             var latlng = L.latLng(loc[0], loc[1]);
-            L.circle(latlng, {radius: 20, color: '#f7d19d', weight: 0, fillOpacity: 1}).addTo(vacantLotGroup);
+            L.circle(latlng, {radius: 20, color: '#f7d19d', weight: 0, fillOpacity: 1}).addTo(vacantLotGroup)
+                .bindPopup("Address: " + v['Address'] + "</br> Area: " + v['Sq. Ft.'] + " sq. ft");
         });
 
         map.addLayer(vacantLotGroup);
@@ -94,6 +114,7 @@ var View = function(){
 
         map.addLayer(safePassageGroup);
     };
+
 
     self.displayRaceDist = function(raceDist) {
         console.log(raceDist);
@@ -143,11 +164,18 @@ var View = function(){
             .attr("height", d => y(0) - y(d.value))
             .attr("width", x.bandwidth());
 
+
+    self.displayCensusBlocks = function(censusData){
+        L.geoJSON(censusData, {weight: 0.2}).addTo(map);
     };
 
     var publiclyAvailable = {
         initialize: function(){
             self.displayMap();
+        },
+
+        addCensusBlocks: function(censusData){
+            self.displayCensusBlocks(censusData);
         },
 
         addServices: function(serviceData){

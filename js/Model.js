@@ -6,7 +6,6 @@ var App = App || {};
 
 var Model = function() {
 
-
     var censusData = [];
 
     var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [];
@@ -24,7 +23,6 @@ var Model = function() {
             
             $(document).trigger('loadCensus');
         });
-        
     }
 
 
@@ -58,22 +56,12 @@ var Model = function() {
             d.forEach(function(r){
                 vacantLotsData.push(r);
             });
-            // d.forEach(function(r){
-            //     if(r.community_area === 'ENGLEWOOD' || r.community_area === "WEST ENGLEWOOD"){
-            //         vacantLots.push(r);
-            //     }
-            // });
         });
 
         d3.csv("data/West_Englewood_Land_Inventory.csv", function(d){
             d.forEach(function(r){
                 vacantLotsData.push(r);
             });
-            // d.forEach(function(r){
-            //     if(r.community_area === 'ENGLEWOOD' || r.community_area === "WEST ENGLEWOOD") {
-            //         vacantLots.push(r);
-            //     }
-            // });
         });
     }
 
@@ -126,13 +114,13 @@ var Model = function() {
         }
         censusData.forEach(function(block) {
             // console.log(block);
-            var raceDetails = block.properties.census.RACE_TOTAL_TALLIED
+            var raceDetails = block.properties.census.RACE_TOTAL_TALLIED;
             for (var race in raceDetails) {
                 raceTotalsDict[race] = raceDetails[race] + raceTotalsDict[race] + 0;
             }
         });
         var raceTotals = [];
-        console.log(raceTotalsDict)
+        console.log(raceTotalsDict);
         for(var item in raceTotalsDict) {
             if(item != 'Total') {
                 var obj = {'race': item, 'count': raceTotalsDict[item]};
@@ -160,8 +148,6 @@ var Model = function() {
         loadCrimesData: loadCrimesData,
         getCrimesByCat: getCrimesByCat,
         loadCensusData: loadCensusData,
-
-
         getCensusData: getCensusData,
         getTotalRaceDist: getTotalRaceDist,
         loadServicesData: loadServicesData,
@@ -172,7 +158,6 @@ var Model = function() {
         getServiceData: getServiceData,
         getVacantLots: getVacantLots,
         getSafePassagesData: getSafePassagesData
-
     }
 
 };
