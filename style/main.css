@@ -42,7 +42,7 @@ body {
 
 /*filters*/
 ul {
-    margin-top: 23em;
+    margin-top: 14em;
     list-style-type: none;
     padding: 0;
     text-align: center;
@@ -57,7 +57,15 @@ ul span {
 }
 
 .highlight {
-    color: #e74c3c;
+    color: #b1d7fb !important;
+}
+
+.medium {
+    font-size: 45px;
+}
+
+.filter-option{
+    color: #1a1937;
 }
 
 /*end filters*/

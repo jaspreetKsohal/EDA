@@ -17,6 +17,9 @@ var App = App || {};
         model.loadData();
         model.loadCrimesData();
         model.loadCensusData();
+        model.loadServicesData();
+        model.loadVacantLotsData();
+        model.loadSafePassagesData();
     };
 
 }) ();

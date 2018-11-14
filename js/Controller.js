@@ -15,7 +15,14 @@ var Controller = function(model, view){
 
         $('#'+filter).toggleClass("highlight");
 
-        if(filter === 'school'){
+        if(filter === 'service'){
+            if(view.isLayerActive(filter)){
+                view.removeServices();
+            } else {
+                view.addServices(model.getServiceData()[0]);
+            }
+        }//if-service
+        else if(filter === 'school'){
             if(view.isLayerActive(filter)){
                 view.removeSchools();
             } else {
@@ -24,11 +31,26 @@ var Controller = function(model, view){
         }//if-school
         else if(filter === 'crime'){
             if(view.isLayerActive(filter)){
-
+                view.removeCrimes();
             } else {
                 view.addCrimes(model.getCrimeData()[0]);
             }
         }//if-crime
+        else if(filter === 'vacant-lot'){
+            if(view.isLayerActive(filter)){
+                view.removeVacantLots();
+            } else {
+                view.addVacantLots(model.getVacantLots());
+            }
+        }//if-vacant-lots
+        else if(filter === 'safe-passage'){
+            if(view.isLayerActive(filter)){
+                view.removeSafePassages();
+            } else {
+                view.addSafePassages(model.getSafePassagesData());
+            }
+        }//if-safe-passage
+
     });
 
     $(document).on('loadCensus', function(e) {
