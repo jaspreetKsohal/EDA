@@ -129,7 +129,7 @@ var View = function(){
     }
     
     self.displayCrimesByCat = function(crimeData) {
-        
+
         var margin = {top: 0, right: 5, bottom: 20, left: 10};
         var width = d3.select(".chart_crime_cat").node().getBoundingClientRect().width;
         var height = 200;
@@ -151,7 +151,7 @@ var View = function(){
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
-            .attr("transform", 
+            .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")");
 
         chart_svg.selectAll('.bar')
@@ -163,6 +163,7 @@ var View = function(){
             .attr("y", d => y(d.value))
             .attr("height", d => y(0) - y(d.value))
             .attr("width", x.bandwidth());
+    }
 
 
     self.displayCensusBlocks = function(censusData){
