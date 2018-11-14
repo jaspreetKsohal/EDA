@@ -36,6 +36,19 @@ var View = function(){
         map.addLayer(schoolGroup);
     };
 
+    self.displayRaceDist = function(raceDist) {
+        console.log(raceDist);
+        var waffle = new WaffleChart()
+            .selector(".chart_race")
+            .data(raceDist)
+            .useWidth(true)
+            .label("Race Distribution")
+            .size(10)
+            .gap(2)
+            .rows(10)
+            .rounded(true)();
+    } 
+
 
     self.displayCrimes = function(crimeData) {
         // crimeGroup = L.featureGroup();
@@ -142,12 +155,17 @@ var View = function(){
           map.removeLayer(safePassageGroup);
         },
 
+
+        showRaceDist: function(raceDist) {
+            self.displayRaceDist(raceDist);
+        },
+
         isLayerActive: function(layer){
             if(layer === 'school')
                 return map.hasLayer(schoolGroup);
             else if(layer === 'crime')
-                // return map.hasLayer(crimeGroup);
-                return map.hasLayer(markers);
+            // return map.hasLayer(crimeGroup);
+                 return map.hasLayer(markers);
             else if(layer === 'service')
                 return map.hasLayer(serviceGroup);
             else if(layer === 'vacant-lot')
@@ -155,6 +173,7 @@ var View = function(){
             else
                 return map.hasLayer(safePassageGroup);
         }
+
     };
 
     return publiclyAvailable;

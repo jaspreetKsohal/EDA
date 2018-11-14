@@ -6,12 +6,25 @@ var App = App || {};
 
 var Model = function() {
 
+
+    var censusData = [];
+
     var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [];
+
 
     function loadData() {
         d3.csv("data/schools.csv", function(d){
             schoolData.push(d);
         });
+    }
+
+    function loadCensusData() {
+        d3.json('data/censusData.geojson', function(error, mapData) {
+            censusData = mapData.features;
+            
+            $(document).trigger('loadCensus');
+        });
+        
     }
 
 
@@ -89,6 +102,37 @@ var Model = function() {
         return crimeData;
     }
 
+
+    function getCensusData() {
+        return censusData;
+    }
+
+    function getTotalRaceDist() {
+        //extract race distribution here
+        
+        var raceTotalsDict = censusData[0].properties.census.RACE_TOTAL_TALLIED;
+        for(var item in raceTotalsDict) {
+            raceTotalsDict[item] = 0
+        }
+        censusData.forEach(function(block) {
+            // console.log(block);
+            var raceDetails = block.properties.census.RACE_TOTAL_TALLIED
+            for (var race in raceDetails) {
+                raceTotalsDict[race] = raceDetails[race] + raceTotalsDict[race] + 0;
+            }
+        });
+        var raceTotals = [];
+        console.log(raceTotalsDict)
+        for(var item in raceTotalsDict) {
+            if(item != 'Total') {
+                var obj = {'race': item, 'count': raceTotalsDict[item]};
+                // obj[item] = raceTotalsDict[item];
+                raceTotals.push(obj);
+            }
+        }
+        return raceTotals;
+    }
+
     function getServiceData(){
         return servicesData;
     }
@@ -104,6 +148,12 @@ var Model = function() {
     return {
         loadData: loadData,
         loadCrimesData: loadCrimesData,
+
+        loadCensusData: loadCensusData,
+
+
+        getCensusData: getCensusData,
+        getTotalRaceDist: getTotalRaceDist,
         loadServicesData: loadServicesData,
         loadVacantLotsData: loadVacantLotsData,
         loadSafePassagesData: loadSafePassagesData,
@@ -112,6 +162,7 @@ var Model = function() {
         getServiceData: getServiceData,
         getVacantLots: getVacantLots,
         getSafePassagesData: getSafePassagesData
+
     }
 
 };
