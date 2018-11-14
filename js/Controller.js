@@ -58,4 +58,9 @@ var Controller = function(model, view){
         
         view.showRaceDist(model.getTotalRaceDist());
     });
+
+    $(document).on('loadCrime', function(e) {
+        console.log('crime loaded');
+        view.showCrimeByCat(model.getCrimesByCat());
+    });
 };

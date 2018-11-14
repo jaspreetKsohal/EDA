@@ -77,7 +77,7 @@ var WaffleChart = function() {
       var color = d3.scaleLinear()
         .domain([1, _obj.data.length - 1])
         .interpolate(d3.interpolateRgb)
-        .range(["#555", "#EEE"]);
+        .range(["darkgreen", "#cdddd6"]);
   
       // add label
   
@@ -92,7 +92,7 @@ var WaffleChart = function() {
   
       var legend = d3.select($_selector)
         .append("div")
-        .attr("class", "legend");
+        .attr("class", "legend")
   
       var legendItem = legend.selectAll("div")
         .data(_obj.data);
@@ -106,12 +106,11 @@ var WaffleChart = function() {
       var legendIcon = legendItem.append("div")
         .attr("class", "legend_item_icon")
         .style("background-color", function(d, i) {
-        //   if (i === 0) {
-        //     return red;
-        //   } else {
-        //     return color(i);
-        //   }
-          return color(i);
+          if (i === 0) {
+            return red;
+          } else {
+            return color(i);
+          }
         });
   
       if (_obj.rounded) {
@@ -120,7 +119,10 @@ var WaffleChart = function() {
   
       legendItem.append("span")
         .attr("class", "legend_item_text")
-        .text(function(d) { return d[$_keys[0]]; });
+        .text(function(d) { 
+            return "legend";
+            // return d[$_keys[0]]; 
+        });
   
       // set up the dimensions
   

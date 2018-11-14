@@ -40,6 +40,7 @@ var Model = function() {
         }).done(function(data) {
             // alert("Retrieved " + data.length + " records from the dataset!");
             crimeData.push(data);
+            $(document).trigger('loadCrime');
         });
     }
 
@@ -102,6 +103,15 @@ var Model = function() {
         return crimeData;
     }
 
+    function getCrimesByCat() {
+        
+        var crimeByCat = d3.nest()
+            .key(function(d) { return d.primary_type; })
+            .rollup(function(v) { return v.length; })
+            .entries(crimeData[0]);
+
+        return crimeByCat;
+    }
 
     function getCensusData() {
         return censusData;
@@ -148,7 +158,7 @@ var Model = function() {
     return {
         loadData: loadData,
         loadCrimesData: loadCrimesData,
-
+        getCrimesByCat: getCrimesByCat,
         loadCensusData: loadCensusData,
 
 

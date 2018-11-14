@@ -36,20 +36,6 @@ var View = function(){
         map.addLayer(schoolGroup);
     };
 
-    self.displayRaceDist = function(raceDist) {
-        console.log(raceDist);
-        var waffle = new WaffleChart()
-            .selector(".chart_race")
-            .data(raceDist)
-            .useWidth(true)
-            .label("Race Distribution")
-            .size(10)
-            .gap(2)
-            .rows(10)
-            .rounded(true)();
-    } 
-
-
     self.displayCrimes = function(crimeData) {
         // crimeGroup = L.featureGroup();
 
@@ -109,6 +95,56 @@ var View = function(){
         map.addLayer(safePassageGroup);
     };
 
+    self.displayRaceDist = function(raceDist) {
+        console.log(raceDist);
+        var waffle = new WaffleChart()
+            .selector(".chart_race")
+            .data(raceDist)
+            .useWidth(true)
+            .label("Race Distribution")
+            .size(10)
+            .gap(2)
+            .rows(10)();
+    }
+    
+    self.displayCrimesByCat = function(crimeData) {
+        
+        var margin = {top: 0, right: 5, bottom: 20, left: 10};
+        var width = d3.select(".chart_crime_cat").node().getBoundingClientRect().width;
+        var height = 200;
+        var x = d3.scaleBand()
+            .domain(crimeData.map(d => d.key))
+            .range([margin.left, width - margin.right])
+            .padding(0.1)
+        var y = d3.scaleLinear()
+            .domain([0, d3.max(crimeData, d => d.value)]).nice()
+            .range([height - margin.bottom, margin.top])
+
+        d3.select(".chart_crime_cat")
+            .append("div")
+            .attr("class", "label")
+            .text("Crimes by Category");
+
+        var chart_svg = d3.select(".chart_crime_cat")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", 
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        chart_svg.selectAll('.bar')
+            .data(crimeData)
+            .attr("class", "bar")
+            .enter().append("rect")
+            .style("fill", "darkgreen")
+            .attr("x", d => x(d.key))
+            .attr("y", d => y(d.value))
+            .attr("height", d => y(0) - y(d.value))
+            .attr("width", x.bandwidth());
+
+    };
+
     var publiclyAvailable = {
         initialize: function(){
             self.displayMap();
@@ -158,6 +194,10 @@ var View = function(){
 
         showRaceDist: function(raceDist) {
             self.displayRaceDist(raceDist);
+        },
+
+        showCrimeByCat: function(crimeDist) {
+            self.displayCrimesByCat(crimeDist);
         },
 
         isLayerActive: function(layer){
