@@ -38,6 +38,15 @@ var View = function(){
 
     self.displayRaceDist = function(raceDist) {
         console.log(raceDist);
+        var waffle = new WaffleChart()
+            .selector(".chart_race")
+            .data(raceDist)
+            .useWidth(true)
+            .label("Race Distribution")
+            .size(10)
+            .gap(2)
+            .rows(10)
+            .rounded(true)();
     } 
 
 

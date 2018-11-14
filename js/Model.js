@@ -109,19 +109,27 @@ var Model = function() {
 
     function getTotalRaceDist() {
         //extract race distribution here
-        console.log(censusData)
-        var raceTotals = censusData[0].properties.census.RACE_TOTAL_TALLIED;
-        for(var item in raceTotals) {
-            raceTotals[item] = 0
+        
+        var raceTotalsDict = censusData[0].properties.census.RACE_TOTAL_TALLIED;
+        for(var item in raceTotalsDict) {
+            raceTotalsDict[item] = 0
         }
         censusData.forEach(function(block) {
             // console.log(block);
             var raceDetails = block.properties.census.RACE_TOTAL_TALLIED
             for (var race in raceDetails) {
-                raceTotals[race] = raceDetails[race] + raceTotals[race] + 0;
+                raceTotalsDict[race] = raceDetails[race] + raceTotalsDict[race] + 0;
             }
         });
-        
+        var raceTotals = [];
+        console.log(raceTotalsDict)
+        for(var item in raceTotalsDict) {
+            if(item != 'Total') {
+                var obj = {'race': item, 'count': raceTotalsDict[item]};
+                // obj[item] = raceTotalsDict[item];
+                raceTotals.push(obj);
+            }
+        }
         return raceTotals;
     }
 
