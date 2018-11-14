@@ -10,13 +10,15 @@
         <link rel="stylesheet" type="text/css" href="style/main.css">
         <link rel="stylesheet" type="text/css" href="style/icons/style.css">
         <link rel="stylesheet" href="leaflet/leaflet.css" />
+        <link rel="stylesheet" href="leaflet_cluster/MarkerCluster.css" />
+        <link rel="stylesheet" href="leaflet_cluster/MarkerCluster.Default.css" />
 
         <!--scripts-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script src="leaflet/leaflet.js"></script>
-
+        <script src="leaflet_cluster/leaflet.markercluster.js"></script>
     </head>
 
     <body onload="App.start();">
@@ -25,7 +27,9 @@
                 <ul id="filter-options">
                     <li><span class="icon-services filter-option" id="service"></span> Services</li>
                     <li><span class="icon-schools filter-option" id="school"></span> Schools</li>
-                    <li><span class="icon-crimes filter-option" id="crime"></span> Crimes</li>
+                    <li><span class="icon-crimes filter-option medium" id="crime"></span> Crimes</li>
+                    <li><span class="icon-vacant-lot filter-option medium" id="vacant-lot"></span> <br>Vacant Lots</li>
+                    <li><span class="icon-safe-passage filter-option medium" id="safe-passage"></span> <br> Safe Passages</li>
                 </ul>
             </div>
             <!--end filters-->

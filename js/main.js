@@ -16,6 +16,9 @@ var App = App || {};
         view.initialize();
         model.loadData();
         model.loadCrimesData();
+        model.loadServicesData();
+        model.loadVacantLotsData();
+        model.loadSafePassagesData();
     };
 
 }) ();
