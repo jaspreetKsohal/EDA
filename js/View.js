@@ -139,7 +139,7 @@ var View = function(){
         d3.select(".chart_crime_cat")
             .append("div")
             .attr("class", "label")
-            .text("Crimes by Category");
+            .text("Crimes by Category in Englewood");
 
         var chart_svg = d3.select(".chart_crime_cat")
             .append("svg")
