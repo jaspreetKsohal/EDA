@@ -180,11 +180,21 @@ var View = function(){
                 .duration(500)
                 .style("opacity", 0);
                 });
+    };
+
+    function onEachFeature(feature, layer){
+        layer.on('click', function(e){
+           console.log('Block selected',e.target.feature.properties.blockce10);
+           var blockSelected = e.target.feature.properties.blockce10;
+        });
     }
 
+
     self.displayCensusBlocks = function(censusData){
-        L.geoJSON(censusData, {weight: 0.2}).addTo(map);
+        L.geoJSON(censusData, {weight: 0.2, onEachFeature: onEachFeature})
+            .addTo(map);
     };
+
 
     self.displayGenderAgeDist = function(genAgeDist) {
         console.log(genAgeDist);
