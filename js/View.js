@@ -276,7 +276,29 @@ var View = function(){
 
     self.removeGenAgeDist = function() {
         d3.select('.chart_gen_age').selectAll("*").remove();
-    }
+    };
+
+    self.displaySchoolDetails = function(schoolNum) {
+        var schoolDet = d3.select('.details_school');
+        schoolDet.append('h1')
+            .attr("class", "det_num")
+            .text(schoolNum)
+
+        schoolDet.append('p')
+            .attr("class", "det_text")
+            .text("Schools")
+    };
+
+    self.displayServiceDetails = function(serviceNum) {
+        var servDet = d3.select('.details_services');
+        servDet.append('h1')
+            .attr("class", "det_num")
+            .text(serviceNum)
+
+        servDet.append('p')
+            .attr("class", "det_text")
+            .text("Services")
+    };
 
     var publiclyAvailable = {
         initialize: function(){
@@ -347,6 +369,14 @@ var View = function(){
 
         showCrimeByCat: function(crimeDist) {
             self.displayCrimesByCat(crimeDist);
+        },
+
+        displaySchoolDetails: function(schoolNum) {
+            self.displaySchoolDetails(schoolNum);
+        },
+
+        displayServiceDetails: function(num) {
+            self.displayServiceDetails(num);
         },
 
         isLayerActive: function(layer){

@@ -73,4 +73,13 @@ var Controller = function(model, view){
         view.showRaceDist(model.getBlockRaceDist(info));
         view.showGenderAgeDist(model.getBlockGenAgeDist(info));
     });
+
+    $(document).on('loadServices', function(e) {
+        view.displayServiceDetails(model.getServiceData()[0].length);
+    });
+
+    $(document).on('loadSchool', function(e) {
+        console.log('school loaded');
+        view.displaySchoolDetails(model.getSchoolData()[0].length);
+    });
 };

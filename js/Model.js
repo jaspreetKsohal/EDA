@@ -14,6 +14,7 @@ var Model = function() {
     function loadData() {
         d3.csv("data/schools.csv", function(d){
             schoolData.push(d);
+            $(document).trigger('loadSchool');
         });
     }
 
@@ -47,6 +48,7 @@ var Model = function() {
         console.log('loading services data...');
         d3.csv("data/services.csv", function(d){
             servicesData.push(d);
+            $(document).trigger('loadServices');
         });
     }
 

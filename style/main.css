@@ -11,8 +11,8 @@ body {
     height: 100%;
     grid-template-columns: 5% auto 30%;
     grid-template-rows: auto 22%;
-    grid-gap: 6px;
-    background-color: whitesmoke;
+    grid-gap: 5px;
+    background-color: white;
 }
 
 .filters {
@@ -30,6 +30,7 @@ body {
     grid-row-start: span 2;
     grid-column: 3 / 3;
     background-color: white;
+    padding: 10px;
 }
 
 .timeline {
@@ -112,4 +113,25 @@ ul span {
     border-radius: 2px;
     pointer-events: none;
   }
+
+.details_school {
+    display: flex;
+    width: auto;
+    height: auto;
+}
+
+h1.det_num {
+    font: 3em sans-serif;
+    color: gray;
+    display: inline;
+    align-self: center;
+    text-align: center
+}
+p.det_text {
+    font: 1.5em sans-serif;
+    color: gray;
+    display: inline;
+    align-self: center;
+    text-align: center
+}
   /* end charts*/
