@@ -76,7 +76,7 @@ var WaffleChart = function() {
   
       var color = d3.scaleOrdinal()
         .domain([1, _obj.data.length - 1])
-        .range(d3.schemeAccent);
+        .range(d3.schemeSet2);
   
       // add label
   

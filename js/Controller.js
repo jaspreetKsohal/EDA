@@ -69,6 +69,8 @@ var Controller = function(model, view){
     $(document).on('blockSelected', function(e, info) {
         console.log(info);
         view.removeRaceDist();
+        view.removeGenAgeDist();
         view.showRaceDist(model.getBlockRaceDist(info));
+        view.showGenderAgeDist(model.getBlockGenAgeDist(info));
     });
 };

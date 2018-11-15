@@ -271,11 +271,12 @@ var View = function(){
             .call(d3.axisBottom(x0))
             .call(g => g.select(".domain").remove())
             .selectAll("text")
-            .style("font-size", 7);
-            
-
-                
+            .style("font-size", 7);       
     };
+
+    self.removeGenAgeDist = function() {
+        d3.select('.chart_gen_age').selectAll("*").remove();
+    }
 
     var publiclyAvailable = {
         initialize: function(){
@@ -338,6 +339,10 @@ var View = function(){
 
         showGenderAgeDist: function(genAgeDist) {
             self.displayGenderAgeDist(genAgeDist);
+        },
+
+        removeGenAgeDist: function() {
+            self.removeGenAgeDist();
         },
 
         showCrimeByCat: function(crimeDist) {

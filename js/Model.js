@@ -174,6 +174,21 @@ var Model = function() {
         return races;
     }
 
+    function getBlockGenAgeDist(blockNum) {
+        var selectedblock = censusData.find(obj => {
+            return obj.properties.blockce10 == blockNum
+        });
+        var femaleByAge = selectedblock.properties.census['SEX_BY_AGE_(FEMALE)'];
+        var maleByAge = selectedblock.properties.census['SEX_BY_AGE_(MALE)'];
+        var genAgeDist = []
+        for (var age in femaleByAge) {
+            if(age != 'Total') {
+                genAgeDist.push({'age': age, 'male': maleByAge[age], 'female': femaleByAge[age]})
+            }
+        }
+        return genAgeDist;
+    }
+
     function getServiceData(){
         return servicesData;
     }
@@ -202,7 +217,8 @@ var Model = function() {
         getServiceData: getServiceData,
         getVacantLots: getVacantLots,
         getSafePassagesData: getSafePassagesData,
-        getBlockRaceDist: getBlockRaceDist
+        getBlockRaceDist: getBlockRaceDist,
+        getBlockGenAgeDist: getBlockGenAgeDist
     }
 
 };
