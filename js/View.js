@@ -127,6 +127,10 @@ var View = function(){
             .gap(2)
             .rows(10)();
     }
+
+    self.removeRaceDist = function() {
+        d3.select('.chart_race').selectAll("*").remove();
+    }
     
     self.displayCrimesByCat = function(crimeData) {
 
@@ -184,8 +188,9 @@ var View = function(){
 
     function onEachFeature(feature, layer){
         layer.on('click', function(e){
-           console.log('Block selected',e.target.feature.properties.blockce10);
+        //    console.log('Block selected',e.target.feature.properties.blockce10);
            var blockSelected = e.target.feature.properties.blockce10;
+           $(document).trigger('blockSelected', blockSelected);
         });
     }
 
@@ -197,7 +202,7 @@ var View = function(){
 
 
     self.displayGenderAgeDist = function(genAgeDist) {
-        console.log(genAgeDist);
+        // console.log(genAgeDist);
         var margin = {top: 0, right: 5, bottom: 20, left: 10};
         var width = d3.select(".chart_crime_cat").node().getBoundingClientRect().width;
         var height = 150;
@@ -325,6 +330,10 @@ var View = function(){
 
         showRaceDist: function(raceDist) {
             self.displayRaceDist(raceDist);
+        },
+
+        removeRaceDist: function() {
+            self.removeRaceDist();
         },
 
         showGenderAgeDist: function(genAgeDist) {

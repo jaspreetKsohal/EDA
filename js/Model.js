@@ -127,9 +127,9 @@ var Model = function() {
                 raceTotals.push(obj);
             }
         }
-        raceTotals.sort(function(a, b){
-            return a.count-b.count;
-        })
+        // raceTotals.sort(function(a, b){
+        //     return a.count-b.count;
+        // })
         return raceTotals;
     }
 
@@ -168,9 +168,9 @@ var Model = function() {
                 races.push(obj);
             }
         }
-        races.sort(function(a, b){
-            return a.count-b.count;
-        })
+        // races.sort(function(a, b){
+        //     return a.count-b.count;
+        // })
         return races;
     }
 
@@ -201,7 +201,8 @@ var Model = function() {
         getCrimeData: getCrimeData,
         getServiceData: getServiceData,
         getVacantLots: getVacantLots,
-        getSafePassagesData: getSafePassagesData
+        getSafePassagesData: getSafePassagesData,
+        getBlockRaceDist: getBlockRaceDist
     }
 
 };

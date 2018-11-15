@@ -65,4 +65,10 @@ var Controller = function(model, view){
         console.log('crime loaded');
         view.showCrimeByCat(model.getCrimesByCat());
     });
+
+    $(document).on('blockSelected', function(e, info) {
+        console.log(info);
+        view.removeRaceDist();
+        view.showRaceDist(model.getBlockRaceDist(info));
+    });
 };

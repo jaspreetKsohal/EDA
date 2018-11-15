@@ -74,10 +74,9 @@ var WaffleChart = function() {
   
       var red = "#CE2A23";
   
-      var color = d3.scaleLinear()
+      var color = d3.scaleOrdinal()
         .domain([1, _obj.data.length - 1])
-        .interpolate(d3.interpolateRgb)
-        .range(["darkgreen", "#cdddd6"]);
+        .range(d3.schemeAccent);
   
       // add label
   
