@@ -58,6 +58,7 @@ var Controller = function(model, view){
         view.addCensusBlocks(model.getCensusData());
         
         view.showRaceDist(model.getTotalRaceDist());
+        view.showGenderAgeDist(model.getTotalGenderAgeDist());
     });
 
     $(document).on('loadCrime', function(e) {

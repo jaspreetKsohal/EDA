@@ -186,6 +186,82 @@ var View = function(){
         L.geoJSON(censusData, {weight: 0.2}).addTo(map);
     };
 
+    self.displayGenderAgeDist = function(genAgeDist) {
+        console.log(genAgeDist);
+        var margin = {top: 0, right: 5, bottom: 20, left: 10};
+        var width = d3.select(".chart_crime_cat").node().getBoundingClientRect().width;
+        var height = 150;
+        var x0 = d3.scaleBand()
+            .domain(genAgeDist.map(d => d.age))
+            .range([margin.left, width - margin.right])
+            .padding(0.1);
+
+        var keys = d3.keys(genAgeDist[0]).slice(1);
+        var x1 = d3.scaleBand()
+            .padding(0.3)
+            .domain(keys).rangeRound([0, x0.bandwidth()]);
+        var y = d3.scaleLinear()
+            .domain([0, d3.max(genAgeDist, d => d.female, d => d.male )]).nice()
+            .range([height - margin.bottom, margin.top]);
+
+        var z = d3.scaleOrdinal()
+            .range(["steelblue", "palevioletred"]);
+
+        var div = d3.select(".chart_gen_age").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        d3.select(".chart_gen_age")
+            .append("div")
+            .attr("class", "label")
+            .text("Gender-Age Distribution");
+
+        var chart_svg = d3.select(".chart_gen_age")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", 
+                "translate(" + margin.left + "," + margin.top + ")");
+        
+        chart_svg.selectAll('.bar')
+            .data(genAgeDist)
+            .enter().append('g')
+                .attr("transform", function(d) { return "translate(" + x0(d.age) + ",0)"; })
+            .selectAll("rect")
+            .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
+            .enter().append("rect")
+                .attr("x", function(d) { return x1(d.key); })
+                .attr("y", function(d) { return y(d.value); })
+                .attr("width", x1.bandwidth())
+                .attr("height", function(d) { return height - y(d.value); })
+                .attr("fill", function(d) { return z(d.key); })
+                .on("mouseover", function(d) {
+                    div.transition()
+                      .duration(200)
+                      .style("opacity", .9);
+                    div.html(d.value)
+                      .style("left", (d3.event.pageX) + "px")
+                      .style("top", (d3.event.pageY - 28) + "px");
+                    })
+                .on("mouseout", function(d) {
+                    div.transition()
+                      .duration(500)
+                      .style("opacity", 0);
+                    });
+
+        chart_svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x0))
+            .call(g => g.select(".domain").remove())
+            .selectAll("text")
+            .style("font-size", 7);
+            
+
+                
+    };
+
     var publiclyAvailable = {
         initialize: function(){
             self.displayMap();
@@ -239,6 +315,10 @@ var View = function(){
 
         showRaceDist: function(raceDist) {
             self.displayRaceDist(raceDist);
+        },
+
+        showGenderAgeDist: function(genAgeDist) {
+            self.displayGenderAgeDist(genAgeDist);
         },
 
         showCrimeByCat: function(crimeDist) {

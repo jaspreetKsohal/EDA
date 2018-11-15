@@ -120,7 +120,6 @@ var Model = function() {
             }
         });
         var raceTotals = [];
-        console.log(raceTotalsDict);
         for(var item in raceTotalsDict) {
             if(item != 'Total') {
                 var obj = {'race': item, 'count': raceTotalsDict[item]};
@@ -129,6 +128,27 @@ var Model = function() {
             }
         }
         return raceTotals;
+    }
+
+    function getTotalGenderAgeDist() {
+        var ageGroups = censusData[0].properties.census['SEX_BY_AGE_(FEMALE)'];
+        var totalDist = []
+        for (var age in ageGroups) {
+            if(age != 'Total') {
+                totalDist.push({'age': age, 'male': 0, 'female': 0})
+            }
+        }
+        
+        censusData.forEach(function(block) {
+            // console.log(block);
+            var femaleByAge = block.properties.census['SEX_BY_AGE_(FEMALE)'];
+            var maleByAge = block.properties.census['SEX_BY_AGE_(MALE)'];            
+            totalDist.forEach(function(item) {
+                item.female = item.female + femaleByAge[item.age]
+                item.male = item.male + maleByAge[item.age]
+            });
+        });
+        return totalDist;
     }
 
     function getServiceData(){
@@ -148,6 +168,7 @@ var Model = function() {
         loadCrimesData: loadCrimesData,
         getCrimesByCat: getCrimesByCat,
         loadCensusData: loadCensusData,
+        getTotalGenderAgeDist: getTotalGenderAgeDist,
         getCensusData: getCensusData,
         getTotalRaceDist: getTotalRaceDist,
         loadServicesData: loadServicesData,
