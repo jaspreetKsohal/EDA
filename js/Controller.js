@@ -68,6 +68,7 @@ var Controller = function(model, view){
 
     $(document).on('blockSelected', function(e, info) {
         console.log(info);
+        $("#censusTitle").text("Census Data - Block No.: " + info);
         view.removeRaceDist();
         view.removeGenAgeDist();
         view.showRaceDist(model.getBlockRaceDist(info));
