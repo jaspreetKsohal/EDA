@@ -8,7 +8,7 @@ var Model = function() {
 
     var censusData = [];
 
-    var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [];
+    var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [], filteredCensusData = [];
 
 
     function loadData() {
@@ -104,7 +104,18 @@ var Model = function() {
     }
 
     function getCensusData() {
-        return censusData;
+        console.log('census Data');
+        censusData.forEach(function(d){
+            var population = d.properties.census['TOTAL_POPULATION'];
+            if(population['Total'] != 0){
+                // console.log(population, 'condition satisfied');
+                filteredCensusData.push(d);
+            }
+            else{
+                // console.log('0 population');
+            }
+        });
+        return filteredCensusData;
     }
 
     function getTotalRaceDist() {

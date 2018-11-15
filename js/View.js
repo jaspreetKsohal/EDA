@@ -190,6 +190,7 @@ var View = function(){
         layer.on('click', function(e){
         //    console.log('Block selected',e.target.feature.properties.blockce10);
            var blockSelected = e.target.feature.properties.blockce10;
+           console.log('Selected Block:', blockSelected);
            $(document).trigger('blockSelected', blockSelected);
         });
     }
