@@ -106,10 +106,14 @@ var Model = function() {
     function getCensusData() {
         console.log('census Data');
         censusData.forEach(function(d){
+            console.log(d.properties);
             var population = d.properties.census['TOTAL_POPULATION'];
             if(population['Total'] != 0){
                 // console.log(population, 'condition satisfied');
                 filteredCensusData.push(d);
+                // if(d.properties.blockce10 == 2007){
+                //     console.log('block 2007', population);
+                // }
             }
             else{
                 // console.log('0 population');
@@ -170,7 +174,7 @@ var Model = function() {
     function getBlockRaceDist(blockNum) {
         // per block
         var selectedblock = censusData.find(obj => {
-            return obj.properties.blockce10 == blockNum
+            return obj.properties.tract_bloc == blockNum
         });
         var blockRaces = selectedblock.properties.census.RACE_TOTAL_TALLIED;
         var races = [];
@@ -189,7 +193,7 @@ var Model = function() {
 
     function getBlockGenAgeDist(blockNum) {
         var selectedblock = censusData.find(obj => {
-            return obj.properties.blockce10 == blockNum
+            return obj.properties.tract_bloc == blockNum
         });
         var femaleByAge = selectedblock.properties.census['SEX_BY_AGE_(FEMALE)'];
         var maleByAge = selectedblock.properties.census['SEX_BY_AGE_(MALE)'];
