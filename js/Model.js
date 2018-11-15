@@ -127,6 +127,9 @@ var Model = function() {
                 raceTotals.push(obj);
             }
         }
+        raceTotals.sort(function(a, b){
+            return a.count-b.count;
+        })
         return raceTotals;
     }
 
@@ -149,6 +152,26 @@ var Model = function() {
             });
         });
         return totalDist;
+    }
+
+    function getBlockRaceDist(blockNum) {
+        // per block
+        var selectedblock = censusData.find(obj => {
+            return obj.properties.blockce10 == blockNum
+        });
+        var blockRaces = selectedblock.properties.census.RACE_TOTAL_TALLIED;
+        var races = [];
+        for(var item in blockRaces) {
+            if(item != 'Total') {
+                var obj = {'race': item, 'count': blockRaces[item]};
+                // obj[item] = raceTotalsDict[item];
+                races.push(obj);
+            }
+        }
+        races.sort(function(a, b){
+            return a.count-b.count;
+        })
+        return races;
     }
 
     function getServiceData(){

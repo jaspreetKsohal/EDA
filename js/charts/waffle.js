@@ -170,7 +170,7 @@ var WaffleChart = function() {
         })
         .append("title")
         .text(function (d, i) {
-          return _obj.data[d.groupIndex][$_keys[0]] + ": " + Math.round((d.units / formattedData.length) * 100) + "%";
+          return _obj.data[d.groupIndex][$_keys[0]] + ": " + ((d.units / formattedData.length) * 100).toFixed(2) + "%";
         });
   
       if (_obj.rounded) {
