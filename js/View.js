@@ -37,22 +37,6 @@ var View = function(){
         map.addLayer(schoolGroup);
     };
 
-
-    self.displayRaceDist = function(raceDist) {
-        console.log(raceDist);
-        var waffle = new WaffleChart()
-            .selector(".chart_race")
-            .data(raceDist)
-            .useWidth(true)
-            .label("Race Distribution")
-            .size(10)
-            .gap(2)
-            .rows(10)
-            .rounded(true)();
-    };
-
-
-
     self.displayCrimes = function(crimeData) {
         // crimeGroup = L.featureGroup();
 
@@ -115,18 +99,21 @@ var View = function(){
         map.addLayer(safePassageGroup);
     };
 
-
     self.displayRaceDist = function(raceDist) {
-        console.log(raceDist);
-        var waffle = new WaffleChart()
-            .selector(".chart_race")
-            .data(raceDist)
-            .useWidth(true)
-            .label("Race Distribution")
-            .size(10)
-            .gap(2)
-            .rows(10)();
-    }
+        if(raceDist === undefined) {
+            d3.select(".chart_race").append("h2").text("No Data Available");
+        } else {
+            var waffle = new WaffleChart()
+                .selector(".chart_race")
+                .data(raceDist)
+                .useWidth(true)
+                .label("Race Distribution")
+                .size(10)
+                .gap(2)
+                .rows(10)
+                .rounded(true)();
+        }
+    };
 
     self.removeRaceDist = function() {
         d3.select('.chart_race').selectAll("*").remove();

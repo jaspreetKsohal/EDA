@@ -183,6 +183,9 @@ var Model = function() {
                 var obj = {'race': item, 'count': blockRaces[item]};
                 // obj[item] = raceTotalsDict[item];
                 races.push(obj);
+            } else {
+                if(blockRaces[item] == 0)
+                    return;
             }
         }
         // races.sort(function(a, b){
