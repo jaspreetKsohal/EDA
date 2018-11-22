@@ -8,7 +8,11 @@ var View = function(){
 
     var self = this;
     var map;
-    var schoolGroup, crimeGroup, serviceGroup, vacantLotGroup, markers, safePassageGroup;
+    var schoolGroup, crimeLayer, serviceGroup, vacantLotGroup, markers, safePassageGroup, censusLayer;
+
+
+    var colorScale = d3.scaleSequential(d3.interpolateReds)
+        .domain([0, 3]);
 
     self.displayMap = function() {
         // L.mapbox.accessToken = 'pk.eyJ1IjoiamFzcHJlZXQxM3NvaGFsIiwiYSI6ImNqZzlpNjFjeDFkdXgzNG10ZGxta3QxYjAifQ.OdfMrevmS4Az30DQCEHCFg';
@@ -47,28 +51,39 @@ var View = function(){
         map.addLayer(schoolGroup);
     };
 
-    self.displayCrimes = function(crimeData) {
-        // crimeGroup = L.featureGroup();
+    function getColor(noOfCrimes){
+        return colorScale(noOfCrimes);
+    }
 
-        markers = L.markerClusterGroup({
-            spiderfyOnMaxZoom: false
-        });
-        crimeData.forEach(function(c){
-           // var latlng = L.latLng(c.latitude, c.longitude);
-           // L.circle(latlng, {radius: 5, color: '#E78820'}).addTo(crimeGroup);
-            var marker = L.marker(new L.latLng(c.latitude, c.longitude));
-            markers.addLayer(marker);
-        });
+    function setCrimeChoropleth(feature){
+        return {
+            weight: 0,
+            fillColor: getColor(feature.properties.noOfCrimes)
+        }
+    }
 
-        // map.addLayer(crimeGroup);
-        map.addLayer(markers);
+    self.displayCrimes = function(censusData) {
+        // console.log('plotting crimes',censusData[0].properties.noOfCrimes);
+        map.removeLayer(censusLayer);
+
+        crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature});
+        map.addLayer(crimeLayer);
+
+        // markers = L.markerClusterGroup({
+        //     spiderfyOnMaxZoom: false
+        // });
+        // crimeData.forEach(function(c){
+        //     var marker = L.marker(new L.latLng(c.latitude, c.longitude));
+        //     markers.addLayer(marker);
+        // });
+        //
+        // map.addLayer(markers);
     };
 
 
     self.displayServices = function(serviceData) {
 
         $('#map').append('<div id="numberServices"><p class="content">'+ serviceData.length +'<span class="det_text"> Services</span></p></div>');
-        console.log('schoolse exists or not',$('#numberSchools').length);
         if($('#numberSchools').length > 0){
             $('#numberServices').addClass('shift');
         }
@@ -194,15 +209,15 @@ var View = function(){
         layer.on('click', function(e){
         //    console.log('Block selected',e.target.feature.properties.blockce10);
            var blockSelected = e.target.feature.properties.tract_bloc;
-           console.log('Selected Block:', blockSelected);
+           // console.log('Selected Block:', blockSelected);
            $(document).trigger('blockSelected', blockSelected);
         });
     }
 
 
     self.displayCensusBlocks = function(censusData){
-        L.geoJSON(censusData, {weight: 0.2, onEachFeature: onEachFeature})
-            .addTo(map);
+        censusLayer = L.geoJSON(censusData, {weight: 0.2, onEachFeature: onEachFeature});
+        map.addLayer(censusLayer);
     };
 
 

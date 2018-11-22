@@ -33,8 +33,8 @@ var Controller = function(model, view){
             if(view.isLayerActive(filter)){
                 view.removeCrimes();
             } else {
-                // console.log(model.getCrimeData()[0]);
-                view.addCrimes(model.getCrimeData()[0]);
+                // view.addCrimes(model.getCrimeData()[0]);
+                view.addCrimes(model.getCensusData());
             }
         }//if-crime
         else if(filter === 'vacant-lot'){
@@ -68,7 +68,6 @@ var Controller = function(model, view){
     });
 
     $(document).on('blockSelected', function(e, info) {
-        console.log(info);
         $("#censusTitle").text("Census Data - Block No.: " + info);
         view.removeRaceDist();
         view.removeGenAgeDist();

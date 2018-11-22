@@ -10,7 +10,7 @@ var Model = function() {
 
     var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [], filteredCensusData = [], aggCrimesByTract;
 
-    var crimes = JSON.parse(localStorage.getItem('crimes'));
+    // var crimes = JSON.parse(localStorage.getItem('crimes'));
 
     var crimesTract; //contains crimes data along with census tract information
 
@@ -36,7 +36,7 @@ var Model = function() {
             url: "https://data.cityofchicago.org/resource/6zsd-86xi.json?year=2018&$where=community_area in('67','68') AND latitude IS NOT NULL",
             type: "GET",
             data: {
-                "$limit" : 12000
+                "$limit" : 5000         //change the limit back to 12000
                 // "$$app_token" : "YOURAPPTOKENHERE"
             }
         }).done(function(data) {
@@ -44,26 +44,16 @@ var Model = function() {
             crimeData.push(data);
             $(document).trigger('loadCrime');
             $(document).trigger('getTract');
-
         });
-
-        console.log(crimes);
     }
 
 
     $(document).on('getTract',function(e){
-
+        // console.log('crimes pre loaded',crimes);
         // if(!crimes){
-            console.log('could not find local storage item');
+            // console.log('could not find local storage item');
             getCrimesCensusTract(crimeData[0]);
-            console.log(tractData);
-            addTract(tractData);
-            console.log(crimeData[0][0].c_tract );
-            aggCrimesByTract = getCrimesPerTract(crimeData[0]);
-            // localStorage.setItem('crimes', JSON.stringify(aggCrimesByTract));
         // }
-
-        console.log(aggCrimesByTract);
     });
 
 
@@ -73,42 +63,47 @@ var Model = function() {
         console.log('getting census tracts...');
         var len = cData.length;
 
-        for(var i = 0; i < 10; i++){
+        for(var i = 0; i < len; i++){
             (function(i){
                 console.log(i);
                 var lat = cData[i].latitude;
                 var lng = cData[i].longitude;
-                var url = "https://geo.fcc.gov/api/census/block/find?latitude=" + lat + "&longitude=" + lng + "&format=json";
+                // var url = "https://geo.fcc.gov/api/census/block/find?latitude=" + lat + "&longitude=" + lng + "&format=json";
+                var url = "https://www.broadbandmap.gov/broadbandmap/census/block?latitude=" + lat + "&longitude=" + lng + "&format=json";
                 urls.push(url);
-
-                // $.ajax({
-                //     url: url,
-                //     type: "GET",
-                //     dataType: 'json'
-                // }).done(function(data){
-                //     addTract(data, i);
-                //     // console.log(getCrimesPerTract(crimeData[0]));
-                // });
-
             })(i);
         }//for
-
 
         Promise.all(urls.map(url =>
             fetch(url).then(resp => resp.json())
         )).then(texts => {
-            // texts.map(text => tractData.push(text.Block.FIPS.slice(-10)))
-            texts.forEach(function(t,index){
-                tractData.push({tract: t.Block.FIPS.slice(-10), i: index});
-            })
-        })
-
+            // texts.map((text, index) => tractData.push({tract: text.Block.FIPS.slice(-10), i: index}));
+            texts.map((text, index) => tractData.push({tract: text.Results.block[0].FIPS.slice(-10), i: index}));
+        }).then(() => {
+            addTract(tractData);
+            aggCrimesByTract = getCrimesPerTract(crimeData[0]);
+            // // localStorage.setItem('crimes',JSON.stringify(crimeData[0]));
+            // console.log(aggCrimesByTract);
+            addCrimesToCensus(aggCrimesByTract);
+        });
     }//getCrimesCensusTract()
 
 
+    function addCrimesToCensus(crimes){
+        censusData.forEach(function(census){
+            crimes.forEach(function(crime){
+                if(crime.key == census.properties.tract_bloc){
+                    census.properties.noOfCrimes = crime.value;
+                }//if
+            })//forEach-crime
+        });//forEach-census
+
+        console.log(censusData[0]);
+    }
+
     function addTract(data){
         data.forEach(function(d){
-            crimeData[0][d.i].c_tract = data.tract;
+            crimeData[0][d.i].c_tract = d.tract;
         });
 
     }
@@ -160,8 +155,6 @@ var Model = function() {
                 // "$$app_token" : "YOURAPPTOKENHERE"
             }
         }).done(function(data) {
-            // alert("Retrieved " + data.length + " records from the dataset!");
-            // console.log(data);
             safePassagesData.push(data);
         });
 
@@ -187,7 +180,7 @@ var Model = function() {
     }
 
     function getCensusData() {
-        console.log('census Data');
+        // console.log('census Data');
         censusData.forEach(function(d){
             var population = d.properties.census['TOTAL_POPULATION'];
             if(population['Total'] != 0){
