@@ -33,6 +33,7 @@ var Controller = function(model, view){
             if(view.isLayerActive(filter)){
                 view.removeCrimes();
             } else {
+                // console.log(model.getCrimeData()[0]);
                 view.addCrimes(model.getCrimeData()[0]);
             }
         }//if-crime
@@ -73,14 +74,5 @@ var Controller = function(model, view){
         view.removeGenAgeDist();
         view.showRaceDist(model.getBlockRaceDist(info));
         view.showGenderAgeDist(model.getBlockGenAgeDist(info));
-    });
-
-    $(document).on('loadServices', function(e) {
-        view.displayServiceDetails(model.getServiceData()[0].length);
-    });
-
-    $(document).on('loadSchool', function(e) {
-        console.log('school loaded');
-        view.displaySchoolDetails(model.getSchoolData()[0].length);
     });
 };

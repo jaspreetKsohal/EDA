@@ -8,8 +8,11 @@ var Model = function() {
 
     var censusData = [];
 
-    var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [], filteredCensusData = [];
+    var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [], filteredCensusData = [], aggCrimesByTract;
 
+    var crimes = JSON.parse(localStorage.getItem('crimes'));
+
+    var crimesTract; //contains crimes data along with census tract information
 
     function loadData() {
         d3.csv("data/schools.csv", function(d){
@@ -40,7 +43,87 @@ var Model = function() {
             // alert("Retrieved " + data.length + " records from the dataset!");
             crimeData.push(data);
             $(document).trigger('loadCrime');
+            $(document).trigger('getTract');
+
         });
+
+        console.log(crimes);
+    }
+
+
+    $(document).on('getTract',function(e){
+
+        // if(!crimes){
+            console.log('could not find local storage item');
+            getCrimesCensusTract(crimeData[0]);
+            console.log(tractData);
+            addTract(tractData);
+            console.log(crimeData[0][0].c_tract );
+            aggCrimesByTract = getCrimesPerTract(crimeData[0]);
+            // localStorage.setItem('crimes', JSON.stringify(aggCrimesByTract));
+        // }
+
+        console.log(aggCrimesByTract);
+    });
+
+
+    const urls = [];
+    var tractData = [];
+    function getCrimesCensusTract(cData){
+        console.log('getting census tracts...');
+        var len = cData.length;
+
+        for(var i = 0; i < 10; i++){
+            (function(i){
+                console.log(i);
+                var lat = cData[i].latitude;
+                var lng = cData[i].longitude;
+                var url = "https://geo.fcc.gov/api/census/block/find?latitude=" + lat + "&longitude=" + lng + "&format=json";
+                urls.push(url);
+
+                // $.ajax({
+                //     url: url,
+                //     type: "GET",
+                //     dataType: 'json'
+                // }).done(function(data){
+                //     addTract(data, i);
+                //     // console.log(getCrimesPerTract(crimeData[0]));
+                // });
+
+            })(i);
+        }//for
+
+
+        Promise.all(urls.map(url =>
+            fetch(url).then(resp => resp.json())
+        )).then(texts => {
+            // texts.map(text => tractData.push(text.Block.FIPS.slice(-10)))
+            texts.forEach(function(t,index){
+                tractData.push({tract: t.Block.FIPS.slice(-10), i: index});
+            })
+        })
+
+    }//getCrimesCensusTract()
+
+
+    function addTract(data){
+        data.forEach(function(d){
+            crimeData[0][d.i].c_tract = data.tract;
+        });
+
+    }
+
+
+    function getCrimesPerTract(data){
+        var temp = d3.nest()
+            .key(function(d) {
+                // console.log(d);
+                return d.c_tract;
+            })
+            .rollup(function(v) { return v.length; })
+            .entries(data);
+
+        return temp;
     }
 
 
@@ -106,17 +189,9 @@ var Model = function() {
     function getCensusData() {
         console.log('census Data');
         censusData.forEach(function(d){
-            console.log(d.properties);
             var population = d.properties.census['TOTAL_POPULATION'];
             if(population['Total'] != 0){
-                // console.log(population, 'condition satisfied');
                 filteredCensusData.push(d);
-                // if(d.properties.blockce10 == 2007){
-                //     console.log('block 2007', population);
-                // }
-            }
-            else{
-                // console.log('0 population');
             }
         });
         return filteredCensusData;
@@ -200,7 +275,7 @@ var Model = function() {
         });
         var femaleByAge = selectedblock.properties.census['SEX_BY_AGE_(FEMALE)'];
         var maleByAge = selectedblock.properties.census['SEX_BY_AGE_(MALE)'];
-        var genAgeDist = []
+        var genAgeDist = [];
         for (var age in femaleByAge) {
             if(age != 'Total') {
                 genAgeDist.push({'age': age, 'male': maleByAge[age], 'female': femaleByAge[age]})

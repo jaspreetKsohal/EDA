@@ -16,9 +16,15 @@ var View = function(){
         //     .setView([41.7753, -87.6416], 14);
 
         map = L.map('map').setView([41.774876, -87.656801], 14);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        // L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        //     // subdomains: 'abcd',
+        //     maxZoom: 19
+        // }).addTo(map);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            // subdomains: 'abcd',
+            subdomains: 'abcd',
             maxZoom: 19
         }).addTo(map);
 
@@ -26,6 +32,10 @@ var View = function(){
 
 
     self.displaySchools = function(schoolData) {
+        $('#map').append('<div id="numberSchools"><p class="content">'+ schoolData.length +'<span class="det_text"> Schools</span></p></div>');
+        if($('#numberServices').length > 0){
+            $('#numberSchools').addClass('shift');
+        }
         schoolGroup = L.featureGroup();
 
         schoolData.forEach(function(s, index){
@@ -56,6 +66,13 @@ var View = function(){
 
 
     self.displayServices = function(serviceData) {
+
+        $('#map').append('<div id="numberServices"><p class="content">'+ serviceData.length +'<span class="det_text"> Services</span></p></div>');
+        console.log('schoolse exists or not',$('#numberSchools').length);
+        if($('#numberSchools').length > 0){
+            $('#numberServices').addClass('shift');
+        }
+
         serviceGroup = L.featureGroup();
 
         serviceData.forEach(function(s){
@@ -266,28 +283,6 @@ var View = function(){
         d3.select('.chart_gen_age').selectAll("*").remove();
     };
 
-    self.displaySchoolDetails = function(schoolNum) {
-        var schoolDet = d3.select('.details_school');
-        schoolDet.append('h1')
-            .attr("class", "det_num")
-            .text(schoolNum)
-
-        schoolDet.append('p')
-            .attr("class", "det_text")
-            .text("Schools")
-    };
-
-    self.displayServiceDetails = function(serviceNum) {
-        var servDet = d3.select('.details_services');
-        servDet.append('h1')
-            .attr("class", "det_num")
-            .text(serviceNum)
-
-        servDet.append('p')
-            .attr("class", "det_text")
-            .text("Services")
-    };
-
     var publiclyAvailable = {
         initialize: function(){
             self.displayMap();
@@ -302,7 +297,8 @@ var View = function(){
         },
 
         removeServices: function(){
-          map.removeLayer(serviceGroup);
+            $('#numberServices').remove();
+            map.removeLayer(serviceGroup);
         },
 
         addSchools: function(schoolData){
@@ -310,7 +306,8 @@ var View = function(){
         },
 
         removeSchools: function(){
-          map.removeLayer(schoolGroup);
+            $('#numberSchools').remove();
+            map.removeLayer(schoolGroup);
         },
 
         addCrimes: function(crimeData){
@@ -357,14 +354,6 @@ var View = function(){
 
         showCrimeByCat: function(crimeDist) {
             self.displayCrimesByCat(crimeDist);
-        },
-
-        displaySchoolDetails: function(schoolNum) {
-            self.displaySchoolDetails(schoolNum);
-        },
-
-        displayServiceDetails: function(num) {
-            self.displayServiceDetails(num);
         },
 
         isLayerActive: function(layer){

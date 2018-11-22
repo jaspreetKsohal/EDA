@@ -71,6 +71,34 @@ ul span {
 
 /*end filters*/
 
+/*map*/
+#numberSchools, #numberServices {
+    position: absolute;
+    top: 90%;
+    left: 3%;
+    background-color: darkgrey;
+    width: 200px;
+    height: 50px;
+    z-index: 1000;  /* z-index of leaflet map is 400 */
+}
+
+.shift {
+    left: 22% !important;
+}
+
+.content {
+    color: black;
+    text-align: center;
+    font-size: 25px !important;
+    line-height: 50px !important;
+}
+
+.det_text {
+    font-size: 20px;
+    line-height: 50px;
+}
+/*map ends*/
+
 /* detail charts*/
 .legend {
     padding-bottom: 7px;
