@@ -297,6 +297,7 @@ var View = function(){
         },
 
         removeServices: function(){
+            $('#numberSchools').removeClass('shift');
             $('#numberServices').remove();
             map.removeLayer(serviceGroup);
         },
@@ -306,6 +307,7 @@ var View = function(){
         },
 
         removeSchools: function(){
+            $('#numberServices').removeClass('shift');
             $('#numberSchools').remove();
             map.removeLayer(schoolGroup);
         },
