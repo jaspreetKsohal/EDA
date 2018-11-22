@@ -58,13 +58,15 @@ var View = function(){
     function setCrimeChoropleth(feature){
         return {
             weight: 0,
-            fillColor: getColor(feature.properties.noOfCrimes)
+            fillColor: getColor(feature.properties.noOfCrimes),
+            fillOpacity: 0.2
         }
     }
 
     self.displayCrimes = function(censusData) {
         // console.log('plotting crimes',censusData[0].properties.noOfCrimes);
         map.removeLayer(censusLayer);
+        crimeLayer = L.featureGroup();
 
         crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature});
         map.addLayer(crimeLayer);
@@ -149,7 +151,7 @@ var View = function(){
 
     self.removeRaceDist = function() {
         d3.select('.chart_race').selectAll("*").remove();
-    }
+    };
     
     self.displayCrimesByCat = function(crimeData) {
 
@@ -327,13 +329,14 @@ var View = function(){
             map.removeLayer(schoolGroup);
         },
 
-        addCrimes: function(crimeData){
-            self.displayCrimes(crimeData);
+        addCrimes: function(censusData){
+            self.displayCrimes(censusData);
         },
 
         removeCrimes: function(){
           // map.removeLayer(crimeGroup);
-            map.removeLayer(markers);
+            map.removeLayer(crimeLayer);
+            // map.addLayer(censusLayer);
         },
 
         addVacantLots: function(vacantLotData){
@@ -378,7 +381,7 @@ var View = function(){
                 return map.hasLayer(schoolGroup);
             else if(layer === 'crime')
             // return map.hasLayer(crimeGroup);
-                 return map.hasLayer(markers);
+                 return map.hasLayer(crimeLayer);
             else if(layer === 'service')
                 return map.hasLayer(serviceGroup);
             else if(layer === 'vacant-lot')

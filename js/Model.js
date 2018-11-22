@@ -10,10 +10,6 @@ var Model = function() {
 
     var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [], filteredCensusData = [], aggCrimesByTract;
 
-    // var crimes = JSON.parse(localStorage.getItem('crimes'));
-
-    var crimesTract; //contains crimes data along with census tract information
-
     function loadData() {
         d3.csv("data/schools.csv", function(d){
             schoolData.push(d);
@@ -26,67 +22,74 @@ var Model = function() {
             censusData = mapData.features;
             
             $(document).trigger('loadCensus');
+            addCrimesToCensus(aggCrimesByTract);
         });
     }
 
 
     function loadCrimesData() {
         console.log('loading crimes data...');
-        $.ajax({
-            url: "https://data.cityofchicago.org/resource/6zsd-86xi.json?year=2018&$where=community_area in('67','68') AND latitude IS NOT NULL",
-            type: "GET",
-            data: {
-                "$limit" : 5000         //change the limit back to 12000
-                // "$$app_token" : "YOURAPPTOKENHERE"
-            }
-        }).done(function(data) {
-            // alert("Retrieved " + data.length + " records from the dataset!");
-            crimeData.push(data);
-            $(document).trigger('loadCrime');
-            $(document).trigger('getTract');
+
+        d3.csv("data/crimes.csv", function(d){
+           crimeData.push(d);
+           $(document).trigger('loadCrime');
+           aggCrimesByTract = getCrimesPerTract(crimeData[0]);
         });
+        // $.ajax({
+        //     url: "https://data.cityofchicago.org/resource/6zsd-86xi.json?year=2018&$where=community_area in('67','68') AND latitude IS NOT NULL",
+        //     type: "GET",
+        //     data: {
+        //         "$limit" : 5000         //change the limit back to 12000
+        //         // "$$app_token" : "YOURAPPTOKENHERE"
+        //     }
+        // }).done(function(data) {
+        //     // alert("Retrieved " + data.length + " records from the dataset!");
+        //     crimeData.push(data);
+        //     $(document).trigger('loadCrime');
+        //     $(document).trigger('getTract');
+        // });
     }
 
 
-    $(document).on('getTract',function(e){
-        // console.log('crimes pre loaded',crimes);
-        // if(!crimes){
-            // console.log('could not find local storage item');
-            getCrimesCensusTract(crimeData[0]);
-        // }
-    });
+    // $(document).on('getTract',function(e){
+    //     // console.log('crimes pre loaded',crimes);
+    //     // if(!crimes){
+    //         // console.log('could not find local storage item');
+    //         getCrimesCensusTract(crimeData[0]);
+    //     // }
+    // });
 
 
-    const urls = [];
-    var tractData = [];
-    function getCrimesCensusTract(cData){
-        console.log('getting census tracts...');
-        var len = cData.length;
-
-        for(var i = 0; i < len; i++){
-            (function(i){
-                console.log(i);
-                var lat = cData[i].latitude;
-                var lng = cData[i].longitude;
-                // var url = "https://geo.fcc.gov/api/census/block/find?latitude=" + lat + "&longitude=" + lng + "&format=json";
-                var url = "https://www.broadbandmap.gov/broadbandmap/census/block?latitude=" + lat + "&longitude=" + lng + "&format=json";
-                urls.push(url);
-            })(i);
-        }//for
-
-        Promise.all(urls.map(url =>
-            fetch(url).then(resp => resp.json())
-        )).then(texts => {
-            // texts.map((text, index) => tractData.push({tract: text.Block.FIPS.slice(-10), i: index}));
-            texts.map((text, index) => tractData.push({tract: text.Results.block[0].FIPS.slice(-10), i: index}));
-        }).then(() => {
-            addTract(tractData);
-            aggCrimesByTract = getCrimesPerTract(crimeData[0]);
-            // // localStorage.setItem('crimes',JSON.stringify(crimeData[0]));
-            // console.log(aggCrimesByTract);
-            addCrimesToCensus(aggCrimesByTract);
-        });
-    }//getCrimesCensusTract()
+    // const urls = [];
+    // var tractData = [];
+    // function getCrimesCensusTract(cData){
+    //     console.log('getting census tracts...');
+    //     var len = cData.length;
+    //
+    //     for(var i = 0; i < len; i++){
+    //         (function(i){
+    //             console.log(i);
+    //             var lat = cData[i].latitude;
+    //             var lng = cData[i].longitude;
+    //             // var url = "https://geo.fcc.gov/api/census/block/find?latitude=" + lat + "&longitude=" + lng + "&format=json";
+    //             var url = "https://www.broadbandmap.gov/broadbandmap/census/block?latitude=" + lat + "&longitude=" + lng + "&format=json";
+    //             urls.push(url);
+    //         })(i);
+    //     }//for
+    //
+    //     Promise.all(urls.map(url =>
+    //         fetch(url).then(resp => resp.json())
+    //     )).then(texts => {
+    //         // texts.map((text, index) => tractData.push({tract: text.Block.FIPS.slice(-10), i: index}));
+    //         texts.map((text, index) => tractData.push({tract: text.Results.block[0].FIPS.slice(-10), i: index}));
+    //     }).then(() => {
+    //         addTract(tractData);
+    //         aggCrimesByTract = getCrimesPerTract(crimeData[0]);
+    //         // // localStorage.setItem('crimes',JSON.stringify(crimeData[0]));
+    //         // console.log(aggCrimesByTract);
+    //         addCrimesToCensus(aggCrimesByTract);
+    //     });
+    // }//getCrimesCensusTract()
 
 
     function addCrimesToCensus(crimes){
@@ -98,15 +101,15 @@ var Model = function() {
             })//forEach-crime
         });//forEach-census
 
-        console.log(censusData[0]);
+        console.log('added crimes to census');
     }
 
-    function addTract(data){
-        data.forEach(function(d){
-            crimeData[0][d.i].c_tract = d.tract;
-        });
-
-    }
+    // function addTract(data){
+    //     data.forEach(function(d){
+    //         crimeData[0][d.i].c_tract = d.tract;
+    //     });
+    //
+    // }
 
 
     function getCrimesPerTract(data){
