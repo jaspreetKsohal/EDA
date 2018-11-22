@@ -115,7 +115,7 @@ var View = function(){
             var loc = str.split(',');
 
             var latlng = L.latLng(loc[0], loc[1]);
-            L.circle(latlng, {radius: 20, color: '#f7d19d', weight: 0, fillOpacity: 1}).addTo(vacantLotGroup)
+            L.circle(latlng, {radius: 20, color: '#8ca0ae', weight: 0, fillOpacity: 1}).addTo(vacantLotGroup)
                 .bindPopup("Address: " + v['Address'] + "</br> Area: " + v['Sq. Ft.'] + " sq. ft");
         });
 
