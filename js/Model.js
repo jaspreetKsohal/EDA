@@ -179,6 +179,10 @@ var Model = function() {
             .rollup(function(v) { return v.length; })
             .entries(crimeData[0]);
 
+        crimeByCat.sort(function(a, b){
+            return b.value-a.value
+        })
+        crimeByCat.splice(10);
         return crimeByCat;
     }
 

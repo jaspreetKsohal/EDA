@@ -199,7 +199,10 @@ var View = function(){
             .data(crimeData)
             .attr("class", "bar")
             .enter().append("rect")
-            .style("fill", "darkgreen")
+            .style("fill", function(d, i) {
+                if(i > 2) return "lightgrey";
+                else return "#FF6666";
+            })
             .attr("x", d => x(d.key))
             .attr("y", d => y(d.value))
             .attr("height", d => y(0) - y(d.value))
