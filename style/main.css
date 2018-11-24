@@ -2,6 +2,7 @@ html,
 body {
     font-family: 'Roboto', sans-serif;
     height: 100%;
+    margin: 0 3px;
 }
 
 /*Layout structure*/
@@ -11,11 +12,12 @@ body {
     height: 100%;
     grid-template-columns: 5% auto 30%;
     grid-template-rows: auto 22%;
-    grid-gap: 5px;
+    /*grid-gap: 5px;*/
     background-color: white;
 }
 
 .filters {
+    position: relative;
     grid-row-start: span 2;
     background-color: gray;
 }
@@ -69,21 +71,36 @@ ul span {
     color: #1a1937;
 }
 
+#service-types {
+    /*display: none;*/
+    position: absolute;
+    left: 100%;
+    padding: 300% 0 300% 40%;
+    width : 200px;
+    /*width: 0px;*/
+    height: 235px;
+    z-index: 500;
+    background-color: #3388ff;
+}
+
+.hide-services{
+    visibility: hidden !important;
+}
 /*end filters*/
 
 /*map*/
 #numberSchools, #numberServices {
     position: absolute;
     top: 90%;
-    left: 3%;
+    right: 3%;
     background-color: darkgrey;
     width: 200px;
     height: 50px;
-    z-index: 1000;  /* z-index of leaflet map is 400 */
+    z-index: 450;  /* z-index of leaflet map is 400 */
 }
 
 .shift {
-    left: 22% !important;
+    right: 22% !important;
 }
 
 .content {
@@ -98,6 +115,15 @@ ul span {
     line-height: 50px;
 }
 /*map ends*/
+
+
+/*tooltip*/
+.service-description{
+    font-size: 12px !important;
+    line-height: 14px !important;
+    margin: 0 !important;
+}
+/*tooltip ends*/
 
 /* detail charts*/
 .legend {

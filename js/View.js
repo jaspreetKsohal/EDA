@@ -12,7 +12,7 @@ var View = function(){
 
 
     var colorScale = d3.scaleSequential(d3.interpolateReds)
-        .domain([0, 3]);
+        .domain([0, 5]);
 
     self.displayMap = function() {
         // L.mapbox.accessToken = 'pk.eyJ1IjoiamFzcHJlZXQxM3NvaGFsIiwiYSI6ImNqZzlpNjFjeDFkdXgzNG10ZGxta3QxYjAifQ.OdfMrevmS4Az30DQCEHCFg';
@@ -51,9 +51,11 @@ var View = function(){
         map.addLayer(schoolGroup);
     };
 
+
     function getColor(noOfCrimes){
         return colorScale(noOfCrimes);
     }
+
 
     function setCrimeChoropleth(feature){
         return {
@@ -63,10 +65,8 @@ var View = function(){
         }
     }
 
+
     self.displayCrimes = function(censusData) {
-        // console.log('plotting crimes',censusData[0].properties.noOfCrimes);
-        map.removeLayer(censusLayer);
-        crimeLayer = L.featureGroup();
 
         crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature});
         map.addLayer(crimeLayer);
@@ -93,10 +93,11 @@ var View = function(){
         serviceGroup = L.featureGroup();
 
         serviceData.forEach(function(s){
-            var latlng = L.latLng(s.Latitude, s.Longitude);
+            var latlng = L.latLng(s.latitude, s.longitude);
             L.circle(latlng, {radius: 25, color: '#f08a6b',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
-                .bindPopup("<b>" + s['Organization Name'] + "</b></br>" + "Address: " + s['Address'] + "</br>" + "<a href='" + s['Website'] + "' target='_blank'>Website</a></br>"
-                + "Phone Number: " + "<a href='tel:" + s['Phone Number'] + "' target='_blank'>" + s['Phone Number'] + "</a>");
+                .bindPopup("<b>" + s['name'] + "</b></br>" + "Address: " + s['address'] + "</br>" + "<a href='" + s['website'] + "' target='_blank'>Website</a></br>"
+                + "Phone Number: " + "<a href='tel:" + s['phone'] + "' target='_blank'>" + s['phone'] + "</a></br>"
+                + "Description: " + "<p class='service-description'>" + s['description'] + "</p>");
         });
 
         map.addLayer(serviceGroup);
@@ -133,6 +134,7 @@ var View = function(){
         map.addLayer(safePassageGroup);
     };
 
+
     self.displayRaceDist = function(raceDist) {
         if(raceDist === undefined) {
             d3.select(".chart_race").append("h2").text("No Data Available");
@@ -161,10 +163,12 @@ var View = function(){
         }
     };
 
+
     self.removeRaceDist = function() {
         d3.select('.chart_race').selectAll("*").remove();
     };
-    
+
+
     self.displayCrimesByCat = function(crimeData) {
 
         var margin = {top: 0, right: 5, bottom: 20, left: 10};
@@ -222,6 +226,7 @@ var View = function(){
                 });
     };
 
+
     function onEachFeature(feature, layer){
         layer.on('click', function(e){
         //    console.log('Block selected',e.target.feature.properties.blockce10);
@@ -233,7 +238,7 @@ var View = function(){
 
 
     self.displayCensusBlocks = function(censusData){
-        censusLayer = L.geoJSON(censusData, {weight: 0.2, onEachFeature: onEachFeature});
+        censusLayer = L.geoJSON(censusData, {fillColor: '#A0A0A0' ,weight: 0.2, onEachFeature: onEachFeature});
         map.addLayer(censusLayer);
     };
 
@@ -311,9 +316,11 @@ var View = function(){
             .style("font-size", 7);       
     };
 
+
     self.removeGenAgeDist = function() {
         d3.select('.chart_gen_age').selectAll("*").remove();
     };
+
 
     var publiclyAvailable = {
         initialize: function(){
@@ -345,13 +352,14 @@ var View = function(){
         },
 
         addCrimes: function(censusData){
+            map.removeLayer(censusLayer);
             self.displayCrimes(censusData);
         },
 
         removeCrimes: function(){
           // map.removeLayer(crimeGroup);
             map.removeLayer(crimeLayer);
-            // map.addLayer(censusLayer);
+            map.addLayer(censusLayer);
         },
 
         addVacantLots: function(vacantLotData){
@@ -406,6 +414,7 @@ var View = function(){
         }
 
     };
+
 
     return publiclyAvailable;
 };

@@ -9,6 +9,20 @@ var Controller = function(model, view){
     var model = model || new Model();
     var view = view || new View();
 
+
+    $('input[name=checkbox]').change(function(e){
+        var arr = [];
+        $('input.chkbox:checkbox:checked').each(function () {
+            arr.push($(this).val());
+        });
+
+        if(view.isLayerActive('service')){
+            view.removeServices();
+        }
+        view.addServices(model.getFilteredServices(arr));
+    });
+
+
     $('.filter-option').on('click', function(event){
         // console.log(view.isLayerActive());
         var filter = event.target.id;
@@ -16,10 +30,12 @@ var Controller = function(model, view){
         $('#'+filter).toggleClass("highlight");
 
         if(filter === 'service'){
+            $('#service-types').toggleClass('hide-services');
             if(view.isLayerActive(filter)){
                 view.removeServices();
             } else {
-                view.addServices(model.getServiceData()[0]);
+                $('.chkbox').prop('checked', true);
+                view.addServices(model.getServiceData());
             }
         }//if-service
         else if(filter === 'school'){

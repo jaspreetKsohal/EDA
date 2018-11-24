@@ -8,7 +8,8 @@ var Model = function() {
 
     var censusData = [];
 
-    var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [], filteredCensusData = [], aggCrimesByTract;
+    var schoolData = [], crimeData = [], servicesData = [], vacantLotsData = [], safePassagesData = [], filteredCensusData = [], aggCrimesByTract, serviceTaxonomy = [];
+    var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
 
     function loadData() {
         d3.csv("data/schools.csv", function(d){
@@ -127,10 +128,71 @@ var Model = function() {
 
     function loadServicesData() {
         console.log('loading services data...');
-        d3.csv("data/services.csv", function(d){
-            servicesData.push(d);
-            $(document).trigger('loadServices');
+        d3.queue()
+            .defer(d3.json, "data/serviceTaxonomy.json")
+            .defer(d3.csv, "data/services.csv")
+            .await(analyzeServices);
+    }
+
+    function analyzeServices(error, taxonomy, services){
+        restructureServicesData(services, taxonomy);
+        // console.log(servicesData);
+        $(document).trigger('loadServices');
+    }
+
+
+    function restructureServicesData(data, taxonomy){
+        console.log('restructuring services data...');
+        data.forEach(function(d){
+            if(d['Latitude']){
+                var s = getServiceDetailsAtOrg(d, taxonomy);
+
+                var org = {
+                    name: d['Organization Name'],
+                    address: d['Address'],
+                    website: d['Website'],
+                    phone: d['Phone Number'],
+                    latitude: d['Latitude'],
+                    longitude: d['Longitude'],
+                    description: d['Description of Services'],
+                    servicesDetails: s[1],
+                    servicesOffered: s[0]
+                };
+
+                servicesData.push(org);
+            }
+        })
+    }
+
+
+    function getServiceDetailsAtOrg(org, taxonomy){
+        var details = {};
+        var servicesOffered = [];
+        serviceTypes.forEach(function(s){
+            // console.log(taxonomy[s]);
+            var subServicesPresent = [];
+            taxonomy[s]['children'].forEach(function(c){
+                if(org[c] == 1){
+                    subServicesPresent.push(c);
+                }//if
+            });//inner-loop
+            if(subServicesPresent.length != 0) servicesOffered.push(s);
+            details[s] = subServicesPresent;
         });
+
+        return [servicesOffered, details];
+    }
+
+
+    function getFilteredServices(sType){
+        // console.log(sType);
+        var filteredServices = [];
+        servicesData.forEach(function(s){
+            if(sType.some(a => s['servicesOffered'].includes(a))){
+                filteredServices.push(s);
+            }//if
+        });//loop
+        return filteredServices;
     }
 
 
@@ -313,7 +375,8 @@ var Model = function() {
         getVacantLots: getVacantLots,
         getSafePassagesData: getSafePassagesData,
         getBlockRaceDist: getBlockRaceDist,
-        getBlockGenAgeDist: getBlockGenAgeDist
+        getBlockGenAgeDist: getBlockGenAgeDist,
+        getFilteredServices: getFilteredServices
     }
 
 };
