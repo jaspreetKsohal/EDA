@@ -137,15 +137,27 @@ var View = function(){
         if(raceDist === undefined) {
             d3.select(".chart_race").append("h2").text("No Data Available");
         } else {
-            var waffle = new WaffleChart()
-                .selector(".chart_race")
-                .data(raceDist)
-                .useWidth(true)
-                .label("Race Distribution")
-                .size(10)
-                .gap(2)
-                .rows(10)
-                .rounded(true)();
+            // var waffle = new WaffleChart()
+            //     .selector(".chart_race")
+            //     .data(raceDist)
+            //     .useWidth(true)
+            //     .label("Race Distribution")
+            //     .size(10)
+            //     .gap(2)
+            //     .rows(10)
+            //     .rounded(true)();
+
+        var donut = donutChart()
+            .width(400)
+            .height(300)
+            .cornerRadius(3) // sets how rounded the corners are on each slice
+            .padAngle(0.015) // effectively dictates the gap between slices
+            .variable('count')
+            .category('race');
+
+        d3.select('.chart_race')
+            .datum(raceDist) // bind data to the div
+            .call(donut); // draw chart in div
         }
     };
 
