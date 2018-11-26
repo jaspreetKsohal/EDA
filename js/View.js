@@ -459,22 +459,22 @@ var View = function(){
 
     self.displayTimeline = function(data) {
 
-        console.log(data)
-        var svg = d3.select(".timeline").append("svg").attr("width", "100%"),
+        console.log(data);
+        var svg = d3.select(".timelineDIV").append("svg").attr("width", "100%"),
             margin = {top: 5, right: 20, bottom: 70, left: 30},
             margin2 = {top: 95, right: 20, bottom: 20, left: 30},
             width = +svg.node().getBoundingClientRect().width - margin.left - margin.right,
             height = +svg.node().getBoundingClientRect().height - margin.top - margin.bottom,
             height2 = +svg.node().getBoundingClientRect().height - margin2.top - margin2.bottom;
 
-        var parseDate = d3.timeParse("%Y-%m-%dT%H")
+        var parseDate = d3.timeParse("%Y-%m-%dT%H");
 
         data.forEach(function (d) {
             d.key = parseDate(d.key);
         });
         data.sort(function(a, b){
             return a.key - b.key
-        })
+        });
         var x = d3.scaleTime().range([0, width]),
             x2 = d3.scaleTime().range([0, width]),
             y = d3.scaleLinear().range([height, 0]),
@@ -593,7 +593,7 @@ var View = function(){
             .attr("height", height)
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .call(zoom);
-    }
+    };
 
     var publiclyAvailable = {
         initialize: function(){

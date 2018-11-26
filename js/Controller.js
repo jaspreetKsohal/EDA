@@ -12,14 +12,14 @@ var Controller = function(model, view){
 
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
-        console.log(selectedValue);
+        // console.log(selectedValue);
         if(selectedValue == 'heatmap'){
-            console.log('heatmap selected');
+            // console.log('heatmap selected');
             $('.heatmapDIV').show();
             $('.timelineDIV').hide();
         }
         else {
-            console.log('timeline selected');
+            // console.log('timeline selected');
             $('.heatmapDIV').hide();
             $('.timelineDIV').show();
         }
@@ -100,7 +100,7 @@ var Controller = function(model, view){
         console.log('crime loaded');
         view.showCrimeByCat(model.getCrimesByCat());
 
-        view.showCrimeTimeline(model.getCrimeTimeline())
+        view.showCrimeTimeline(model.getCrimeTimeline());
 
         var data = model.getCrimesDayVsHours(model.getCrimeData());
         view.addCrimesByHourHeatmap(data);

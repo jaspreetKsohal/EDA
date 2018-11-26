@@ -382,9 +382,9 @@ var Model = function() {
         // console.log('census Data');
         censusData.forEach(function(d){
             var population = d.properties.census['TOTAL_POPULATION'];
-            if(population['Total'] != 0){
+            // if(population['Total'] != 0){
                 filteredCensusData.push(d);
-            }
+            // }
         });
         return filteredCensusData;
     }
