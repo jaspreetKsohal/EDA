@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="leaflet/leaflet.css" />
         <link rel="stylesheet" href="leaflet_cluster/MarkerCluster.css" />
         <link rel="stylesheet" href="leaflet_cluster/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css" />
 
         <!--scripts-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -51,8 +52,8 @@
 
             <div class="details">
                 <div class="chart_crime_cat"></div>
-                <div class="details_school"></div>
-                <div class="details_services"></div>
+
+
                 <h3 id="censusTitle">Census Data</h3>
                 <div class="chart_race"></div>
                 <div class="chart_gen_age"></div>
@@ -60,7 +61,38 @@
             </div>
             <!--end details-->
 
-            <div class="timeline"></div>
+            <div class="timeline">
+                <!--options-->
+                <div id="options">
+                    <div class="pretty p-default p-round">
+                        <input type="radio" name="radio1" id="timeline" value="timeline" checked>
+                        <div class="state">
+                            <label>Timeline</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round">
+                        <input type="radio" name="radio1" id="heatmap" value="heatmap">
+                        <div class="state">
+                            <label>Heatmap</label>
+                        </div>
+                    </div>
+                </div>
+                <!--end options-->
+
+                <!--charts - timeline or heatmap-->
+                <div id="timeline-heatmap">
+
+                    <div class="timelineDIV"></div>
+
+                    <div class="heatmapDIV">
+                        <div id="hour-heatmap"></div>
+                        <div id="month-heatmap"></div>
+                    </div>
+
+                </div>
+                <!--end charts - timeline or heatmap-->
+            </div>
             <!--end timeline-->
         </div>
         <!--end wrapper-->

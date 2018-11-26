@@ -18,6 +18,7 @@ var Model = function() {
         });
     }
 
+
     function loadCensusData() {
         d3.json('data/censusData.geojson', function(error, mapData) {
             censusData = mapData.features;
@@ -34,6 +35,7 @@ var Model = function() {
         d3.csv("data/crimes.csv", function(d){
            crimeData.push(d);
            $(document).trigger('loadCrime');
+           getCrimesDayVsHours(crimeData[0]);
            aggCrimesByTract = getCrimesPerTract(crimeData[0]);
 
         });
@@ -127,6 +129,118 @@ var Model = function() {
     }
 
 
+    function nearestHour(date) {
+
+        date.setHours(date.getHours() + Math.round(date.getMinutes()/60));
+        date.setMinutes(0);
+
+        // console.log('after',date);
+        return date;
+    }
+
+    function getCrimesDayVsHours(data){
+        var tParameter = [];
+        data.forEach(function(d){
+           var date = new Date(d.date);
+            // console.log('before',date);
+           var day = date.getDay() == 0? 7 : date.getDay();
+
+           var hour = nearestHour(date).getHours() == 0? 24: nearestHour(date).getHours();
+
+           var value = 1;
+
+           tParameter.push({day: day, hour: hour, value: value});
+        });
+
+        //sorting first by day and then by hour
+        tParameter.sort(
+            function(a,b){
+                if (a.day==b.day){
+                    return (a.hour-b.hour);
+                } else {
+                    return (a.day-b.day);
+                }
+            });
+        // console.log(tParameter);
+
+        var aggData = d3.nest()
+            .key(function(d) { return d.day; })
+            .key(function(t) { return t.hour; })
+            .rollup(function(v) { return v.length; })
+            .entries(tParameter);
+
+        // console.log(aggData);
+
+        //flattening aggData
+        var filteredData = [];
+        aggData.forEach(function(d){
+            var day = d.key;
+
+            d.values.forEach(function(v){
+                filteredData.push({day: +day, hour: +v.key, value: +v.value});
+            });
+        });
+
+        return filteredData;
+    }
+
+    function getCrimesDayVsMonth(data) {
+        var tParameter = [];
+        data.forEach(function(d){
+            var date = new Date(d.date);
+            // console.log('before',date);
+            var day = date.getDay() == 0? 7 : date.getDay();
+
+            var month = date.getMonth() + 1;
+
+            var value = 1;
+
+            tParameter.push({day: day, month: month, value: value});
+        });
+
+        //sorting first by day and then by hour
+        tParameter.sort(
+            function(a,b){
+                if (a.day==b.day){
+                    return (a.month-b.month);
+                } else {
+                    return (a.day-b.day);
+                }
+            });
+        // console.log(tParameter);
+
+        var aggData = d3.nest()
+            .key(function(d) { return d.day; })
+            .key(function(t) { return t.month; })
+            .rollup(function(v) { return v.length; })
+            .entries(tParameter);
+
+        // console.log(aggData);
+
+        //flattening aggData
+        var filteredData = [];
+        aggData.forEach(function(d){
+            var day = d.key;
+
+            d.values.forEach(function(v){
+                filteredData.push({day: +day, month: +v.key, value: +v.value});
+            });
+        });
+
+        return filteredData;
+    }
+
+    function getBlockCrimeData(block) {
+        var filteredCrimes = [];
+        crimeData[0].forEach(function(c){
+            if(c.c_tract == block){
+                filteredCrimes.push(c);
+            }//if
+        })//forEach
+        return filteredCrimes;
+    }
+
+
     function loadServicesData() {
         console.log('loading services data...');
         d3.queue()
@@ -134,6 +248,7 @@ var Model = function() {
             .defer(d3.csv, "data/services.csv")
             .await(analyzeServices);
     }
+
 
     function analyzeServices(error, taxonomy, services){
         restructureServicesData(services, taxonomy);
@@ -232,7 +347,7 @@ var Model = function() {
     }
 
     function getCrimeData(){
-        return crimeData;
+        return crimeData[0];
     }
 
     function getCrimesByCat() {
@@ -392,7 +507,10 @@ var Model = function() {
         getBlockRaceDist: getBlockRaceDist,
         getBlockGenAgeDist: getBlockGenAgeDist,
         getFilteredServices: getFilteredServices,
-        getCrimeTimeline: getCrimeTimeline
+        getCrimeTimeline: getCrimeTimeline,
+        getCrimesDayVsHours: getCrimesDayVsHours,
+        getCrimesDayVsMonth: getCrimesDayVsMonth,
+        getBlockCrimeData: getBlockCrimeData
     }
 
 };

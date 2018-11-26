@@ -227,6 +227,142 @@ var View = function(){
     };
 
 
+    self.displayCrimesByHourHeatmap = function(data) {
+        var margin = {top: 30, right: 5, bottom: 20, left: 40};
+        // var width = d3.select('#hour-heatmap').node().getBoundingClientRect().width - margin.left - margin.right,
+            // height = 100 - margin.top - margin.bottom,
+        var width = $('#timeline-heatmap').width()/2 - margin.left - margin.right,
+            height = $('#timeline-heatmap').height() - margin.top - margin.bottom,
+            gridSize = Math.floor(width / 24),
+            buckets = 9,
+            colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+            days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+            times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12a", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12p"];
+
+        var svg = d3.select('#hour-heatmap').append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform','translate(' + margin.left + ',' + margin.top + ')');
+
+        var dayLabels = svg.selectAll('.dayLabel')
+            .data(days)
+            .enter().append('text')
+                .text(function(d) { return d; })
+                .attr('x', 0)
+                .attr('y', function(d, i) { return i * gridSize; })
+                .style('text-anchor', 'end')
+                .style('font-size', '10px')
+                .attr("transform", "translate(-4," + gridSize / 1.5 + ")")
+                .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
+
+        var timeLabels = svg.selectAll(".timeLabel")
+            .data(times)
+            .enter().append("text")
+                .text(function(d) { return d; })
+                .attr("x", function(d, i) { return i * gridSize; })
+                .attr("y", 0)
+                .style("text-anchor", "middle")
+                .style('font-size', '10px')
+                .attr("transform", "translate(" + gridSize / 2 + ", -6)")
+                .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
+
+        var arr = [];
+        data.forEach(function(d){
+            arr.push(d.value);
+        });
+
+        var colorScale = d3.scaleQuantile()
+            .domain(arr)
+            // .domain([0, buckets - 1, d3.max(data, function (d) { return d.value; })])
+            .range(colors);
+
+
+        var cards = svg.selectAll(".hour")
+            .data(data, function(d) {return d.day+':'+d.hour;});
+
+        cards.enter().append("rect")
+            .attr("x", function(d) { return (d.hour - 1) * gridSize; })
+            .attr("y", function(d) { return (d.day - 1) * gridSize; })
+            // .attr("rx", 1)
+            // .attr("ry", 1)
+            .attr("class", "hour bordered")
+            .attr("width", gridSize)
+            .attr("height", gridSize)
+            .style("fill", function(d) { return colorScale(d.value); })
+            .append('title')
+                .text(function(d) { return d.value; });
+
+        cards.exit().remove();
+    };
+
+
+    self.displayCrimesByMonthHeatmap = function(data) {
+        var margin = {top: 30, right: 5, bottom: 20, left: 40};
+        // var width = d3.select('#month-heatmap').node().getBoundingClientRect().width - margin.left - margin.right,
+        //     height = 200 - margin.top - margin.bottom,
+        var width = $('#timeline-heatmap').width()/3 - margin.left - margin.right,
+            height = $('#timeline-heatmap').height() - margin.top - margin.bottom,
+            gridSize = Math.floor(($('#timeline-heatmap').width()/2 - margin.left - margin.right) / 24),
+            buckets = 9,
+            colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+            days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+            months = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
+
+        var svg = d3.select('#month-heatmap').append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform','translate(' + margin.left + ',' + margin.top + ')');
+
+        var dayLabels = svg.selectAll('.dayLabel')
+            .data(days)
+            .enter().append('text')
+            .text(function(d) { return d; })
+            .attr('x', 0)
+            .attr('y', function(d, i) { return i * gridSize; })
+            .style('text-anchor', 'end')
+            .style('font-size', '10px')
+            .attr("transform", "translate(-4," + gridSize / 1.5 + ")")
+            .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
+
+        var monthLabels = svg.selectAll(".monthLabel")
+            .data(months)
+            .enter().append("text")
+            .text(function(d) { return d; })
+            .attr("x", function(d, i) { return i * gridSize; })
+            .attr("y", 0)
+            .style("text-anchor", "middle")
+            .style('font-size', '10px')
+            .attr("transform", "translate(" + gridSize / 2 + ", -6)");
+
+        var arr = [];
+        data.forEach(function(d){
+            arr.push(d.value);
+        });
+
+        var colorScale = d3.scaleQuantile()
+            .domain(arr)
+            .range(colors);
+
+
+        var cards = svg.selectAll(".month")
+            .data(data, function(d) {return d.day+':'+d.month;});
+
+        cards.enter().append("rect")
+            .attr("x", function(d) { return (d.month - 1) * gridSize; })
+            .attr("y", function(d) { return (d.day - 1) * gridSize; })
+            .attr("class", "month bordered")
+            .attr("width", gridSize)
+            .attr("height", gridSize)
+            .style("fill", function(d) { return colorScale(d.value); })
+            .append('title')
+            .text(function(d) { return d.value; });
+
+        cards.exit().remove();
+    };
+
+
     function onEachFeature(feature, layer){
         layer.on('click', function(e){
         //    console.log('Block selected',e.target.feature.properties.blockce10);
@@ -491,6 +627,14 @@ var View = function(){
         addCrimes: function(censusData){
             map.removeLayer(censusLayer);
             self.displayCrimes(censusData);
+        },
+
+        addCrimesByHourHeatmap: function(data){
+            self.displayCrimesByHourHeatmap(data);
+        },
+
+        addCrimesByMonthHeatmap: function(data){
+            self.displayCrimesByMonthHeatmap(data);
         },
 
         removeCrimes: function(){

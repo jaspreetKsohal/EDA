@@ -10,6 +10,22 @@ var Controller = function(model, view){
     var view = view || new View();
 
 
+    $('input[type=radio]').click(function(e){
+        var selectedValue = $('input[name=radio1]:checked').val();
+        console.log(selectedValue);
+        if(selectedValue == 'heatmap'){
+            console.log('heatmap selected');
+            $('.heatmapDIV').show();
+            $('.timelineDIV').hide();
+        }
+        else {
+            console.log('timeline selected');
+            $('.heatmapDIV').hide();
+            $('.timelineDIV').show();
+        }
+    });
+
+
     $('input[name=checkbox]').change(function(e){
         var arr = [];
         $('input.chkbox:checkbox:checked').each(function () {
@@ -83,13 +99,25 @@ var Controller = function(model, view){
     $(document).on('loadCrime', function(e) {
         console.log('crime loaded');
         view.showCrimeByCat(model.getCrimesByCat());
+
         view.showCrimeTimeline(model.getCrimeTimeline())
+
+        var data = model.getCrimesDayVsHours(model.getCrimeData());
+        view.addCrimesByHourHeatmap(data);
+
+        var data2 = model.getCrimesDayVsMonth(model.getCrimeData());
+        view.addCrimesByMonthHeatmap(data2);
+
     });
 
     $(document).on('blockSelected', function(e, info) {
         $("#censusTitle").text("Census Data - Block No.: " + info);
         view.removeRaceDist();
         view.removeGenAgeDist();
+
+        // var data = model.getCrimesDayVsHours(model.getBlockCrimeData(info));
+        // view.addCrimesByHourHeatmap(data);
+
         view.showRaceDist(model.getBlockRaceDist(info));
         view.showGenderAgeDist(model.getBlockGenAgeDist(info));
     });

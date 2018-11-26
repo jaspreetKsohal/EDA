@@ -208,6 +208,7 @@ polyline{
     font-size: 0.9em;
     font-style: italic;
 }
+
   /* end charts*/
 
   /* timeline */
@@ -229,3 +230,60 @@ polyline{
   }
 
   /* end timeline */
+
+
+/*heatmap*/
+rect.bordered {
+    stroke: #E6E6E6;
+    stroke-width:0.5px;
+}
+
+text.mono {
+    font-size: 9pt;
+    fill: #aaa;
+}
+
+text.axis-workweek {
+    fill: #000;
+}
+
+text.axis-worktime {
+    fill: #000;
+}
+/* end charts*/
+
+/*timeline*/
+#options {
+    font-size: 12px;
+    padding: 5px;
+    text-align: right;
+}
+
+#timeline-heatmap {
+    position: relative;
+    height: 85%;
+}
+
+#hour-heatmap {
+    float: left;
+    /*padding: 0 10px;*/
+}
+
+#month-heatmap {
+    /*float: right;*/
+}
+
+.heatmapDIV {
+    margin: auto;
+    /*width: 100%;*/
+    height: 100%;
+    padding: 0 8.2%;
+    display: none;
+}
+
+.timelineDIV {
+    background-color: #aaaaaa;
+    height: 100%;
+}
+/*timeline ends*/
+
