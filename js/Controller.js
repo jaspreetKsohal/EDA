@@ -83,6 +83,7 @@ var Controller = function(model, view){
     $(document).on('loadCrime', function(e) {
         console.log('crime loaded');
         view.showCrimeByCat(model.getCrimesByCat());
+        view.showCrimeTimeline(model.getCrimeTimeline())
     });
 
     $(document).on('blockSelected', function(e, info) {

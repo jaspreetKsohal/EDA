@@ -35,6 +35,7 @@ var Model = function() {
            crimeData.push(d);
            $(document).trigger('loadCrime');
            aggCrimesByTract = getCrimesPerTract(crimeData[0]);
+
         });
         // $.ajax({
         //     url: "https://data.cityofchicago.org/resource/6zsd-86xi.json?year=2018&$where=community_area in('67','68') AND latitude IS NOT NULL",
@@ -248,6 +249,20 @@ var Model = function() {
         return crimeByCat;
     }
 
+    function getCrimeTimeline() {
+        var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L");
+        var format = d3.timeFormat("%Y-%m-%dT%H");
+        crimeData[0].forEach(function(c) {
+            c.parsedDate = format(parseDate(c.date));
+        });
+        var crimeTl = d3.nest()
+            .key(function(d) { return d.parsedDate; })
+            .rollup(function(v) { return v.length; })
+            .entries(crimeData[0]);
+        
+        return crimeTl
+    }
+
     function getCensusData() {
         // console.log('census Data');
         censusData.forEach(function(d){
@@ -376,7 +391,8 @@ var Model = function() {
         getSafePassagesData: getSafePassagesData,
         getBlockRaceDist: getBlockRaceDist,
         getBlockGenAgeDist: getBlockGenAgeDist,
-        getFilteredServices: getFilteredServices
+        getFilteredServices: getFilteredServices,
+        getCrimeTimeline: getCrimeTimeline
     }
 
 };
