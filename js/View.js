@@ -52,15 +52,10 @@ var View = function(){
     };
 
 
-    function getColor(noOfCrimes){
-        return colorScale(noOfCrimes);
-    }
-
-
     function setCrimeChoropleth(feature){
         return {
             weight: 0,
-            fillColor: getColor(feature.properties.noOfCrimes),
+            fillColor: colorScale(feature.properties.noOfCrimes),
             fillOpacity: 0.2
         }
     }
@@ -68,7 +63,10 @@ var View = function(){
 
     self.displayCrimes = function(censusData) {
 
-        crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature});
+        if(!crimeLayer){
+            crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature});
+        }
+
         map.addLayer(crimeLayer);
 
         //check which layer active - if any other layer active bring it to top
