@@ -60,15 +60,36 @@ ul span {
 }
 
 .highlight {
-    color: #b1d7fb !important;
+    color: #3388ff !important;
 }
 
 .medium {
-    font-size: 45px;
+    font-size: 45px !important;
 }
 
 .filter-option{
-    color: #1a1937;
+    /*color: #1a1937;*/
+    font-size: 35px;
+}
+
+table {
+    width: 100%;
+    position: relative;
+    top: 25vh;
+}
+
+td {
+    text-align: center;
+    padding-bottom: 25px;
+}
+
+tr:hover {
+    color: #c3c3c3;
+    cursor: pointer;
+}
+
+.title {
+    font-size: 16px;
 }
 
 #service-types {
@@ -286,4 +307,3 @@ text.axis-worktime {
     height: 100%;
 }
 /*timeline ends*/
-

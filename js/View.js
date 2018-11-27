@@ -71,6 +71,20 @@ var View = function(){
         crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature});
         map.addLayer(crimeLayer);
 
+        //check which layer active - if any other layer active bring it to top
+        if(map.hasLayer(schoolGroup)){
+            schoolGroup.bringToFront();
+        }
+        if(map.hasLayer(serviceGroup)){
+            serviceGroup.bringToFront();
+        }
+        if(map.hasLayer(safePassageGroup)){
+            safePassageGroup.bringToFront();
+        }
+        if(map.hasLayer(vacantLotGroup)){
+            vacantLotGroup.bringToFront();
+        }
+
         // markers = L.markerClusterGroup({
         //     spiderfyOnMaxZoom: false
         // });
