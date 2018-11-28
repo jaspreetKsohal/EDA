@@ -51,12 +51,33 @@ var View = function(){
         map.addLayer(schoolGroup);
     };
 
+    function getColor(crimes){
+        if(crimes == undefined){
+            return 'white';
+        }
+        else if(crimes >= 0 && crimes < 10){
+            return '#fcbba1';
+        }
+        else if(crimes >= 10 && crimes < 20){
+            return '#fb6a4a';
+        }
+        else if(crimes >= 20 && crimes < 30){
+            return '#cb181d'
+        }
+        else if(crimes >= 30 && crimes < 40){
+            return '#a50f15'
+        }
+        else {
+            return '#67000d'
+        }
+    }
 
     function setCrimeChoropleth(feature){
         return {
             weight: 0,
-            fillColor: colorScale(feature.properties.noOfCrimes),
-            fillOpacity: 0.2
+            // fillColor: colorScale(feature.properties.noOfCrimes),
+            fillColor: getColor(feature.properties.noOfCrimes),
+            fillOpacity: 0.5
         }
     }
 
@@ -64,7 +85,10 @@ var View = function(){
     self.displayCrimes = function(censusData) {
 
         if(!crimeLayer){
-            crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature});
+            crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature})
+                .bindTooltip(function (layer) {
+                    return String(layer.feature.properties.noOfCrimes); //merely sets the tooltip text
+                });
         }
 
         map.addLayer(crimeLayer);

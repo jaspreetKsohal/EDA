@@ -32,7 +32,7 @@ var Model = function() {
     function loadCrimesData() {
         console.log('loading crimes data...');
 
-        d3.csv("data/crimes.csv", function(d){
+        d3.csv("data/crimes2017.csv", function(d){
            crimeData.push(d);
            $(document).trigger('loadCrime');
            getCrimesDayVsHours(crimeData[0]);
