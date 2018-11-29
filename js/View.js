@@ -189,8 +189,8 @@ var View = function(){
             //     .rounded(true)();
 
         var donut = donutChart()
-            .width(400)
-            .height(300)
+            .width($(".details").width())
+            .height($('.wrapper').height() * 0.3)
             .cornerRadius(3) // sets how rounded the corners are on each slice
             .padAngle(0.015) // effectively dictates the gap between slices
             .variable('count')
@@ -210,9 +210,9 @@ var View = function(){
 
     self.displayCrimesByCat = function(crimeData) {
 
-        var margin = {top: 0, right: 5, bottom: 20, left: 10};
+        var margin = {top: 0, right: 5, bottom: 10, left: 10};
         var width = d3.select(".chart_crime_cat").node().getBoundingClientRect().width;
-        var height = 200;
+        var height = $('.wrapper').height() * 0.3;
         var x = d3.scaleBand()
             .domain(crimeData.map(d => d.key))
             .range([margin.left, width - margin.right])
@@ -422,7 +422,7 @@ var View = function(){
         // console.log(genAgeDist);
         var margin = {top: 0, right: 5, bottom: 20, left: 10};
         var width = d3.select(".chart_crime_cat").node().getBoundingClientRect().width;
-        var height = 150;
+        var height = $('.wrapper').height() * 0.3;
         var x0 = d3.scaleBand()
             .domain(genAgeDist.map(d => d.age))
             .range([margin.left, width - margin.right])
@@ -503,12 +503,14 @@ var View = function(){
     self.displayTimeline = function(data) {
 
         console.log(data);
-        var svg = d3.select(".timelineDIV").append("svg").attr("width", "100%"),
-            margin = {top: 5, right: 20, bottom: 70, left: 30},
-            margin2 = {top: 95, right: 20, bottom: 20, left: 30},
-            width = +svg.node().getBoundingClientRect().width - margin.left - margin.right,
-            height = +svg.node().getBoundingClientRect().height - margin.top - margin.bottom,
-            height2 = +svg.node().getBoundingClientRect().height - margin2.top - margin2.bottom;
+        var svg = d3.select(".timelineDIV").append("svg").attr("width", "100%").attr('height', "100%"),
+            svgHt = $('.timelineDIV').height(),
+            svgwd = $('.timelineDIV').width(),
+            height = svgHt * 0.55,
+            height2 = svgHt * 0.35,
+            margin = {top: svgHt * 0.05, right: svgwd * 0.05, bottom: svgHt * 0.4, left: svgwd * 0.05},
+            margin2 = {top: svgHt * 0.6, right: svgwd * 0.05, bottom: svgHt * 0.05, left: svgwd * 0.05},
+            width = $('.timelineDIV').width() - margin.left - margin.right;
 
         var parseDate = d3.timeParse("%Y-%m-%dT%H");
 
