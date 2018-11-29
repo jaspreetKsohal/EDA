@@ -55,6 +55,9 @@ var View = function(){
         if(crimes == undefined){
             return 'white';
         }
+        else if (crimes == 0){
+            return '#fef1ec';
+        }
         else if(crimes >= 0 && crimes < 10){
             return '#fcbba1';
         }
@@ -82,9 +85,9 @@ var View = function(){
     }
 
 
-    self.displayCrimes = function(censusData) {
-
-        if(!crimeLayer){
+    self.displayCrimes = function(censusData, isUpdate = false) {
+        //update is true if a timeperiod is selected/modified in the timeline
+        if(!crimeLayer || isUpdate){
             crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature})
                 .bindTooltip(function (layer) {
                     return String(layer.feature.properties.noOfCrimes); //merely sets the tooltip text
@@ -544,6 +547,7 @@ var View = function(){
                 focus.select(".area").attr("d", area);
                 focus.select(".axis--x").call(xAxis);
                 context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+                $(document).trigger('dateUpdate', {"start": xAxis.scale().domain()[0], "end": xAxis.scale().domain()[1]});
             });
 
         var area = d3.area()
@@ -660,9 +664,9 @@ var View = function(){
             map.removeLayer(schoolGroup);
         },
 
-        addCrimes: function(censusData){
+        addCrimes: function(censusData, isUpdate){
             map.removeLayer(censusLayer);
-            self.displayCrimes(censusData);
+            self.displayCrimes(censusData, isUpdate);
         },
 
         addCrimesByHourHeatmap: function(data){

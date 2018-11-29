@@ -124,4 +124,14 @@ var Controller = function(model, view){
         view.showRaceDist(model.getBlockRaceDist(info));
         view.showGenderAgeDist(model.getBlockGenAgeDist(info));
     });
+
+    $(document).on('dateUpdate', function(e, info) {
+        console.log(info);
+        var data = model.getDateFilteredCrime(info);
+        if(view.isLayerActive("crime")){
+            console.log('choropleth was active');
+            view.removeCrimes();
+            view.addCrimes(data, true);
+        }
+    });
 };

@@ -98,6 +98,8 @@ var Model = function() {
 
     function addCrimesToCensus(crimes){
         censusData.forEach(function(census){
+            //reset the no of crimes for each block to 0
+            census.properties.noOfCrimes = 0;
             crimes.forEach(function(crime){
                 if(crime.key == census.properties.tract_bloc){
                     census.properties.noOfCrimes = crime.value;
@@ -389,6 +391,18 @@ var Model = function() {
         return filteredCensusData;
     }
 
+    function getDateFilteredCrime(dateRange) {
+        //filter the crimes data
+        var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L");
+        var filtCrimes = crimeData[0].filter(function (d) { return parseDate(d.date) > dateRange["start"] & parseDate(d.date) < dateRange["end"]; })
+        //aggregate by block
+        var aggFiltCrimes = getCrimesPerTract(filtCrimes);
+        //add to census data
+        //return census data
+        addCrimesToCensus(aggFiltCrimes);
+        return censusData;
+    }
+
     function getTotalRaceDist() {
         //extract race distribution here
         
@@ -510,7 +524,8 @@ var Model = function() {
         getCrimeTimeline: getCrimeTimeline,
         getCrimesDayVsHours: getCrimesDayVsHours,
         getCrimesDayVsMonth: getCrimesDayVsMonth,
-        getBlockCrimeData: getBlockCrimeData
+        getBlockCrimeData: getBlockCrimeData,
+        getDateFilteredCrime: getDateFilteredCrime
     }
 
 };
