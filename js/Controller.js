@@ -117,12 +117,14 @@ var Controller = function(model, view){
         $("#censusTitle").text("Census Data - Block No.: " + info);
         view.removeRaceDist();
         view.removeGenAgeDist();
+        view.removeCrimesByCat();
 
         // var data = model.getCrimesDayVsHours(model.getBlockCrimeData(info));
         // view.addCrimesByHourHeatmap(data);
 
         view.showRaceDist(model.getBlockRaceDist(info));
         view.showGenderAgeDist(model.getBlockGenAgeDist(info));
+        view.showCrimeByCat(model.getCrimesByCat(info));
     });
 
     $(document).on('dateUpdate', function(e, info) {

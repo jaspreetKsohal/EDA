@@ -243,7 +243,7 @@ var View = function(){
             .attr("class", "bar")
             .enter().append("rect")
             .style("fill", function(d, i) {
-                if(d.value < 1200) return "lightgrey";
+                if(i > 2) return "lightgrey";
                 else return "#FF6666";
             })
             .attr("x", d => x(d.key))
@@ -496,6 +496,10 @@ var View = function(){
         d3.select('.chart_gen_age').selectAll("*").remove();
     };
 
+    self.removeCrimesByCat = function() {
+        d3.select('.chart_crime_cat').selectAll("*").remove();
+    };
+
     self.displayTimeline = function(data) {
 
         console.log(data);
@@ -714,6 +718,10 @@ var View = function(){
 
         removeGenAgeDist: function() {
             self.removeGenAgeDist();
+        },
+
+        removeCrimesByCat: function() {
+            self.removeCrimesByCat();
         },
 
         showCrimeByCat: function(crimeDist) {

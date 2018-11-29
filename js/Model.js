@@ -352,12 +352,17 @@ var Model = function() {
         return crimeData[0];
     }
 
-    function getCrimesByCat() {
-        
+    function getCrimesByCat(block) {
+        //filter by block
+        if(block) {
+            var crimes = crimeData[0].filter(function (d) { return d.c_tract == block})
+        } else {
+            var crimes = crimeData[0];
+        }     
         var crimeByCat = d3.nest()
             .key(function(d) { return d.primary_type; })
             .rollup(function(v) { return v.length; })
-            .entries(crimeData[0]);
+            .entries(crimes);
 
         crimeByCat.sort(function(a, b){
             return b.value-a.value
