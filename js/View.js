@@ -80,7 +80,7 @@ var View = function(){
             weight: 0,
             // fillColor: colorScale(feature.properties.noOfCrimes),
             fillColor: getColor(feature.properties.noOfCrimes),
-            fillOpacity: 0.5
+            fillOpacity: 0.3
         }
     }
 
