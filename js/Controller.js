@@ -217,7 +217,8 @@ var Controller = function(model, view){
         $('.landing-page').fadeOut('slow', function() {
             $('.landing-page').remove();
             $('.overlay').fadeIn( 'slow', function() {
-                d3.select('.overlay').style('display', 'block');
+                $('.overlay').removeClass('hidden');
+                $('.overlay').addClass('show');
             });
         });
     });

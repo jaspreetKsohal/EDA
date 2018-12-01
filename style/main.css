@@ -86,12 +86,22 @@ body {
 /*overlay story*/
 .overlay {
     background-color: #000;
-    opacity: 0.7;
+    opacity: 0.8;
     width: 100vw;
     height: 100vh;
     position: absolute;
     z-index: 2000;
-    display: none;
+}
+
+.overlay.hidden {
+    visibility: hidden;
+}
+
+.overlay.show {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-gap: 2px;
 }
 
 /*Layout structure*/
