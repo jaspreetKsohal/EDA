@@ -319,8 +319,15 @@ var Model = function() {
             d.forEach(function(r){
                 vacantLotsData.push(r);
             });
+            console.log('vacant lots', vacantLotsData);
         });
 
+        // d3.json("data/WestEnglewoodLandInventory.json",function(d){
+        //     d.forEach(function(r){
+        //         vacantLotsData.push(r);
+        //     });
+        //     console.log('vacant lots', vacantLotsData);
+        // });
         d3.csv("data/West_Englewood_Land_Inventory.csv", function(d){
             d.forEach(function(r){
                 vacantLotsData.push(r);

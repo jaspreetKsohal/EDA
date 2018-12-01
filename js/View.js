@@ -80,7 +80,7 @@ var View = function(){
             weight: 0,
             // fillColor: colorScale(feature.properties.noOfCrimes),
             fillColor: getColor(feature.properties.noOfCrimes),
-            fillOpacity: 0.3
+            fillOpacity: 0.6
         }
     }
 
@@ -88,6 +88,9 @@ var View = function(){
     self.displayCrimes = function(censusData, isUpdate = false) {
         //update is true if a timeperiod is selected/modified in the timeline
         if(!crimeLayer || isUpdate){
+            if(isUpdate){
+                crimeLayer.clearLayers();
+            }
             crimeLayer = L.geoJSON(censusData, {style: setCrimeChoropleth, onEachFeature: onEachFeature})
                 .bindTooltip(function (layer) {
                     return String(layer.feature.properties.noOfCrimes); //merely sets the tooltip text
@@ -426,7 +429,7 @@ var View = function(){
             }
            
         });
-    }
+    };
 
 
     self.displayCensusBlocks = function(censusData){
@@ -688,7 +691,11 @@ var View = function(){
         },
 
         addCrimes: function(censusData, isUpdate){
-            map.removeLayer(censusLayer);
+            if(!isUpdate){
+                console.log('removed census layer');
+                map.removeLayer(censusLayer);
+            }
+
             self.displayCrimes(censusData, isUpdate);
         },
 
@@ -700,10 +707,12 @@ var View = function(){
             self.displayCrimesByMonthHeatmap(data);
         },
 
-        removeCrimes: function(){
-          // map.removeLayer(crimeGroup);
+        removeCrimes: function(isUpdate){
             map.removeLayer(crimeLayer);
-            map.addLayer(censusLayer);
+            if(!isUpdate){
+                console.log('added census layer');
+                map.addLayer(censusLayer);
+            }
         },
 
         addVacantLots: function(vacantLotData){

@@ -71,11 +71,9 @@ var Controller = function(model, view){
         }//if-school
         else if(filter === 'crime'){
             if(view.isLayerActive(filter)){
-                console.log('choropleth was active');
                 view.removeCrimes();
             } else {
                 // view.addCrimes(model.getCrimeData()[0]);
-                console.log('choropleth was not active');
                 view.addCrimes(model.getCensusData());
             }
         }//if-crime
@@ -156,11 +154,10 @@ var Controller = function(model, view){
     });
 
     $(document).on('dateUpdate', function(e, info) {
-        console.log(info);
+        // console.log(info);
         var data = model.getDateFilteredCrime(info);
         if(view.isLayerActive("crime")){
-            console.log('choropleth was active');
-            view.removeCrimes();
+            view.removeCrimes(true);
             view.addCrimes(data, true);
         }
     });
