@@ -104,6 +104,29 @@ body {
     grid-gap: 2px;
 }
 
+.prev {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+}
+
+.next {
+    grid-column: 5 / 6;
+    grid-row: 3 / 4;
+}
+
+.story-progress {
+    grid-column: 3 / 4;
+    grid-row: 5 / 6;
+}
+
+.content {
+    grid-column: 2 / span 3;
+    grid-row: 2 / span 3;
+    background-color: #E6E6E6;
+}
+
+/*overlay end*/
+
 /*Layout structure*/
 .wrapper {
     display: grid;
