@@ -214,6 +214,11 @@ var Controller = function(model, view){
 
     $('#beginBtn').on('click', function () {
         console.log('begin');
-        $('.landing-page').fadeOut('slow', function() { $('.landing-page').remove(); })
+        $('.landing-page').fadeOut('slow', function() {
+            $('.landing-page').remove();
+            $('.overlay').fadeIn( 'slow', function() {
+                d3.select('.overlay').style('display', 'block');
+            });
+        });
     });
 };

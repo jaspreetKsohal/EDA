@@ -83,6 +83,17 @@ body {
 }
 /*landing page ends*/
 
+/*overlay story*/
+.overlay {
+    background-color: #000;
+    opacity: 0.7;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: 2000;
+    display: none;
+}
+
 /*Layout structure*/
 .wrapper {
     display: grid;
