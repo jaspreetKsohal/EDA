@@ -14,6 +14,9 @@ var Controller = function(model, view){
     var isCompare = false,
         lastChanged = 2;
 
+    //Current step for the story progress
+    var storyIndex = 0;
+
 
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
@@ -219,7 +222,18 @@ var Controller = function(model, view){
             $('.overlay').fadeIn( 'slow', function() {
                 $('.overlay').removeClass('hidden');
                 $('.overlay').addClass('show');
+                view.showContentForIndex(storyIndex);
             });
         });
+    });
+
+    $('.next').on('click', function() {
+        storyIndex++;
+        view.showContentForIndex(storyIndex);
+    });
+
+    $('.prev').on('click', function() {
+        storyIndex--;
+        view.showContentForIndex(storyIndex);
     });
 };

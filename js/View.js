@@ -661,6 +661,26 @@ var View = function(){
             .call(zoom);
     };
 
+    self.showContentForIndex = function(index) {
+        var content = d3.select('.content');
+        //change the content
+        //remove the current content
+        content.selectAll("*").remove();
+
+        //add content according to index
+        switch(index) {
+            case 0: {
+                content.append('h1').text('page 1');
+                break;
+            }
+            case 1: {
+                content.append('h1').text('page 2');
+                break;
+            }
+        }
+        //change story progress
+    }
+
     var publiclyAvailable = {
         initialize: function(){
             self.displayMap();
@@ -758,6 +778,10 @@ var View = function(){
 
         showCrimeTimeline: function(crimes) {
             self.displayTimeline(crimes);
+        },
+
+        showContentForIndex: function(index) {
+            self.showContentForIndex(index);
         },
 
         isLayerActive: function(layer){
