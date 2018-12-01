@@ -13,6 +13,8 @@ var App = App || {};
         var view = new View();
         var controller = new Controller(model, view);
 
+        var totalBlocksSelected = 0;
+
         view.initialize();
         model.loadData();
         model.loadCrimesData();

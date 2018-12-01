@@ -90,13 +90,22 @@
             <!--end map-->
 
             <div class="details">
-                <div class="chart_crime_cat"></div>
-
-
-                <h3 id="censusTitle">Census Data</h3>
-                <div class="chart_race"></div>
-                <div class="chart_gen_age"></div>
-                
+                <div class="comp-ctrl">
+                    <input id="overviewBtn" class="button" type="button" value="Show Overview">
+                    <input id="compareBtn" class="button" type="button" value="Compare Blocks">
+                </div>
+                <div class="detailblock1">
+                    <p class="compareText" id='b1CompTxt'>Click on a block to compare</p>
+                    <div class="chart_crime_cat" id="block1crime"></div>
+                    <div class="chart_race" id="block1race"></div>
+                    <div class="chart_gen_age" id="block1gen"></div>
+                </div>
+                <div class="detailblock2">
+                    <p class="compareText" id='b2CompTxt'>Click on a block to compare</p>
+                    <div class="chart_crime_cat" id="block2crime"></div>
+                    <div class="chart_race" id="block2race"></div>
+                    <div class="chart_gen_age" id="block2gen"></div>
+                </div>
             </div>
             <!--end details-->
 

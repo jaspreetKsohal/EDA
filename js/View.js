@@ -174,9 +174,9 @@ var View = function(){
     };
 
 
-    self.displayRaceDist = function(raceDist) {
+    self.displayRaceDist = function(raceDist, container) {
         if(raceDist === undefined) {
-            d3.select(".chart_race").append("h2").text("No Data Available");
+            d3.select(container).append("h2").text("No Data Available");
         } else {
             // var waffle = new WaffleChart()
             //     .selector(".chart_race")
@@ -189,48 +189,48 @@ var View = function(){
             //     .rounded(true)();
 
         var donut = donutChart()
-            .width($(".details").width())
-            .height($('.wrapper').height() * 0.3)
+            .width($(container).width())
+            .height($('.wrapper').height() * 0.25)
             .cornerRadius(3) // sets how rounded the corners are on each slice
             .padAngle(0.015) // effectively dictates the gap between slices
             .variable('count')
             .category('race');
 
-        d3.select('.chart_race')
+        d3.select(container)
             .datum(raceDist) // bind data to the div
             .call(donut); // draw chart in div
         }
     };
 
 
-    self.removeRaceDist = function() {
-        d3.select('.chart_race').selectAll("*").remove();
+    self.removeRaceDist = function(container) {
+        d3.select(container).selectAll("*").remove();
     };
 
 
-    self.displayCrimesByCat = function(crimeData) {
+    self.displayCrimesByCat = function(crimeData, container) {
 
         var margin = {top: 0, right: 5, bottom: 10, left: 10};
-        var width = d3.select(".chart_crime_cat").node().getBoundingClientRect().width;
-        var height = $('.wrapper').height() * 0.3;
+        var width = d3.select(container).node().getBoundingClientRect().width;
+        var height = $('.wrapper').height() * 0.25;
         var x = d3.scaleBand()
             .domain(crimeData.map(d => d.key))
-            .range([margin.left, width - margin.right])
+            .range([margin.left, Math.min(width - margin.right, crimeData.length * 25)])
             .padding(0.1);
         var y = d3.scaleLinear()
             .domain([0, d3.max(crimeData, d => d.value)]).nice()
             .range([height - margin.bottom, margin.top]);
         
-        var div = d3.select(".chart_crime_cat").append("div")
+        var div = d3.select(container).append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.select(".chart_crime_cat")
+        d3.select(container)
             .append("div")
             .attr("class", "label")
             .text("Crimes by Category in Englewood");
 
-        var chart_svg = d3.select(".chart_crime_cat")
+        var chart_svg = d3.select(container)
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -249,7 +249,7 @@ var View = function(){
             .attr("x", d => x(d.key))
             .attr("y", d => y(d.value))
             .attr("height", d => y(0) - y(d.value))
-            .attr("width", x.bandwidth())
+            .attr("width", 20)
             .on("mouseover", function(d) {
                 div.transition()
                 .duration(200)
@@ -405,9 +405,26 @@ var View = function(){
     function onEachFeature(feature, layer){
         layer.on('click', function(e){
         //    console.log('Block selected',e.target.feature.properties.blockce10);
-           var blockSelected = e.target.feature.properties.tract_bloc;
-           // console.log('Selected Block:', blockSelected);
-           $(document).trigger('blockSelected', blockSelected);
+            var blockSelected = e.target.feature.properties.tract_bloc;
+            if(!e.target.feature.properties.isSelected) {
+                console.log('Selected Block:', blockSelected);
+                e.target.feature.properties.isSelected = true;
+                e.target.setStyle({
+                    weight: 0.7,
+                    fillColor: '#666',
+                    color: '#666'
+                });
+                $(document).trigger('blockSelected', blockSelected);
+            } else {
+                e.target.feature.properties.isSelected = false;
+                e.target.setStyle({
+                    fillColor: '#A0A0A0',
+                    color: '#A0A0A0', 
+                    weight: 0.2
+                });
+                $(document).trigger('blockDeselected', blockSelected);
+            }
+           
         });
     }
 
@@ -418,11 +435,11 @@ var View = function(){
     };
 
 
-    self.displayGenderAgeDist = function(genAgeDist) {
+    self.displayGenderAgeDist = function(genAgeDist, container) {
         // console.log(genAgeDist);
         var margin = {top: 0, right: 5, bottom: 20, left: 10};
-        var width = d3.select(".chart_crime_cat").node().getBoundingClientRect().width;
-        var height = $('.wrapper').height() * 0.3;
+        var width = d3.select(container).node().getBoundingClientRect().width;
+        var height = $('.wrapper').height() * 0.25;
         var x0 = d3.scaleBand()
             .domain(genAgeDist.map(d => d.age))
             .range([margin.left, width - margin.right])
@@ -439,16 +456,16 @@ var View = function(){
         var z = d3.scaleOrdinal()
             .range(["steelblue", "palevioletred"]);
 
-        var div = d3.select(".chart_gen_age").append("div")
+        var div = d3.select(container).append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.select(".chart_gen_age")
+        d3.select(container)
             .append("div")
             .attr("class", "label")
             .text("Gender-Age Distribution");
 
-        var chart_svg = d3.select(".chart_gen_age")
+        var chart_svg = d3.select(container)
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -492,12 +509,12 @@ var View = function(){
     };
 
 
-    self.removeGenAgeDist = function() {
-        d3.select('.chart_gen_age').selectAll("*").remove();
+    self.removeGenAgeDist = function(container) {
+        d3.select(container).selectAll("*").remove();
     };
 
-    self.removeCrimesByCat = function() {
-        d3.select('.chart_crime_cat').selectAll("*").remove();
+    self.removeCrimesByCat = function(container) {
+        d3.select(container).selectAll("*").remove();
     };
 
     self.displayTimeline = function(data) {
@@ -706,28 +723,28 @@ var View = function(){
         },
 
 
-        showRaceDist: function(raceDist) {
-            self.displayRaceDist(raceDist);
+        showRaceDist: function(raceDist, container) {
+            self.displayRaceDist(raceDist, container);
         },
 
-        removeRaceDist: function() {
-            self.removeRaceDist();
+        removeRaceDist: function(container) {
+            self.removeRaceDist(container);
         },
 
-        showGenderAgeDist: function(genAgeDist) {
-            self.displayGenderAgeDist(genAgeDist);
+        showGenderAgeDist: function(genAgeDist, container) {
+            self.displayGenderAgeDist(genAgeDist, container);
         },
 
-        removeGenAgeDist: function() {
-            self.removeGenAgeDist();
+        removeGenAgeDist: function(container) {
+            self.removeGenAgeDist(container);
         },
 
-        removeCrimesByCat: function() {
-            self.removeCrimesByCat();
+        removeCrimesByCat: function(container) {
+            self.removeCrimesByCat(container);
         },
 
-        showCrimeByCat: function(crimeDist) {
-            self.displayCrimesByCat(crimeDist);
+        showCrimeByCat: function(crimeDist, container) {
+            self.displayCrimesByCat(crimeDist, container);
         },
 
         showCrimeTimeline: function(crimes) {

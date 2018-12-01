@@ -9,6 +9,11 @@ var Controller = function(model, view){
     var model = model || new Model();
     var view = view || new View();
 
+    var block1 = '';
+    var block2 = '';
+    var isCompare = false,
+        lastChanged = 2;
+
 
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
@@ -95,13 +100,13 @@ var Controller = function(model, view){
         // total race dist from the model
         view.addCensusBlocks(model.getCensusData());
         
-        view.showRaceDist(model.getTotalRaceDist());
-        view.showGenderAgeDist(model.getTotalGenderAgeDist());
+        view.showRaceDist(model.getTotalRaceDist(), '#block1race');
+        view.showGenderAgeDist(model.getTotalGenderAgeDist(), '#block1gen');
     });
 
     $(document).on('loadCrime', function(e) {
         console.log('crime loaded');
-        view.showCrimeByCat(model.getCrimesByCat());
+        view.showCrimeByCat(model.getCrimesByCat(), '#block1crime');
 
         view.showCrimeTimeline(model.getCrimeTimeline());
 
@@ -114,17 +119,40 @@ var Controller = function(model, view){
     });
 
     $(document).on('blockSelected', function(e, info) {
-        $("#censusTitle").text("Census Data - Block No.: " + info);
-        view.removeRaceDist();
-        view.removeGenAgeDist();
-        view.removeCrimesByCat();
+        if(isCompare) {
+            if (lastChanged == 1) {
+                block2 = info;
+                lastChanged = 2;
+            } else {
+                block1 = info;
+                lastChanged = 1;
+            }
+        } else {
+            block1 = info;
+            lastChanged = 1;
+        }
+        view.removeRaceDist('#block' + lastChanged + 'race');
+        view.removeGenAgeDist('#block' + lastChanged + 'gen');
+        view.removeCrimesByCat('#block' + lastChanged + 'crime');
 
-        // var data = model.getCrimesDayVsHours(model.getBlockCrimeData(info));
-        // view.addCrimesByHourHeatmap(data);
+        //hide the compare text
+        $('#b' + lastChanged + 'CompTxt').removeClass('show')
+        
 
-        view.showRaceDist(model.getBlockRaceDist(info));
-        view.showGenderAgeDist(model.getBlockGenAgeDist(info));
-        view.showCrimeByCat(model.getCrimesByCat(info));
+
+        view.showRaceDist(model.getBlockRaceDist(info), '#block' + lastChanged + 'race');
+        view.showGenderAgeDist(model.getBlockGenAgeDist(info), '#block' + lastChanged + 'gen');
+        view.showCrimeByCat(model.getCrimesByCat(info), '#block' + lastChanged + 'crime');
+
+        
+    });
+
+    $(document).on('blockDeselected', function(e, info) {
+        console.log(info)
+        if(block1 == info) {
+            block1 = '';
+        }
+        console.log('block1 ', block1);        
     });
 
     $(document).on('dateUpdate', function(e, info) {
@@ -136,4 +164,54 @@ var Controller = function(model, view){
             view.addCrimes(data, true);
         }
     });
+
+    $("#overviewBtn").on('click', function (e) {
+        //hide details for block2
+        showOverview()
+        
+    });
+
+    $('#compareBtn').on('click', function() {
+        isCompare = !isCompare;
+        if(isCompare) {
+            $('#compareBtn').attr('value', 'Stop Comparing');
+            //split the details for 2 blocks
+            view.removeRaceDist('#block1race');
+            view.removeGenAgeDist('#block1gen');
+            view.removeCrimesByCat('#block1crime');
+            $('.detailblock1').addClass('compare')
+            $('.detailblock2').addClass('compare')
+            $('#b2CompTxt').addClass('show')
+            if(block1 == '') {
+                $('#b1CompTxt').addClass('show')
+            } else {
+                view.showRaceDist(model.getBlockRaceDist(block1), '#block' + lastChanged + 'race');
+                view.showGenderAgeDist(model.getBlockGenAgeDist(block1), '#block' + lastChanged + 'gen');
+                view.showCrimeByCat(model.getCrimesByCat(block1), '#block' + lastChanged + 'crime');
+            }
+        }
+        else {
+            showOverview();
+        } 
+    });
+
+    function showOverview() {
+        $('.detailblock1').removeClass('compare')
+        $('.detailblock2').removeClass('compare')
+        view.removeRaceDist('#block1race');
+        view.removeGenAgeDist('#block1gen');
+        view.removeCrimesByCat('#block1crime');
+        view.removeRaceDist('#block2race');
+        view.removeGenAgeDist('#block2gen');
+        view.removeCrimesByCat('#block2crime');
+
+        $('#compareBtn').attr('value', 'Compare Blocks');
+
+        // var data = model.getCrimesDayVsHours(model.getBlockCrimeData(info));
+        // view.addCrimesByHourHeatmap(data);
+
+        view.showRaceDist(model.getTotalRaceDist(), '#block1race');
+        view.showGenderAgeDist(model.getTotalGenderAgeDist(), '#block1gen');
+        view.showCrimeByCat(model.getCrimesByCat(), '#block1crime');
+    }
 };
