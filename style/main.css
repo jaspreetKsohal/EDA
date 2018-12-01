@@ -70,6 +70,16 @@ body {
     grid-column: 11 / span 3;
     grid-row: 9 / span 6;
     background-color: #333333;
+    align-content: center;
+}
+
+.beginBtn {
+    background-color: #aaa;
+    border: 0;
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    cursor: pointer;
 }
 /*landing page ends*/
 

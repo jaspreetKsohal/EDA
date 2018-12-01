@@ -211,4 +211,9 @@ var Controller = function(model, view){
         view.showGenderAgeDist(model.getTotalGenderAgeDist(), '#block1gen');
         view.showCrimeByCat(model.getCrimesByCat(), '#block1crime');
     }
+
+    $('#beginBtn').on('click', function () {
+        console.log('begin');
+        $('.landing-page').fadeOut('slow', function() { $('.landing-page').remove(); })
+    });
 };
