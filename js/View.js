@@ -679,12 +679,17 @@ var View = function(controller){
         switch(index) {
             // Englewood history
             case 0: {
-                content.append('h1').text('0');
+                var imgDiv = content.append('div')
+                // imgDiv.append('img').attr('src', 'images/63andhalsted.jpg');
+                // imgDiv.append('p').text('<a href="https://www.wbez.org/shows/wbez-blogs/englewood-past-and-present/a434694c-8793-492e-a713-5882faf4c5da">Source</a>')
+                content.append('h3').text('Centered around 63rd and Halsted, Englewood was a dyanmic and prosperous community with population of over 100,000');
+                content.append('h3').text('I hosted major departmental stores like sears and was the busiest shopping district outside the loop');
                 break;
             }
             // englewood downfall
             case 1: {
-                content.append('h1').text('1');
+                content.append('h3').text('However the latter half of the 20th century witnessed the downfall of a thriving community');
+                content.append('h3').text('Due to the competition from the shopping malls, 63rd and Halsted shopping district lost its fame resulting in abandonment and deterioration of many shops and buildings.');
                 break;
             }
             // famous buidlings closed or demolished
@@ -730,7 +735,7 @@ var View = function(controller){
             }
             // peak of crimes and poverty
             case 3: {
-                content.append('h1').text('3');
+                content.append('h3').text('The years that followed were marked by high crime rate and poverty');
                 break;
             }
             // efforts taken: vacant lots
