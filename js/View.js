@@ -411,6 +411,7 @@ var View = function(controller){
         layer.on('click', function(e){
         //    console.log('Block selected',e.target.feature.properties.blockce10);
             var blockSelected = e.target.feature.properties.tract_bloc;
+            var target = e.target;
             if(!e.target.feature.properties.isSelected) {
                 console.log('Selected Block:', blockSelected);
                 e.target.feature.properties.isSelected = true;
@@ -419,19 +420,21 @@ var View = function(controller){
                     fillColor: '#666',
                     color: '#666'
                 });
-                $(document).trigger('blockSelected', blockSelected);
+                $(document).trigger('blockSelected', {blockSelected: blockSelected, target: target});
             } else {
                 e.target.feature.properties.isSelected = false;
-                e.target.setStyle({
-                    fillColor: '#A0A0A0',
-                    color: '#A0A0A0', 
-                    weight: 0.2
-                });
-                $(document).trigger('blockDeselected', blockSelected);
+                removeBlockHighlight(e.target);
+                $(document).trigger('blockDeselected', {blockSelected: blockSelected, target: target});
             }
            
         });
     };
+
+    self.removeBlockHighlight = function(target) {
+        if(target) {
+            censusLayer.resetStyle(target);
+        }
+    }
 
 
     self.displayCensusBlocks = function(censusData){
@@ -916,6 +919,10 @@ var View = function(controller){
 
         showCrimeTimeline: function(crimes) {
             self.displayTimeline(crimes);
+        },
+
+        removeBlockHighlight: function(target) {
+            self.removeBlockHighlight(target);
         },
 
         showContentForIndex: function(index) {

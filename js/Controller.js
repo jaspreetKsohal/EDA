@@ -11,6 +11,8 @@ var Controller = function(model, view){
 
     var block1 = '';
     var block2 = '';
+    var block1Target = undefined;
+    var block2Target = undefined;
     var isCompare = false,
         lastChanged = 2;
 
@@ -119,15 +121,27 @@ var Controller = function(model, view){
     $(document).on('blockSelected', function(e, info) {
         if(isCompare) {
             if (lastChanged == 1) {
-                block2 = info;
+                block2 = info.blockSelected;
+                //first remove the highlight
+                view.removeBlockHighlight(block2Target);
+                //update variable to hold new block target
+                block2Target = info.target;
                 lastChanged = 2;
             } else {
-                block1 = info;
+                block1 = info.blockSelected;
                 lastChanged = 1;
+                //first remove the highlight
+                view.removeBlockHighlight(block1Target);
+                //update variable to hold new block target
+                block1Target = info.target;
             }
         } else {
-            block1 = info;
+            block1 = info.blockSelected;
             lastChanged = 1;
+            //first remove the highlight
+            view.removeBlockHighlight(block1Target);
+            //update variable to hold new block target
+            block1Target = info.target;
         }
         view.removeRaceDist('#block' + lastChanged + 'race');
         view.removeGenAgeDist('#block' + lastChanged + 'gen');
@@ -138,16 +152,16 @@ var Controller = function(model, view){
         
 
 
-        view.showRaceDist(model.getBlockRaceDist(info), '#block' + lastChanged + 'race');
-        view.showGenderAgeDist(model.getBlockGenAgeDist(info), '#block' + lastChanged + 'gen');
-        view.showCrimeByCat(model.getCrimesByCat(info), '#block' + lastChanged + 'crime');
+        view.showRaceDist(model.getBlockRaceDist(info.blockSelected), '#block' + lastChanged + 'race');
+        view.showGenderAgeDist(model.getBlockGenAgeDist(info.blockSelected), '#block' + lastChanged + 'gen');
+        view.showCrimeByCat(model.getCrimesByCat(info.blockSelected), '#block' + lastChanged + 'crime');
 
         
     });
 
     $(document).on('blockDeselected', function(e, info) {
         console.log(info)
-        if(block1 == info) {
+        if(block1 == info.blockSelected) {
             block1 = '';
         }
         console.log('block1 ', block1);        
@@ -201,7 +215,16 @@ var Controller = function(model, view){
         view.removeRaceDist('#block2race');
         view.removeGenAgeDist('#block2gen');
         view.removeCrimesByCat('#block2crime');
+        //first remove the highlight
+        view.removeBlockHighlight(block2Target);
+        view.removeBlockHighlight(block1Target);
+        
+        //update variable to hold new block target
+        block2Target = undefined;
+        block1Target = undefined;
 
+        block1 = '';
+        block2 = '';
         $('#compareBtn').attr('value', 'Compare Blocks');
 
         // var data = model.getCrimesDayVsHours(model.getBlockCrimeData(info));
