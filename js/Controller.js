@@ -17,7 +17,6 @@ var Controller = function(model, view){
     //Current step for the story progress
     var storyIndex = 0;
 
-
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
         // console.log(selectedValue);
@@ -33,7 +32,6 @@ var Controller = function(model, view){
         }
     });
 
-
     $('input[name=checkbox]').change(function(e){
         var arr = [];
         $('input.chkbox:checkbox:checked').each(function () {
@@ -45,7 +43,6 @@ var Controller = function(model, view){
         }
         view.addServices(model.getFilteredServices(arr));
     });
-
 
     $('td').on('click', function(event){
 
@@ -228,6 +225,7 @@ var Controller = function(model, view){
     });
 
     $('.next').on('click', function() {
+        if(storyIndex == 2 || storyIndex == 5) storyIndex++;
         storyIndex++;
         view.showContentForIndex(storyIndex);
     });

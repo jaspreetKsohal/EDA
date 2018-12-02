@@ -4,7 +4,7 @@
 
 var App = App || {};
 
-var View = function(){
+var View = function(controller){
 
     var self = this;
     var map;
@@ -661,6 +661,9 @@ var View = function(){
             .call(zoom);
     };
 
+    var markergroup1 = L.layerGroup();
+    var markergroup2 = L.layerGroup();
+
     self.showContentForIndex = function(index) {
         var content = d3.select('.content');
         //change the content
@@ -669,17 +672,150 @@ var View = function(){
 
         //add content according to index
         switch(index) {
+            // Englewood history
             case 0: {
-                content.append('h1').text('page 1');
+                content.append('h1').text('0');
                 break;
             }
+            // englewood downfall
             case 1: {
-                content.append('h1').text('page 2');
+                content.append('h1').text('1');
+                break;
+            }
+            // famous buidlings closed or demolished
+            case 2: {
+                $('.overlay').fadeOut('slow',function(){
+                   var southtown = L.marker([41.779911, -87.641739]).addTo(markergroup1);
+                   var masonic = L.marker([41.777750, -87.646330]).addTo(markergroup1);
+
+                   map.addLayer(markergroup1);
+                   var container1 = $('<div/>');
+
+                   container1.on('click', '.btn1', function() {
+                        masonic.closePopup();
+                        southtown.openPopup();
+                   });
+
+                   container1.html(
+                       '<h4>Masonic Temple</h4> <br> ' +
+                       '<button class="btn1">Next</button>'
+                   );
+
+                   masonic.bindPopup(container1[0]).openPopup();
+
+                   var container2 = $('<div />');
+
+                   container2.on('click', '.btn2', function() {
+                       southtown.closePopup();
+                       $('.overlay').fadeIn('slow');
+                       map.removeLayer(markergroup1);
+                       self.showContentForIndex(3);
+                   });
+
+                   container2.html(
+                       '<h4>Southtown Theatre</h4> <br> ' +
+                       '<button class="btn2">Next</button>'
+                   );
+
+                   southtown.bindPopup(container2[0]);
+
+                });
+
+                break;
+            }
+            // peak of crimes and poverty
+            case 3: {
+                content.append('h1').text('3');
+                break;
+            }
+            // efforts taken: vacant lots
+            case 4: {
+                content.append('h1').text('4');
+                break;
+            }
+            // vacant lots examples
+            case 5: {
+                $('.overlay').fadeOut('slow').promise().done(function() {
+                    var story = true;
+                    var position = $('#vacant-lot')[0].getBoundingClientRect();
+                    var top = position.top, left = position.left;
+                    var width = position.width, height = position.height;
+                    var topPos = height/2 + top, leftPos = width/2 + left;
+
+                    $('body').append('<div id="pulse" class="pulsating-circle"></div>');
+
+                    $('.pulsating-circle').css({top: topPos, left: leftPos, width: '50px', height: '50px'});
+
+                    $('td').on('click', function() {
+                        if(story){
+                            var filter = $(event.currentTarget).find(':first-child').attr('id');
+                            if(filter == 'vacant-lot' && story){
+                                $('#pulse').remove();
+                                var yale = L.marker([41.774570, -87.631220]).addTo(markergroup2);
+                                var honroe = L.marker([41.777210, -87.669770]).addTo(markergroup2);
+
+                                map.addLayer(markergroup2);
+
+                                var container1 = $('<div/>');
+
+                                container1.on('click', '.btn1', function() {
+                                    honroe.closePopup();
+                                    yale.openPopup();
+                                });
+
+                                container1.html(
+                                    '<h4>Honroe - Vacant Lot</h4> <br> ' +
+                                    '<button class="btn1">Next</button>'
+                                );
+
+                                honroe.bindPopup(container1[0]).openPopup();
+
+                                var container2 = $('<div />');
+
+                                container2.on('click', '.btn2', function() {
+                                    yale.closePopup();
+                                    $('.overlay').fadeIn('slow');
+                                    map.removeLayer(markergroup2);
+                                    self.showContentForIndex(6);
+                                    story = false;
+                                });
+
+                                container2.html(
+                                    '<h4>Yale Apartments</h4> <br> ' +
+                                    '<button class="btn2">Next</button>'
+                                );
+
+                                yale.bindPopup(container2[0]);
+                            }
+                        }
+                    });
+                });
+                break;
+            }
+            // safe passages
+            case 6: {
+                content.append('h1').text('6');
+                break;
+            }
+
+            case 7: {
+                content.append('h1').text('7');
+                break;
+            }
+            //call to action
+            case 8: {
+                content.append('h1').text('8');
+                $('#next').remove();
+                content.append('button').text('Explore').attr('id', 'explore');
+                $('#explore').on('click', function(){
+                    console.log('explore');
+                    $('.overlay').fadeOut('slow');
+                });
                 break;
             }
         }
         //change story progress
-    }
+    };
 
     var publiclyAvailable = {
         initialize: function(){
