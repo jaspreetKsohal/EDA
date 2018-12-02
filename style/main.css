@@ -129,7 +129,7 @@ body {
     grid-row: 5 / 6;
 }
 
-.content {
+.story-content {
     grid-column: 2 / span 3;
     grid-row: 2 / span 3;
     background-color: #E6E6E6;

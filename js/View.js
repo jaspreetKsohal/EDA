@@ -670,7 +670,7 @@ var View = function(controller){
     var markergroup2 = L.layerGroup();
 
     self.showContentForIndex = function(index) {
-        var content = d3.select('.content');
+        var content = d3.select('.story-content');
         //change the content
         //remove the current content
         content.selectAll("*").remove();
