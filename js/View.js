@@ -20,17 +20,17 @@ var View = function(controller){
         //     .setView([41.7753, -87.6416], 14);
 
         map = L.map('map').setView([41.774876, -87.656801], 14);
-        // L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-        //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        //     // subdomains: 'abcd',
-        //     maxZoom: 19
-        // }).addTo(map);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
+            // subdomains: 'abcd',
             maxZoom: 19
         }).addTo(map);
+
+        // L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        //     subdomains: 'abcd',
+        //     maxZoom: 19
+        // }).addTo(map);
 
     };
 
@@ -44,7 +44,7 @@ var View = function(controller){
 
         schoolData.forEach(function(s, index){
             var latlng = L.latLng(s.Latitude, s.Longitude);
-            L.circle( latlng, {radius: 30, color: '#5e8df7', weight: 0, fillOpacity: 1}).addTo(schoolGroup)
+            L.circle( latlng, {radius: 30, color: '#2d97f2', weight: 0, fillOpacity: 1}).addTo(schoolGroup)
                 .bindPopup("<b>" + s['Organization Name'] + " </b></br>Address: " + s['Address']);
         });
 
@@ -59,19 +59,19 @@ var View = function(controller){
             return '#fef1ec';
         }
         else if(crimes >= 0 && crimes < 10){
-            return '#fcbba1';
+            return '#eecbc7';
         }
         else if(crimes >= 10 && crimes < 20){
-            return '#fb6a4a';
+            return '#e4a2a4';
         }
         else if(crimes >= 20 && crimes < 30){
-            return '#cb181d'
+            return '#c98496'
         }
         else if(crimes >= 30 && crimes < 40){
-            return '#a50f15'
+            return '#a25a72'
         }
         else {
-            return '#67000d'
+            return '#843c54'
         }
     }
 
@@ -80,7 +80,7 @@ var View = function(controller){
             weight: 0,
             // fillColor: colorScale(feature.properties.noOfCrimes),
             fillColor: getColor(feature.properties.noOfCrimes),
-            fillOpacity: 0.6
+            fillOpacity: 0.5
         }
     }
 
@@ -136,7 +136,7 @@ var View = function(controller){
 
         serviceData.forEach(function(s){
             var latlng = L.latLng(s.latitude, s.longitude);
-            L.circle(latlng, {radius: 25, color: '#f08a6b',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
+            L.circle(latlng, {radius: 25, color: '#e57287',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
                 .bindPopup("<b>" + s['name'] + "</b></br>" + "Address: " + s['address'] + "</br>" + "<a href='" + s['website'] + "' target='_blank'>Website</a></br>"
                 + "Phone Number: " + "<a href='tel:" + s['phone'] + "' target='_blank'>" + s['phone'] + "</a></br>"
                 + "Description: " + "<p class='service-description'>" + s['description'] + "</p>");
@@ -158,7 +158,7 @@ var View = function(controller){
             var loc = str.split(',');
 
             var latlng = L.latLng(loc[0], loc[1]);
-            L.circle(latlng, {radius: 20, color: '#8ca0ae', weight: 0, fillOpacity: 1}).addTo(vacantLotGroup)
+            L.circle(latlng, {radius: 20, color: '#7a7a7a', weight: 0, fillOpacity: 0.6}).addTo(vacantLotGroup)
                 .bindPopup("Address: " + v['Address'] + "</br> Area: " + v['Sq. Ft.'] + " sq. ft");
         });
 
@@ -170,7 +170,7 @@ var View = function(controller){
         safePassageGroup = L.featureGroup();
 
         safePassagesData.forEach(function(s){
-            L.geoJSON(s['the_geom']).addTo(safePassageGroup);
+            L.geoJSON(s['the_geom'], {fillColor: "#2d97f2", weight: 2}).addTo(safePassageGroup);
         });
 
         map.addLayer(safePassageGroup);
@@ -247,7 +247,7 @@ var View = function(controller){
             .enter().append("rect")
             .style("fill", function(d, i) {
                 if(i > 2) return "lightgrey";
-                else return "#FF6666";
+                else return "#986c7a";
             })
             .attr("x", d => x(d.key))
             .attr("y", d => y(d.value))
@@ -277,7 +277,8 @@ var View = function(controller){
             height = $('#timeline-heatmap').height() - margin.top - margin.bottom,
             gridSize = Math.floor(width / 24),
             buckets = 9,
-            colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+            // colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+            colors = ["#fef1ec","#eecbc7","#e4a2a4","#c98496","#a25a72","#843c54"],
             days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
             times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12a", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12p"];
 
@@ -347,7 +348,8 @@ var View = function(controller){
             height = $('#timeline-heatmap').height() - margin.top - margin.bottom,
             gridSize = Math.floor(($('#timeline-heatmap').width()/2 - margin.left - margin.right) / 24),
             buckets = 9,
-            colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+            // colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+            colors = ["#fef1ec","#eecbc7","#e4a2a4","#c98496","#a25a72","#843c54"],
             days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
             months = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
 
@@ -457,7 +459,7 @@ var View = function(controller){
             .range([height - margin.bottom, margin.top]);
 
         var z = d3.scaleOrdinal()
-            .range(["steelblue", "palevioletred"]);
+            .range(["#6ca5dd", "#c98496"]);
 
         var div = d3.select(container).append("div")
             .attr("class", "tooltip")
