@@ -7,7 +7,8 @@ body {
 
 /*landing page*/
 .landing-page{
-    background-color: #c3c3c3;
+    /*background-color: #c3c3c3;*/
+    background-image: linear-gradient(to bottom, #48c6ef 0%, #6f86d6 100%); /* Fly high */
     width: 100vw;
     height: 100vh;
     position: absolute;
@@ -379,7 +380,7 @@ tr:hover {
 }
 
 .tooltip-title {
-    font-size: 2em !important;
+    font-size: 1.5em !important;
     text-align: center;
     text-transform: uppercase;
 }
@@ -411,7 +412,7 @@ tr:hover {
     transform: translateY(-2px);
 }
 
-#selectVacantLots {
+#selectVacantLots, #selectFilters {
     background-color: #6ca6dd;
     width: 200px;
     height: 50px;
@@ -419,7 +420,20 @@ tr:hover {
     z-index: 1800;
     padding: 1%;
     text-align: center;
-    line-height: 50px;
+    /*line-height: 50px;*/
+    display: flex;
+    align-items: center;
+}
+
+#step6 {
+    width: 277px;
+    /*height: 244px;*/
+    position: absolute;
+    z-index: 1450;
+    padding: 30px;
+    border-radius: 8%;
+    background-color: white;
+    box-shadow: 4px 4px 30px #adadad;
 }
 /*tooltip ends*/
 

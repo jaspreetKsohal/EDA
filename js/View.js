@@ -679,7 +679,7 @@ var View = function(controller){
         switch(index) {
             // Englewood history
             case 0: {
-                var imgDiv = content.append('div')
+                var imgDiv = content.append('div');
                 // imgDiv.append('img').attr('src', 'images/63andhalsted.jpg');
                 // imgDiv.append('p').text('<a href="https://www.wbez.org/shows/wbez-blogs/englewood-past-and-present/a434694c-8793-492e-a713-5882faf4c5da">Source</a>')
                 content.append('h3').text('Centered around 63rd and Halsted, Englewood was a dyanmic and prosperous community with population of over 100,000');
@@ -720,6 +720,7 @@ var View = function(controller){
                     // });
 
                    masonic.bindPopup(container1[0]).openPopup();
+                   // map.setView(new L.latLng(41.777750, -87.646330), 14);
 
                    var container2 = $('<div />');
 
@@ -727,6 +728,7 @@ var View = function(controller){
                        southtown.closePopup();
                        $('.overlay').fadeIn('slow');
                        map.removeLayer(markergroup1);
+                       map.setView(new L.latLng(41.774876, -87.656801), 14);
                        self.showContentForIndex(3);
                    });
 
@@ -741,7 +743,6 @@ var View = function(controller){
                    southtown.bindPopup(container2[0]);
 
                 });
-
                 break;
             }
             // peak of crimes and poverty
@@ -757,7 +758,7 @@ var View = function(controller){
             // vacant lots examples
             case 5: {
                 $('.overlay').fadeOut('slow').promise().done(function() {
-                    var story = true;
+                    var story = true, step5 = true;
                     var position = $('#vacant-lot')[0].getBoundingClientRect();
                     var top = position.top, left = position.left;
                     var width = position.width, height = position.height;
@@ -773,7 +774,7 @@ var View = function(controller){
                     $('#selectVacantLots').css({top: topPos, left: filtersWidth + 10});
 
                     $('td').on('click', function() {
-                        if(story){
+                        if(story && step5){
                             var filter = $(event.currentTarget).find(':first-child').attr('id');
                             if(filter == 'vacant-lot' && story){
                                 $('#pulse').remove();
@@ -785,32 +786,124 @@ var View = function(controller){
 
                                 var container1 = $('<div/>');
 
-                                container1.on('click', '.btn1', function() {
+                                container1.on('click', '#honroe', function() {
                                     honroe.closePopup();
                                     yale.openPopup();
                                 });
 
                                 container1.html(
-                                    '<h4>Honroe - Vacant Lot</h4> <br> ' +
-                                    '<button class="btn1">Next</button>'
+                                    '<img src="images/peaceGarden.jpg" width="100%" height="100%" id="honroe" /> <br>' +
+                                    '<h2 class="tooltip-title">Vacant Lot to Community Garden</h2> <br> ' +
+                                    '<p class="tooltip-text custom-margin">I Grow Chicago, a nonprofit community organization in Englewood ' +
+                                    'converted a vacant lot into Community Garden.</p> <br>' +
+                                    '<p class="tooltip-text custom-margin"><i>"litter filled lot transformed into vibrant source of food, healing and connection ' +
+                                    'to self, community and earth."</i></p> <br>' +
+                                    '<p class="tooltip-text custom-margin"><b>- I Grow Chicago</b></p> <br>' +
+                                    '<button id="honroe" class="btn">Next</button>'
                                 );
 
                                 honroe.bindPopup(container1[0]).openPopup();
+                                // map.setView(new L.latLng(41.777210, -87.669770), 14);
 
                                 var container2 = $('<div />');
 
-                                container2.on('click', '.btn2', function() {
+                                container2.on('click', '#yale', function() {
+                                    step5 = false;
                                     yale.closePopup();
-                                    $('.overlay').fadeIn('slow');
+
                                     map.removeLayer(markergroup2);
                                     map.setView(new L.latLng(41.774876, -87.656801), 14);
-                                    self.showContentForIndex(6);
-                                    story = false;
+
+
+                                    $('#vacant-lot').parent().removeClass('highlight');
+                                    map.removeLayer(vacantLotGroup);
+
+                                    var schoolPos = $('#school')[0].getBoundingClientRect();
+                                    var crimePos = $('#crime')[0].getBoundingClientRect();
+                                    var passagePos = $('#safe-passage')[0].getBoundingClientRect();
+
+                                    var schoolTop = schoolPos.height / 2 + schoolPos.top,
+                                        schoolLeft = schoolPos.width / 2 + schoolPos.left,
+                                        crimeTop = crimePos.height / 2 + crimePos.top,
+                                        crimeLeft = crimePos.width / 2 + crimePos.left,
+                                        passageTop = passagePos.height / 2 + passagePos.top,
+                                        passageLeft = passagePos.width / 2 + passagePos.left;
+
+                                    $('body').append('<div id="schools-pulse" class="pulsating-circle"></div>');
+                                    $('body').append('<div id="crimes-pulse" class="pulsating-circle"></div>');
+                                    $('body').append('<div id="passages-pulse" class="pulsating-circle"></div>');
+
+                                    $('#schools-pulse').css({top: schoolTop, left: schoolLeft, width: '50px', height: '50px'});
+                                    $('#crimes-pulse').css({top: crimeTop, left: crimeLeft, width: '50px', height: '50px'});
+                                    $('#passages-pulse').css({top: passageTop, left: passageLeft, width: '50px', height: '50px'});
+
+                                    $('body').append('<div id="selectFilters" class="instructions-tooltip"> Select the Schools, Crimes and Safe-Passages filter</div>');
+
+                                    $('#selectFilters').css({top: crimeTop, left: filtersWidth + 10});
+
+                                    var counter = 0, step6 = true;
+                                    $('td').on('click', function(){
+                                        console.log('something clicked');
+                                        console.log(story);
+                                       if(story && step6){
+                                           console.log('story mode on');
+                                           var filter = $(event.currentTarget).find(':first-child').attr('id');
+                                           console.log(filter + ' selected');
+
+                                           console.log(counter);
+                                           if(filter == 'school') counter++;
+                                           if(filter == 'crime') counter++;
+                                           if(filter == 'safe-passage') counter++;
+
+                                           if(counter == 3){
+                                               $('#schools-pulse').remove();
+                                               $('#crimes-pulse').remove();
+                                               $('#passages-pulse').remove();
+                                               $('#selectFilters').remove();
+                                               story = false;
+                                               step6 = false;
+
+                                               $('body').append(
+                                                   '<div id="step6">' +
+                                                        // '<img src="images/passage.jpg" width="100%" height="100%"/>' +
+                                                        '<h2 class="tooltip-title">Safe Passage Program</h2>' +
+                                                        '<p class="tooltip-text">This program not only allows safe passage to students to and from schools but also provides ' +
+                                                        'opportunities to parents and residents to get involved in the community as a safe passage worker.</p>' +
+                                                        '<button id="passage" class="btn">Next</button>' +
+                                                   '</div>'
+                                               );
+
+                                               $('#step6').css({top: filtersWidth/2, left: filtersWidth + 60});
+
+                                               $('#passage').on('click', function(){
+                                                    map.removeLayer(crimeLayer);
+                                                    map.addLayer(censusLayer);
+                                                    map.removeLayer(safePassageGroup);
+                                                    map.removeLayer(schoolGroup);
+                                                   $('#numberSchools').remove();
+
+                                                   $('#school').parent().removeClass('highlight');
+                                                   $('#crime').parent().removeClass('highlight');
+                                                   $('#safe-passage').parent().removeClass('highlight');
+
+                                                   $('#step6').remove();
+                                                   $('.overlay').fadeIn('slow');
+                                                   self.showContentForIndex(6);
+                                               });
+                                           }//if
+
+                                       }//if-story
+
+                                    });
                                 });
 
                                 container2.html(
-                                    '<h4>Yale Apartments</h4> <br> ' +
-                                    '<button class="btn2">Next</button>'
+                                    '<img src="images/YaleApartments.jpg" width="100%" height="100%" id="yale" /> <br>' +
+                                    '<h2 class="tooltip-title">Yale Building</h2> <br> ' +
+                                    '<p class="tooltip-text custom-margin">Lot of work went into restoring this building which now serves as home to ' +
+                                    'senior citizens.  It features a large, open atrium and sprawling glass arcade that fills the building with natural light. ' +
+                                    'One of the best example of transformation.</p><br>' +
+                                    '<button id="yale" class="btn">Next</button>'
                                 );
 
                                 yale.bindPopup(container2[0]);
@@ -820,19 +913,8 @@ var View = function(controller){
                 });
                 break;
             }
-            // safe passages
-            case 6: {
-                content.append('h1').text('6');
-                break;
-            }
-
-            case 7: {
-                content.append('h1').text('7');
-                break;
-            }
             //call to action
-            case 8: {
-                content.append('h1').text('8');
+            case 6: {
                 $('#next').remove();
                 content.append('button').text('Explore').attr('id', 'explore');
                 $('#explore').on('click', function(){
