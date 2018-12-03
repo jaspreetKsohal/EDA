@@ -701,21 +701,29 @@ var View = function(controller){
                    map.addLayer(markergroup1);
                    var container1 = $('<div/>');
 
-                   container1.on('click', '.btn1', function() {
+                   container1.on('click', '#masonic-btn', function() {
                         masonic.closePopup();
                         southtown.openPopup();
                    });
 
                    container1.html(
-                       '<h4>Masonic Temple</h4> <br> ' +
-                       '<button class="btn1">Next</button>'
+                       '<img src="images/MasonicTemple.jpg" width="100%" height="100%" id="masonic-temple" /> <br>' +
+                       '<h2 class="tooltip-title">Masonic Temple</h2>' +
+                       '<p class="tooltip-text custom-margin">an extraordinary landmark, reminder of Englewood\'s past glory.</p> <br> <p class="tooltip-text custom-margin">Demolished in February 2018.</p> <br>' +
+                       '<button id="masonic-btn" class="btn">Next</button>'
                    );
+
+                    // map.on('popupopen', function(e) {
+                    //     var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
+                    //     px.y -= e.popup._container.clientHeight/2;// find the height of the popup container, divide by 2, subtract from the Y axis of marker location
+                    //     map.panTo(map.unproject(px),{animate: true}); // pan to new center
+                    // });
 
                    masonic.bindPopup(container1[0]).openPopup();
 
                    var container2 = $('<div />');
 
-                   container2.on('click', '.btn2', function() {
+                   container2.on('click', '#southtown-btn', function() {
                        southtown.closePopup();
                        $('.overlay').fadeIn('slow');
                        map.removeLayer(markergroup1);
@@ -723,8 +731,11 @@ var View = function(controller){
                    });
 
                    container2.html(
-                       '<h4>Southtown Theatre</h4> <br> ' +
-                       '<button class="btn2">Next</button>'
+                       '<img src="images/southtown.jpg" width="100%" height="100%" id="southtown" /> <br>' +
+                       '<h2 class="tooltip-title">Southtown Theatre</h2> <br> ' +
+                       '<p class="tooltip-text custom-margin">The phenominal Southtown Theatre, known for its grandeur and duck pond loby, was converted to discount store and ultimately ' +
+                       'demolished in 1991.</p> <br>' +
+                       '<button id="southtown-btn" class="btn">Next</button>'
                    );
 
                    southtown.bindPopup(container2[0]);
@@ -751,16 +762,22 @@ var View = function(controller){
                     var top = position.top, left = position.left;
                     var width = position.width, height = position.height;
                     var topPos = height/2 + top, leftPos = width/2 + left;
+                    var filtersWidth = $('.filters')[0].getBoundingClientRect().width;
 
                     $('body').append('<div id="pulse" class="pulsating-circle"></div>');
 
                     $('.pulsating-circle').css({top: topPos, left: leftPos, width: '50px', height: '50px'});
+
+                    $('body').append('<div id="selectVacantLots" class="instructions-tooltip"> Select the Vacant-Lots filter</div>');
+
+                    $('#selectVacantLots').css({top: topPos, left: filtersWidth + 10});
 
                     $('td').on('click', function() {
                         if(story){
                             var filter = $(event.currentTarget).find(':first-child').attr('id');
                             if(filter == 'vacant-lot' && story){
                                 $('#pulse').remove();
+                                $('#selectVacantLots').remove();
                                 var yale = L.marker([41.774570, -87.631220]).addTo(markergroup2);
                                 var honroe = L.marker([41.777210, -87.669770]).addTo(markergroup2);
 
@@ -786,6 +803,7 @@ var View = function(controller){
                                     yale.closePopup();
                                     $('.overlay').fadeIn('slow');
                                     map.removeLayer(markergroup2);
+                                    map.setView(new L.latLng(41.774876, -87.656801), 14);
                                     self.showContentForIndex(6);
                                     story = false;
                                 });
