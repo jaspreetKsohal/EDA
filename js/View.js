@@ -685,7 +685,7 @@ var View = function(controller){
                 content.append(
                     '<div id="step0">' +
                     '<img src="images/englewood.jpg" width="100%"/>' +
-                    '<p id="step0-content" class="overlay-content tooltip-text">Centered around 63rd and Halsted, Englewood was a dynamic and prosperous community with ' +
+                    '<p id="step0-content" class="overlay-content">Centered around 63rd and Halsted, Englewood was a dynamic and prosperous community with ' +
                     'population of over 90,000. <br><br> It hosted major departmental stores like Sears and was the busiest shopping district outside the loop.</p>' +
                     '</div>'
                 );
@@ -696,7 +696,7 @@ var View = function(controller){
                 content.append(
                     '<div id="step1">' +
                     '<img src="images/masonic-demolished.jpg" width="100%"/>' +
-                    '<p id="step1-content" class="overlay-content tooltip-text">However, the latter half of the 20th century witnessed the downfall of this' +
+                    '<p id="step1-content" class="overlay-content">However, the latter half of the 20th century witnessed the downfall of this' +
                     ' thriving community. <br><br> Due to the competition from shopping malls, 63rd and Halsted lost its fame resulting in abandonment and ' +
                     'deterioration of many shops and buildings.</p>' +
                     '</div>'
@@ -718,9 +718,9 @@ var View = function(controller){
                    });
 
                    container1.html(
-                       '<img src="images/MasonicTemple.jpg" width="100%" height="100%" id="masonic-temple" /> <br>' +
+                       '<img src="images/MasonicTemple.jpg" id="masonic-temple" /> <br>' +
                        '<h2 class="tooltip-title">Masonic Temple</h2>' +
-                       '<p class="tooltip-text custom-margin">An extraordinary landmark, reminder of Englewood\'s past glory.</p> <br> <p class="tooltip-text custom-margin">Demolished in February 2018.</p> <br>' +
+                       '<p class="tooltip-text custom-margin">An extraordinary landmark, reminder of Englewood\'s past glory. <br>Demolished in February 2018.</p> <br>' +
                        '<button id="masonic-btn" class="btn-width btn">Next</button>'
                    );
 
@@ -744,8 +744,8 @@ var View = function(controller){
                    });
 
                    container2.html(
-                       '<img src="images/southtown.jpg" width="100%" height="100%" id="southtown" /> <br>' +
-                       '<h2 class="tooltip-title">Southtown Theatre</h2> <br> ' +
+                       '<img src="images/southtown.jpg" id="southtown" /> <br>' +
+                       '<h2 class="tooltip-title">Southtown Theatre</h2>' +
                        '<p class="tooltip-text custom-margin">The phenominal Southtown Theatre, known for its grandeur and duck pond loby, was converted to discount store and ultimately ' +
                        'demolished in 1991.</p> <br>' +
                        '<button id="southtown-btn" class="btn-width btn">Next</button>'
@@ -760,7 +760,7 @@ var View = function(controller){
             case 3: {
                 content.append(
                     '<div id="step3">' +
-                    '<p id="step3-content" class="overlay-content tooltip-text">The years that followed were marked by high crime rate and poverty.</p>' +
+                    '<p id="step3-content" class="overlay-content">The years that followed were marked by high crime rate and poverty.</p>' +
                     '</div>'
                 );
                 break;
@@ -769,7 +769,7 @@ var View = function(controller){
             case 4: {
                 content.append(
                     '<div id="step4">' +
-                    '<p id="step4-content" class="overlay-content tooltip-text">But yet, the community has not given up.</p>' +
+                    '<p id="step4-content" class="overlay-content">But yet, the community has not given up.</p>' +
                     '</div>'
                 );
                 break;
@@ -812,7 +812,7 @@ var View = function(controller){
 
                                 container1.html(
                                     '<img src="images/peaceGarden.jpg" width="100%" height="100%" id="honroe" /> <br>' +
-                                    '<h2 class="tooltip-title">Vacant Lot to Community Garden</h2> <br> ' +
+                                    '<h2 class="tooltip-title">Vacant Lot to Community Garden</h2> ' +
                                     '<p class="tooltip-text custom-margin">I Grow Chicago, a nonprofit community organization in Englewood ' +
                                     'converted a vacant lot into Community Garden.</p> <br>' +
                                     '<p class="tooltip-text custom-margin"><i>"litter filled lot transformed into vibrant source of food, healing and connection ' +
@@ -889,12 +889,12 @@ var View = function(controller){
                                                step6 = false;
 
                                                $('body').append(
-                                                   '<div id="step6">' +
+                                                   '<div id="step6"><div>' +
                                                         '<h2 class="tooltip-title">Safe Passage Program</h2>' +
                                                         '<p class="tooltip-text">This program not only allows safe passage to students to and from schools but also provides ' +
                                                         'opportunities to parents and residents to get involved in the community as a safe passage worker.</p>' +
                                                         '<button id="passage" class="btn-width btn">Next</button>' +
-                                                   '</div>'
+                                                   '</div></div>'
                                                );
 
                                                $('#step6').css({top: filtersWidth/2, left: filtersWidth + 60});
@@ -923,7 +923,7 @@ var View = function(controller){
 
                                 container2.html(
                                     '<img src="images/YaleApartments.jpg" width="100%" height="100%" id="yale" /> <br>' +
-                                    '<h2 class="tooltip-title">Yale Building</h2> <br> ' +
+                                    '<h2 class="tooltip-title">Yale Building</h2>' +
                                     '<p class="tooltip-text custom-margin">Lot of work went into restoring this building which now serves as home to ' +
                                     'senior citizens.  It features a large, open atrium and sprawling glass arcade that fills the building with natural light. ' +
                                     'A remarkable example of transformation.</p><br>' +
@@ -942,7 +942,7 @@ var View = function(controller){
                 $('#next').remove();
                 content.append(
                     '<div id="call-to-action">' +
-                    '<p id="final-step-content" class="overlay-content tooltip-text">Despite all these efforts, Englewood still is one of the Chicago\'s most troubled neighborhood. The senseless killing of kids, sound of gunshots ' +
+                    '<p id="final-step-content" class="overlay-content">Despite all these efforts, Englewood still is one of the Chicago\'s most troubled neighborhood. The senseless killing of kids, sound of gunshots ' +
                     ', helplessness of mothers to protect their children is aggravating Englewood\'s conditions. <br> <br>' +
                     'Crimes can happen anywhere, what is required is a collective effort by you and the entire community. <br><br>' +
                     'Imagine what would Englewood be if all the vacant lots were repurposed, if not few passages but all the passages were safe. That is what we have to aim for. <br> <br>' +

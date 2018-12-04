@@ -263,6 +263,8 @@ body {
     box-shadow: 1px -2px 20px 0px #7a7a7a;
     /*z-index: 1450;*/
     color: #1f1f1f;
+    display: flex;
+    align-items: center;
 }
 
 .map {
@@ -374,7 +376,7 @@ ul span {
 table {
     width: 100%;
     position: relative;
-    top: 15vh;
+    /*top: 15vh;*/
     z-index: 1550;
 }
 
@@ -511,6 +513,9 @@ tr:hover {
     border-radius: 8%;
     background-color: white;
     box-shadow: 4px 4px 30px #adadad;
+    display: flex;
+    align-items: center;
+    text-align: center;
 }
 
 #call-to-action {
@@ -542,6 +547,7 @@ tr:hover {
 .overlay-content {
     font-size: 1.3em;
     letter-spacing: 0.3px;
+    text-align: center;
 }
 
 .explore-btn {
@@ -556,7 +562,7 @@ tr:hover {
 /* detail charts*/
 #overviewBtn, #compareBtn {
     width: 40%;
-    font-size: 1em;
+    font-size: 0.7em;
 }
 
 .legend {
@@ -727,9 +733,26 @@ text.axis-worktime {
 
 
 /*media queries*/
-@media (max-width: 992px) {
-    #southtown, #honroe, #yale {
+@media (max-width: 1199px) {
+    #masonic-temple, #southtown, #honroe, #yale {
+        position: relative;
         width: 50%;
+    }
+
+    .tooltip-title {
+        font-size: 0.9em !important;
+    }
+    .tooltip-text{
+        font-size: 0.8em !important;
+        line-height: 12px !important;
+    }
+    .overlay-content {
+        font-size: 0.9em;
+    }
+    .btn{
+        height: 30px;
+        width: 60%;
+        font-size: 0.9em;
     }
 
     /*filter*/
@@ -737,34 +760,73 @@ text.axis-worktime {
         font-size: 10px;
     }
     .filter-option, .medium{
-        font-size: 15px;
+        font-size: 18px !important;
     }
     #about{
         font-size: 15px;
+    }
+    td{
+        padding-bottom: 5px;
+    }
+
+    /*details*/
+    #overviewBtn, #compareBtn {
+        font-size: 8px;
+    }
+    .overlay-content {
+        font-size: 0.9em;
     }
 }
 
 @media (min-width : 1200px) and (max-width: 1679px) {
     /*story tooltips*/
     #masonic-temple{
-        /*width: 70%;*/
+        width: 55%;
     }
 
     #southtown, #honroe, #yale {
-        width: 70%;
+        width: 50%;
+    }
+
+    .tooltip-title {
+        font-size: 1.2em !important;
+    }
+
+    .tooltip-text{
+        font-size: 1em !important;
+        line-height: 15px !important;
+    }
+    .overlay-content {
+        font-size: 1em;
+    }
+    .btn{
+        height: 30px;
+        width: 60%;
+        font-size: 1em;
     }
 
     /*filter*/
     .title{
-        font-size: 12px;
+        font-size: 11px;
     }
     .filter-option, .medium {
-        font-size: 30px;
+        font-size: 25px !important;
     }
     #about{
-        font-size: 20px;
+        font-size: 18px;
     }
+    td{
+        padding-bottom: 8px;
+    }
+    
+    /*details*/
+    #overviewBtn, #compareBtn {
+        font-size: 10px;
+    }
+
+
 }
+
 
 /* Large screens ----------- */
 @media (min-width : 1680px) {
