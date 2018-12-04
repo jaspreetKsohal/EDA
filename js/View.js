@@ -159,7 +159,7 @@ var View = function(controller){
 
             var latlng = L.latLng(loc[0], loc[1]);
             L.circle(latlng, {radius: 20, color: '#7a7a7a', weight: 0, fillOpacity: 0.6}).addTo(vacantLotGroup)
-                .bindPopup("Address: " + v['Address'] + "</br> Area: " + v['Sq. Ft.'] + " sq. ft");
+                .bindTooltip("Address: " + v['Address'] + "</br> Area: " + v['Sq. Ft.'] + " sq. ft");
         });
 
         map.addLayer(vacantLotGroup);

@@ -25,7 +25,10 @@ var Controller = function(model, view){
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
         if(selectedValue == 'heatmap'){
-            $('#options').append('<p id="heatmap-title">Number of Crimes: Hour vs Day and Month vs Day</p>');
+            if(!$('#heatmap-title').length){
+                $('#options').append('<p id="heatmap-title">Number of Crimes: Hour vs Day and Month vs Day</p>');
+            }
+
             $('.heatmapDIV').show();
             $('.timelineDIV').hide();
         }
