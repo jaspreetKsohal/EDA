@@ -362,7 +362,19 @@ body {
     grid-row: 3 / 4;
 }
 
+.no_data-avail {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
 
+.race-title {
+    position: relative;
+    top: 0;
+    left: 0;
+    font-size: 13px;
+}
 
 .timeline {
     grid-column: 2 / 3;

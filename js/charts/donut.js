@@ -1,7 +1,7 @@
 function donutChart() {
-    var width,
+    var margin = {top: 10, right: 10, bottom: 10, left: 10},
+        width,
         height,
-        margin = {top: 10, right: 10, bottom: 10, left: 10},
         colorScheme = ['#a5aeff', '#5893d4', '#974d52', '#ffb997', '#f67e7d', '#843b62'];
         // colour = d3.scaleOrdinal(d3.schemeSet2), // colour scheme
     let colour = d3.scaleOrdinal().range(colorScheme), // colour scheme
@@ -55,7 +55,13 @@ function donutChart() {
             svg.append('g').attr('class', 'labelName');
             svg.append('g').attr('class', 'lines');
             // ===========================================================================================
-
+            // svg.append("text")
+            //     .attr("x", (width * 0.9))             
+            //     .attr("y", height * 0.1)
+            //     .attr("text-anchor", "end")  
+            //     .style("font-size", "13px")  
+            //     .style("padding", "5") 
+            //     .text("Demographics - Race");
             // ===========================================================================================
             // add and colour the donut slices
             var path = svg.select('.slices')

@@ -179,7 +179,7 @@ var View = function(controller){
 
     self.displayRaceDist = function(raceDist, container) {
         if(raceDist === undefined) {
-            d3.select(container).append("h2").text("No Data Available");
+            d3.select(container).append("p").text("No Data Available").attr("class", "no-data-avail");
         } else {
             // var waffle = new WaffleChart()
             //     .selector(".chart_race")
@@ -198,7 +198,7 @@ var View = function(controller){
                 .padAngle(0.015) // effectively dictates the gap between slices
                 .variable('count')
                 .category('race')
-                .margin(0);
+                .margin({top: 13, right: 0, bottom: 0, left: 0});
 
             d3.select(container)
                 .datum(raceDist) // bind data to the div
@@ -214,9 +214,9 @@ var View = function(controller){
 
     self.displayCrimesByCat = function(crimeData, container) {
 
-        var margin = {top: 0, right: 5, bottom: 0, left: 10};
+        var margin = {top: 13, right: 5, bottom: 0, left: 10};
         var width = d3.select(container).node().getBoundingClientRect().width;
-        var height = $('.chart_crime_cat').height();
+        var height = $('.chart_crime_cat').height() - margin.top;
         var x = d3.scaleBand()
             .domain(crimeData.map(d => d.key))
             .range([margin.left, Math.min(width - margin.right, crimeData.length * 25)])
@@ -267,6 +267,14 @@ var View = function(controller){
                 .duration(500)
                 .style("opacity", 0);
                 });
+
+        chart_svg.append("text")
+            .attr("x", (width * 0.9))             
+            .attr("y", height * 0.1)
+            .attr("text-anchor", "end")  
+            .style("font-size", "13px")  
+            .style("padding", "5") 
+            .text("Crimes by Type");
     };
 
 
@@ -424,7 +432,7 @@ var View = function(controller){
                 $(document).trigger('blockSelected', {blockSelected: blockSelected, target: target});
             } else {
                 e.target.feature.properties.isSelected = false;
-                removeBlockHighlight(e.target);
+                self.removeBlockHighlight(e.target);
                 $(document).trigger('blockDeselected', {blockSelected: blockSelected, target: target});
             }
            
@@ -446,8 +454,8 @@ var View = function(controller){
 
     self.displayGenderAgeDist = function(genAgeDist, container) {
         // console.log(genAgeDist);
-        var margin = {top: 0, right: 5, bottom: 20, left: 10};
-        var width = d3.select(container).node().getBoundingClientRect().width;
+        var margin = {top: 13, right: 5, bottom: 20, left: 10};
+        var width = $(container).width() - margin.left - margin.right;
         var height = $('.chart_gen_age').height() - margin.top - margin.bottom;
         var x0 = d3.scaleBand()
             .domain(genAgeDist.map(d => d.age))
@@ -514,7 +522,14 @@ var View = function(controller){
             .call(d3.axisBottom(x0))
             .call(g => g.select(".domain").remove())
             .selectAll("text")
-            .style("font-size", 7);       
+            .style("font-size", 7);   
+        chart_svg.append("text")
+            .attr("x", (width * 0.9))             
+            .attr("y", height * 0.1)
+            .attr("text-anchor", "end")  
+            .style("font-size", "13px")  
+            .style("padding", "5") 
+            .text("Gender and Age");    
     };
 
 
