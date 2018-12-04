@@ -926,7 +926,7 @@ var View = function(controller){
                                     '<h2 class="tooltip-title">Yale Building</h2> <br> ' +
                                     '<p class="tooltip-text custom-margin">Lot of work went into restoring this building which now serves as home to ' +
                                     'senior citizens.  It features a large, open atrium and sprawling glass arcade that fills the building with natural light. ' +
-                                    'One of the best example of transformation.</p><br>' +
+                                    'A remarkable example of transformation.</p><br>' +
                                     '<button id="yale" class="btn-width btn">Next</button>'
                                 );
 
@@ -944,8 +944,8 @@ var View = function(controller){
                     '<div id="call-to-action">' +
                     '<p id="final-step-content" class="overlay-content tooltip-text">Despite all these efforts, Englewood still is one of the Chicago\'s most troubled neighborhood. The senseless killing of kids, sound of gunshots ' +
                     ', helplessness of mothers to protect their children is aggravating Englewood\'s conditions. <br> <br>' +
-                    'Crimes can happen anywhere, what is required is a collective effort by me, you and the entire community. <br><br>' +
-                    'Imagine what would Englewood be if all the vacant lots were repurposed, if not few passages but all the passages are safe. That is what we have to aim for. <br> <br>' +
+                    'Crimes can happen anywhere, what is required is a collective effort by you and the entire community. <br><br>' +
+                    'Imagine what would Englewood be if all the vacant lots were repurposed, if not few passages but all the passages were safe. That is what we have to aim for. <br> <br>' +
                     '<span class="text-highlight">So, Will Englewood be brought back to life again?</span>' +
                     '<br><br><button id="final-step-btn" class="explore-btn btn">It Will!</button> </p>' +
                     '</div>'

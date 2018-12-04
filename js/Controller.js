@@ -19,6 +19,9 @@ var Controller = function(model, view){
     //Current step for the story progress
     var storyIndex = 0;
 
+    //about button
+    $('#about').css({width: $('.filters')[0].getBoundingClientRect().width});
+
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
         if(selectedValue == 'heatmap'){

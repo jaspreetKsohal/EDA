@@ -14,7 +14,6 @@
         <link rel="stylesheet" href="leaflet_cluster/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="//gitcdn.link/repo/wintercounter/Protip/master/protip.min.css">
 
         <!--scripts-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -23,7 +22,6 @@
         <script src="leaflet/leaflet.js"></script>
         <script src="leaflet_cluster/leaflet.markercluster.js"></script>
         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-        <script src="//gitcdn.link/repo/wintercounter/Protip/master/protip.min.js"></script>
     </head>
 
     <body onload="App.start();">
@@ -59,7 +57,7 @@
                 </div>
 
             </div>
-        </div>
+        </div><!--end landing-page-->
 
         <div id="overlay" class="overlay hidden">
             <!--<div class="prev">-->
@@ -70,7 +68,7 @@
             </div>
             <div class="story-progress"></div>
             <div class="story-content"></div>
-        </div>
+        </div><!--end overlay-->
 
         <div class="wrapper">
             <div class="filters">
@@ -87,14 +85,6 @@
                     <input type="checkbox" id="YE" class="chkbox" name="checkbox" value="YE"> <label for="YE">Youth Engagement</label><br><br>
                     </div>
                 </div>
-
-                <!--<ul id="filter-options">-->
-                    <!--<li><span class="icon-services filter-option" id="service"></span> Services</li>-->
-                    <!--<li><span class="icon-schools filter-option" id="school"></span> Schools</li>-->
-                    <!--<li><span class="icon-crimes filter-option medium" id="crime"></span> Crimes</li>-->
-                    <!--<li><span class="icon-vacant-lot filter-option medium" id="vacant-lot"></span> <br>Vacant Lots</li>-->
-                    <!--<li><span class="icon-safe-passage filter-option medium" id="safe-passage"></span> <br> Safe Passages</li>-->
-                <!--</ul>-->
 
                 <table id="filter-options">
                     <tr>
@@ -192,10 +182,11 @@
                 <!--end charts - timeline or heatmap-->
             </div>
             <!--end timeline-->
+        </div><!--end wrapper-->
+
+        <div id="about">
+            <i class="fa fa-info-circle"></i>
         </div>
-        <!--end wrapper-->
-
-
         <!--scripts-->
         <script src="js/main.js"></script>
         <script src="js/Model.js"></script>

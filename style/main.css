@@ -197,12 +197,19 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 100%;
-
+    cursor: pointer;
+    background-image: linear-gradient(to bottom, #48c6ef 0%, #6f86d6 100%); /* Fly high */
+    box-shadow: 0px 8px 15px #0b0b0b;
+    transition: all 0.3s ease 0s;
+    outline: none;
+    border: none;
 }
 
-/*#vacant-lot {*/
-    /*z-index: */
-/*}*/
+.nextBtn:hover {
+    background-image: linear-gradient(to bottom, #b4e8f8 0%, #cbd3f0 100%);
+    box-shadow: 0px 15px 20px #000000;
+    transform: translateY(-2px);
+}
 
 .pulsating-circle {
     position: absolute;
@@ -319,6 +326,17 @@ body {
     box-shadow: 0px 3px 20px 0px #7a7a7a;
     z-index: 1300;
 }
+
+#about {
+    position: absolute;
+    height: 80px;
+    font-size: 25px;
+    float: left;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 /*end layout structure*/
 
 
@@ -355,7 +373,7 @@ ul span {
 table {
     width: 100%;
     position: relative;
-    top: 10vh;
+    top: 15vh;
     z-index: 1550;
 }
 
@@ -715,6 +733,9 @@ text.axis-worktime {
     .filter-option, .medium{
         font-size: 15px;
     }
+    #about{
+        font-size: 15px;
+    }
 }
 
 @media (min-width : 1200px) and (max-width: 1679px) {
@@ -733,6 +754,9 @@ text.axis-worktime {
     }
     .filter-option, .medium {
         font-size: 30px;
+    }
+    #about{
+        font-size: 20px;
     }
 }
 

@@ -8,7 +8,6 @@ var App = App || {};
 
     App.start = function(){
         console.log('application started');
-        $.protip();
         var model = new Model();
         var view = new View();
         var controller = new Controller(model, view);
