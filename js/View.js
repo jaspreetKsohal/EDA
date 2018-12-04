@@ -666,6 +666,33 @@ var View = function(controller){
             .call(zoom);
     };
 
+    function clearInterface() {
+        if(map.hasLayer(crimeLayer)){
+            map.removeLayer(crimeLayer);
+            $('#crime').parent().removeClass('highlight');
+            map.addLayer(censusLayer);
+        }
+        if(map.hasLayer(schoolGroup)){
+            map.removeLayer(schoolGroup);
+            $('#school').parent().removeClass('highlight');
+            $('#numberSchools').remove();
+        }
+        if(map.hasLayer(serviceGroup)){
+            map.removeLayer(serviceGroup);
+            $('#service').parent().removeClass('highlight');
+            $('#numberServices').remove();
+            $('#service-types').addClass('hide-services');
+        }
+        if(map.hasLayer(vacantLotGroup)){
+            map.removeLayer(vacantLotGroup);
+            $('#vacant-lot').parent().removeClass('highlight');
+        }
+        if(map.hasLayer(safePassageGroup)){
+            map.removeLayer(safePassageGroup);
+            $('#safe-passage').parent().removeClass('highlight');
+        }
+    }
+
     var markergroup1 = L.layerGroup();
     var markergroup2 = L.layerGroup();
 
@@ -730,7 +757,7 @@ var View = function(controller){
                     //     map.panTo(map.unproject(px),{animate: true}); // pan to new center
                     // });
 
-                   masonic.bindPopup(container1[0]).openPopup();
+                   masonic.bindPopup(container1[0], {closeOnClick: false}).openPopup();
                    map.setView(new L.latLng(41.794124, -87.654949), 14);
 
                    var container2 = $('<div class="tooltip-wrapper"/>');
@@ -738,7 +765,9 @@ var View = function(controller){
                    container2.on('click', '#southtown-btn', function() {
                        southtown.closePopup();
                        $('.overlay').fadeIn('slow');
+                       clearInterface();
                        map.removeLayer(markergroup1);
+
                        map.setView(new L.latLng(41.774876, -87.656801), 14);
                        self.showContentForIndex(3);
                    });
@@ -751,7 +780,7 @@ var View = function(controller){
                        '<button id="southtown-btn" class="btn-width btn">Next</button>'
                    );
 
-                   southtown.bindPopup(container2[0]);
+                   southtown.bindPopup(container2[0], {closeOnClick: false, autoClose: false});
 
                 });
                 break;
@@ -813,16 +842,14 @@ var View = function(controller){
                                 container1.html(
                                     '<img src="images/peaceGarden.jpg" width="100%" height="100%" id="honroe" /> <br>' +
                                     '<h2 class="tooltip-title">Vacant Lot to Community Garden</h2> ' +
-                                    '<p class="tooltip-text custom-margin">I Grow Chicago, a nonprofit community organization in Englewood ' +
-                                    'converted a vacant lot into Community Garden.</p> <br>' +
                                     '<p class="tooltip-text custom-margin"><i>"litter filled lot transformed into vibrant source of food, healing and connection ' +
-                                    'to self, community and earth."</i></p> <br>' +
-                                    '<p class="tooltip-text custom-margin"><b>- I Grow Chicago</b></p> <br>' +
+                                    'to self, community and earth."</i></p>' +
+                                    '<p class="tooltip-text custom-margin"><b>- I Grow Chicago</b>, a nonprofit community organization in Englewood</p> <br>' +
                                     '<button id="honroe" class="btn-width btn">Next</button>'
                                 );
 
-                                honroe.bindPopup(container1[0]).openPopup();
-                                map.setView(new L.latLng(41.799615, -87.655019), 14);
+                                honroe.bindPopup(container1[0], {closeOnClick: false,  autoClose: false}).openPopup();
+                                map.setView(new L.latLng(41.795978, -87.654860), 14);
 
                                 var container2 = $('<div class="tooltip-wrapper"/>');
 
@@ -841,6 +868,7 @@ var View = function(controller){
                                     var crimePos = $('#crime')[0].getBoundingClientRect();
                                     var passagePos = $('#safe-passage')[0].getBoundingClientRect();
 
+                                    clearInterface();
                                     var schoolTop = schoolPos.height / 2 + schoolPos.top,
                                         schoolLeft = schoolPos.width / 2 + schoolPos.left,
                                         crimeTop = crimePos.height / 2 + crimePos.top,
@@ -860,24 +888,19 @@ var View = function(controller){
 
                                     $('#selectFilters').css({top: crimeTop, left: filtersWidth + 10});
 
-                                    var counter = 0, filtersSelected=[], step6 = true;
+                                    var filtersSelected=[], step6 = true;
                                     $('td').on('click', function(){
                                        if(story && step6){
-                                           console.log('story mode on');
                                            var filter = $(event.currentTarget).find(':first-child').attr('id');
-                                           console.log(filter + ' selected');
 
                                            if(filter == 'crime' || filter == 'safe-passage' || filter == 'school') {
                                                if(!filtersSelected.includes(filter)) {
                                                    filtersSelected.push(filter);
-                                                   counter++;
                                                }
                                                else {
-                                                   counter--;
                                                    var index = filtersSelected.indexOf(filter);
                                                    if (index !== -1) filtersSelected.splice(index, 1);
                                                }
-                                               console.log(filtersSelected);
                                            }
 
                                            if(filtersSelected.length == 3){
@@ -900,15 +923,7 @@ var View = function(controller){
                                                $('#step6').css({top: filtersWidth/2, left: filtersWidth + 60});
 
                                                $('#passage').on('click', function(){
-                                                    map.removeLayer(crimeLayer);
-                                                    map.addLayer(censusLayer);
-                                                    map.removeLayer(safePassageGroup);
-                                                    map.removeLayer(schoolGroup);
-                                                   $('#numberSchools').remove();
-
-                                                   $('#school').parent().removeClass('highlight');
-                                                   $('#crime').parent().removeClass('highlight');
-                                                   $('#safe-passage').parent().removeClass('highlight');
+                                                    clearInterface();
 
                                                    $('#step6').remove();
                                                    $('.overlay').fadeIn('slow');
@@ -930,7 +945,7 @@ var View = function(controller){
                                     '<button id="yale" class="btn-width btn">Next</button>'
                                 );
 
-                                yale.bindPopup(container2[0]);
+                                yale.bindPopup(container2[0], {closeOnClick: false, autoClose: false});
                             }
                         }
                     });
