@@ -21,18 +21,21 @@ var Controller = function(model, view){
 
     //about button
     $('#about').css({width: $('.filters')[0].getBoundingClientRect().width});
-
+    $('#options').append('<p id="timeline-title">2017 Crimes</p>');
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
         if(selectedValue == 'heatmap'){
             if(!$('#heatmap-title').length){
                 $('#options').append('<p id="heatmap-title">Number of Crimes: Hour vs Day and Month vs Day</p>');
             }
-
+            $('#timeline-title').remove();
             $('.heatmapDIV').show();
             $('.timelineDIV').hide();
         }
         else {
+            if(!$('#timeline-title').length){
+                $('#options').append('<p id="timeline-title">2017 Crimes</p>');
+            }
             $('#heatmap-title').remove();
             $('.heatmapDIV').hide();
             $('.timelineDIV').show();
