@@ -762,7 +762,7 @@ text.axis-worktime {
     fill: #000;
 }
 
-#heatmap-title {
+#heatmap-title, #timeline-title {
     margin: 0;
     float: left;
 }
