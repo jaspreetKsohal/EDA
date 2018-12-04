@@ -51,7 +51,6 @@ var Controller = function(model, view){
 
     function getServiceTypePanelHeight() {
         var height = $('#map')[0].getBoundingClientRect().height;
-        console.log(height);
         return height;
     };
 
