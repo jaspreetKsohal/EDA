@@ -790,7 +790,10 @@ var View = function(controller){
             case 3: {
                 content.append(
                     '<div id="step3">' +
-                    '<p id="step3-content" class="overlay-content">The years that followed were marked by high crime rate and poverty. Scores of residents abandoned their homes and the population dwindled to under 50,000 in the 90s. As the neighborhood continued to deteriorate, crumbling buildings and vacant lots provided a breeding ground for crime. Englewood and West Englewood had become a part of the most notorious neighborhoods in Chicago.</p>' +
+                    '<p id="step3-content" class="overlay-content">The years that followed were marked by high crime rate and poverty. Scores of residents abandoned' +
+                    ' their homes and the population dwindled to under 50,000 in the 90s. As the neighborhood continued to deteriorate, crumbling buildings and vacant ' +
+                    'lots provided a breeding ground for crime. <br> <br> <b> By this time Englewood and West Englewood had become a part of the most ' +
+                    'notorious neighborhoods in Chicago.</b></p>' +
                     '</div>'
                 );
                 break;
@@ -799,7 +802,11 @@ var View = function(controller){
             case 4: {
                 content.append(
                     '<div id="step4">' +
-                    '<p id="step4-content" class="overlay-content">But yet, the community has not given up. The last two decades have seen numerous efforts taken to improver the neighborhood by the residents of Englewood. Some residents have converted vacant lots into community gardens and places that can be enjoyed families. Programs like the Dollar Lot are helping the residents take the reigns in their own hands. </p>' +
+                    '<img src="images/perry-garden.jpg" width="100%"/>' +
+                    '<p id="step4-content" class="overlay-content">But yet, the community has not given up. <br> <br> The last two decades have seen numerous efforts' +
+                    ' taken by the residents to improve the neighborhood. Some residents have converted vacant lots into community gardens' +
+                    ' and places that can be enjoyed by families. Programs like the Dollar Lot are helping the residents take the reigns in their own hands. <br><br>' +
+                    '(Left) Garden of Perry Mansion Cultural Center: From Drug House to Cultural Center. </p>' +
                     '</div>'
                 );
                 break;
