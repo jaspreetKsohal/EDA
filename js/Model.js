@@ -440,7 +440,8 @@ var Model = function() {
         // raceTotals.sort(function(a, b){
         //     return a.count-b.count;
         // })
-        return raceTotals;
+        console.log(shortenNames(raceTotals));
+        return shortenNames(raceTotals);
     }
 
     function getTotalGenderAgeDist() {
@@ -484,7 +485,7 @@ var Model = function() {
         // races.sort(function(a, b){
         //     return a.count-b.count;
         // })
-        return races;
+        return shortenNames(races);
     }
 
     function getBlockGenAgeDist(blockNum) {
@@ -500,6 +501,24 @@ var Model = function() {
             }
         }
         return genAgeDist;
+    }
+
+    function shortenNames(races) {
+        races.forEach(function(item) {
+            if(item.race == "White alone or in combination with one or more other races") 
+                item.race = "White";
+            else if(item.race == "Black or African American alone or in combination with one or more other races") 
+                item.race = "Black or African American";
+            else if(item.race == "American Indian and Alaska Native alone or in combination with one or more other races") 
+                item.race = "American Indian and Alaska Native";
+            else if(item.race == "Asian alone or in combination with one or more other races") 
+                item.race = "Asian";
+            else if(item.race =="Native Hawaiian and Other Pacific Islander alone or in combination with one or more other races")
+                item.key = "Native Hawaiian and Other Pacific Islander";
+            else if(item.race == "Some Other Race alone or in combination with one or more other races")
+                item.race = "Other";
+        });
+        return races;
     }
 
     function getServiceData(){

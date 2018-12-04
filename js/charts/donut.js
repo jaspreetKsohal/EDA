@@ -117,8 +117,8 @@ function donutChart() {
 
                     // leave off 'dy' attr for first tspan so the 'dy' attr on text element works. The 'dy' attr on
                     // tspan effectively imitates a line break.
-                    if (i === 0) tip += '<tspan x="0">' + key + ': ' + value + '</tspan>';
-                    else tip += '<tspan x="0" dy="1.2em">' + key + ': ' + value + '</tspan>';
+                    if (i === 0) tip += '<tspan x="0">' + value + '</tspan>';
+                    else tip += '<tspan x="0" dy="1.2em">'  + value + '</tspan>';
                     i++;
                 }
 
