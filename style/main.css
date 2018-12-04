@@ -288,6 +288,7 @@ body {
 .comp-ctrl {
     grid-row: 1;
     grid-column: span 2;
+    text-align: center;
 }
 
 .detailblock1 {
@@ -553,6 +554,11 @@ tr:hover {
 /*tooltip ends*/
 
 /* detail charts*/
+#overviewBtn, #compareBtn {
+    width: 40%;
+    font-size: 1em;
+}
+
 .legend {
     padding-bottom: 7px;
   }
