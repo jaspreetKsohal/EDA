@@ -291,7 +291,7 @@ body {
     
     display: grid;
     grid-template-columns: 50% 50%;
-    grid-template-rows: 10% 90%;
+    grid-template-rows: 6% 90%;
     /* grid-column-gap: 5px; */
     box-shadow: -2px 0px 20px -5px #7a7a7a;
     z-index: 1450;
