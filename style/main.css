@@ -374,15 +374,14 @@ tr:hover {
 }
 
 #service-types {
-    /*display: none;*/
+    display: flex;
+    align-items: center;
     position: absolute;
     left: 100%;
-    padding: 300% 0 300% 40%;
+    padding-left: 2vw;
     width : 200px;
-    /*width: 0px;*/
-    height: 200px;
     z-index: 500;
-    background-color: #f5f5f5;
+    background-color: #dbe9f7;
 }
 
 .hide-services{
@@ -612,7 +611,7 @@ polyline{
 
   /* timeline */
   .area {
-    fill: steelblue;
+    fill: #6ca8df;
     clip-path: url(#clip);
   }
   
@@ -624,7 +623,7 @@ polyline{
 
   .line {
     fill: none;
-    stroke: steelblue;
+    stroke: #6ca8df;
     stroke-width: 2px;
   }
 
@@ -648,6 +647,11 @@ text.axis-workweek {
 
 text.axis-worktime {
     fill: #000;
+}
+
+#heatmap-title {
+    margin: 0;
+    float: left;
 }
 /* end charts*/
 

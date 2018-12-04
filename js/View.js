@@ -191,17 +191,17 @@ var View = function(controller){
             //     .rows(10)
             //     .rounded(true)();
 
-        var donut = donutChart()
-            .width($(container).width())
-            .height($('.wrapper').height() * 0.25)
-            .cornerRadius(3) // sets how rounded the corners are on each slice
-            .padAngle(0.015) // effectively dictates the gap between slices
-            .variable('count')
-            .category('race');
+            var donut = donutChart()
+                .width($(container).width())
+                .height($('.wrapper').height() * 0.25)
+                .cornerRadius(3) // sets how rounded the corners are on each slice
+                .padAngle(0.015) // effectively dictates the gap between slices
+                .variable('count')
+                .category('race');
 
-        d3.select(container)
-            .datum(raceDist) // bind data to the div
-            .call(donut); // draw chart in div
+            d3.select(container)
+                .datum(raceDist) // bind data to the div
+                .call(donut); // draw chart in div
         }
     };
 

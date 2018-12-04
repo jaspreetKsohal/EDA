@@ -21,14 +21,13 @@ var Controller = function(model, view){
 
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
-        // console.log(selectedValue);
         if(selectedValue == 'heatmap'){
-            // console.log('heatmap selected');
+            $('#options').append('<p id="heatmap-title">Number of Crimes: Hour vs Day and Month vs Day</p>');
             $('.heatmapDIV').show();
             $('.timelineDIV').hide();
         }
         else {
-            // console.log('timeline selected');
+            $('#heatmap-title').remove();
             $('.heatmapDIV').hide();
             $('.timelineDIV').show();
         }
@@ -46,6 +45,14 @@ var Controller = function(model, view){
         view.addServices(model.getFilteredServices(arr));
     });
 
+
+    function getServiceTypePanelHeight() {
+        var height = $('#map')[0].getBoundingClientRect().height;
+        console.log(height);
+        return height;
+    };
+
+
     $('td').on('click', function(event){
 
         // $('.filter-option').on('click', function(event){
@@ -57,6 +64,7 @@ var Controller = function(model, view){
 
         if(filter === 'service'){
             $('#service-types').toggleClass('hide-services');
+            $('#service-types').css({height: getServiceTypePanelHeight()});
             if(view.isLayerActive(filter)){
                 view.removeServices();
             } else {
