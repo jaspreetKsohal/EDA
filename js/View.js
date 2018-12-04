@@ -670,10 +670,13 @@ var View = function(controller){
     var markergroup2 = L.layerGroup();
 
     self.showContentForIndex = function(index) {
-        var content = d3.select('.story-content');
+        // var content = d3.select('.story-content');
         //change the content
         //remove the current content
-        content.selectAll("*").remove();
+        // content.selectAll("*").remove();
+
+        var content = $('.story-content');
+        content.empty();
 
         //add content according to index
         switch(index) {
@@ -699,7 +702,7 @@ var View = function(controller){
                    var masonic = L.marker([41.777750, -87.646330]).addTo(markergroup1);
 
                    map.addLayer(markergroup1);
-                   var container1 = $('<div/>');
+                   var container1 = $('<div class="tooltip-wrapper"/>');
 
                    container1.on('click', '#masonic-btn', function() {
                         masonic.closePopup();
@@ -709,8 +712,8 @@ var View = function(controller){
                    container1.html(
                        '<img src="images/MasonicTemple.jpg" width="100%" height="100%" id="masonic-temple" /> <br>' +
                        '<h2 class="tooltip-title">Masonic Temple</h2>' +
-                       '<p class="tooltip-text custom-margin">an extraordinary landmark, reminder of Englewood\'s past glory.</p> <br> <p class="tooltip-text custom-margin">Demolished in February 2018.</p> <br>' +
-                       '<button id="masonic-btn" class="btn">Next</button>'
+                       '<p class="tooltip-text custom-margin">An extraordinary landmark, reminder of Englewood\'s past glory.</p> <br> <p class="tooltip-text custom-margin">Demolished in February 2018.</p> <br>' +
+                       '<button id="masonic-btn" class="btn-width btn">Next</button>'
                    );
 
                     // map.on('popupopen', function(e) {
@@ -720,9 +723,9 @@ var View = function(controller){
                     // });
 
                    masonic.bindPopup(container1[0]).openPopup();
-                   // map.setView(new L.latLng(41.777750, -87.646330), 14);
+                   map.setView(new L.latLng(41.794124, -87.654949), 14);
 
-                   var container2 = $('<div />');
+                   var container2 = $('<div class="tooltip-wrapper"/>');
 
                    container2.on('click', '#southtown-btn', function() {
                        southtown.closePopup();
@@ -737,7 +740,7 @@ var View = function(controller){
                        '<h2 class="tooltip-title">Southtown Theatre</h2> <br> ' +
                        '<p class="tooltip-text custom-margin">The phenominal Southtown Theatre, known for its grandeur and duck pond loby, was converted to discount store and ultimately ' +
                        'demolished in 1991.</p> <br>' +
-                       '<button id="southtown-btn" class="btn">Next</button>'
+                       '<button id="southtown-btn" class="btn-width btn">Next</button>'
                    );
 
                    southtown.bindPopup(container2[0]);
@@ -784,7 +787,7 @@ var View = function(controller){
 
                                 map.addLayer(markergroup2);
 
-                                var container1 = $('<div/>');
+                                var container1 = $('<div class="tooltip-wrapper"/>');
 
                                 container1.on('click', '#honroe', function() {
                                     honroe.closePopup();
@@ -799,13 +802,13 @@ var View = function(controller){
                                     '<p class="tooltip-text custom-margin"><i>"litter filled lot transformed into vibrant source of food, healing and connection ' +
                                     'to self, community and earth."</i></p> <br>' +
                                     '<p class="tooltip-text custom-margin"><b>- I Grow Chicago</b></p> <br>' +
-                                    '<button id="honroe" class="btn">Next</button>'
+                                    '<button id="honroe" class="btn-width btn">Next</button>'
                                 );
 
                                 honroe.bindPopup(container1[0]).openPopup();
-                                // map.setView(new L.latLng(41.777210, -87.669770), 14);
+                                map.setView(new L.latLng(41.799615, -87.655019), 14);
 
-                                var container2 = $('<div />');
+                                var container2 = $('<div class="tooltip-wrapper"/>');
 
                                 container2.on('click', '#yale', function() {
                                     step5 = false;
@@ -841,21 +844,27 @@ var View = function(controller){
 
                                     $('#selectFilters').css({top: crimeTop, left: filtersWidth + 10});
 
-                                    var counter = 0, step6 = true;
+                                    var counter = 0, filtersSelected=[], step6 = true;
                                     $('td').on('click', function(){
-                                        console.log('something clicked');
-                                        console.log(story);
                                        if(story && step6){
                                            console.log('story mode on');
                                            var filter = $(event.currentTarget).find(':first-child').attr('id');
                                            console.log(filter + ' selected');
 
-                                           console.log(counter);
-                                           if(filter == 'school') counter++;
-                                           if(filter == 'crime') counter++;
-                                           if(filter == 'safe-passage') counter++;
+                                           if(filter == 'crime' || filter == 'safe-passage' || filter == 'school') {
+                                               if(!filtersSelected.includes(filter)) {
+                                                   filtersSelected.push(filter);
+                                                   counter++;
+                                               }
+                                               else {
+                                                   counter--;
+                                                   var index = filtersSelected.indexOf(filter);
+                                                   if (index !== -1) filtersSelected.splice(index, 1);
+                                               }
+                                               console.log(filtersSelected);
+                                           }
 
-                                           if(counter == 3){
+                                           if(filtersSelected.length == 3){
                                                $('#schools-pulse').remove();
                                                $('#crimes-pulse').remove();
                                                $('#passages-pulse').remove();
@@ -865,11 +874,10 @@ var View = function(controller){
 
                                                $('body').append(
                                                    '<div id="step6">' +
-                                                        // '<img src="images/passage.jpg" width="100%" height="100%"/>' +
                                                         '<h2 class="tooltip-title">Safe Passage Program</h2>' +
                                                         '<p class="tooltip-text">This program not only allows safe passage to students to and from schools but also provides ' +
                                                         'opportunities to parents and residents to get involved in the community as a safe passage worker.</p>' +
-                                                        '<button id="passage" class="btn">Next</button>' +
+                                                        '<button id="passage" class="btn-width btn">Next</button>' +
                                                    '</div>'
                                                );
 
@@ -903,7 +911,7 @@ var View = function(controller){
                                     '<p class="tooltip-text custom-margin">Lot of work went into restoring this building which now serves as home to ' +
                                     'senior citizens.  It features a large, open atrium and sprawling glass arcade that fills the building with natural light. ' +
                                     'One of the best example of transformation.</p><br>' +
-                                    '<button id="yale" class="btn">Next</button>'
+                                    '<button id="yale" class="btn-width btn">Next</button>'
                                 );
 
                                 yale.bindPopup(container2[0]);
@@ -916,9 +924,18 @@ var View = function(controller){
             //call to action
             case 6: {
                 $('#next').remove();
-                content.append('button').text('Explore').attr('id', 'explore');
-                $('#explore').on('click', function(){
-                    console.log('explore');
+                content.append(
+                    '<div id="call-to-action">' +
+                    '<p id="final-step-content" class="overlay-content tooltip-text">Despite all these efforts, Englewood still is one of the Chicago\'s most troubled neighborhood. The senseless killing of kids, sound of gunshots ' +
+                    ', helplessness of mothers to protect their children is aggravating Englewood\'s conditions. <br> <br>' +
+                    'Crimes can happen anywhere, what is required is a collective effort by me, you and the entire community. <br><br>' +
+                    'Imagine what would Englewood be if all the vacant lots were repurposed, if not few passages but all the passages are safe. That is what we have to aim for. <br> <br>' +
+                    '<span class="text-highlight">So, Will Englewood be brought back to life again?</span>' +
+                    '<br><br><button id="final-step-btn" class="explore-btn btn">It Will!</button> </p>' +
+                    '</div>'
+                );
+
+                $('#final-step-btn').on('click', function(){
                     $('.overlay').fadeOut('slow');
                 });
                 break;
