@@ -193,11 +193,12 @@ var View = function(controller){
 
             var donut = donutChart()
                 .width($(container).width())
-                .height($('.wrapper').height() * 0.25)
+                .height($('.chart_race').height())
                 .cornerRadius(3) // sets how rounded the corners are on each slice
                 .padAngle(0.015) // effectively dictates the gap between slices
                 .variable('count')
-                .category('race');
+                .category('race')
+                .margin(0);
 
             d3.select(container)
                 .datum(raceDist) // bind data to the div
@@ -213,9 +214,9 @@ var View = function(controller){
 
     self.displayCrimesByCat = function(crimeData, container) {
 
-        var margin = {top: 0, right: 5, bottom: 10, left: 10};
+        var margin = {top: 0, right: 5, bottom: 0, left: 10};
         var width = d3.select(container).node().getBoundingClientRect().width;
-        var height = $('.wrapper').height() * 0.25;
+        var height = $('.chart_crime_cat').height();
         var x = d3.scaleBand()
             .domain(crimeData.map(d => d.key))
             .range([margin.left, Math.min(width - margin.right, crimeData.length * 25)])
@@ -228,10 +229,10 @@ var View = function(controller){
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.select(container)
-            .append("div")
-            .attr("class", "label")
-            .text("Crimes by Category in Englewood");
+        // d3.select(container)
+        //     .append("div")
+        //     .attr("class", "label")
+        //     .text("Crimes by Category in Englewood");
 
         var chart_svg = d3.select(container)
             .append("svg")
@@ -447,7 +448,7 @@ var View = function(controller){
         // console.log(genAgeDist);
         var margin = {top: 0, right: 5, bottom: 20, left: 10};
         var width = d3.select(container).node().getBoundingClientRect().width;
-        var height = $('.wrapper').height() * 0.25;
+        var height = $('.chart_gen_age').height() - margin.top - margin.bottom;
         var x0 = d3.scaleBand()
             .domain(genAgeDist.map(d => d.age))
             .range([margin.left, width - margin.right])
@@ -468,10 +469,10 @@ var View = function(controller){
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.select(container)
-            .append("div")
-            .attr("class", "label")
-            .text("Gender-Age Distribution");
+        // d3.select(container)
+        //     .append("div")
+        //     .attr("class", "label")
+        //     .text("Gender-Age Distribution");
 
         var chart_svg = d3.select(container)
             .append("svg")
