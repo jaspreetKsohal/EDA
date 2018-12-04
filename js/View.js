@@ -193,7 +193,7 @@ var View = function(controller){
 
             var donut = donutChart()
                 .width($(container).width())
-                .height($('.chart_race').height())
+                .height($('.chart_race').height() - 15)
                 .cornerRadius(3) // sets how rounded the corners are on each slice
                 .padAngle(0.015) // effectively dictates the gap between slices
                 .variable('count')
