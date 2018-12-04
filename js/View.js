@@ -682,17 +682,25 @@ var View = function(controller){
         switch(index) {
             // Englewood history
             case 0: {
-                var imgDiv = content.append('div');
-                // imgDiv.append('img').attr('src', 'images/63andhalsted.jpg');
-                // imgDiv.append('p').text('<a href="https://www.wbez.org/shows/wbez-blogs/englewood-past-and-present/a434694c-8793-492e-a713-5882faf4c5da">Source</a>')
-                content.append('h3').text('Centered around 63rd and Halsted, Englewood was a dyanmic and prosperous community with population of over 100,000');
-                content.append('h3').text('I hosted major departmental stores like sears and was the busiest shopping district outside the loop');
+                content.append(
+                    '<div id="step0">' +
+                    '<img src="images/englewood.jpg" width="100%"/>' +
+                    '<p id="step0-content" class="overlay-content tooltip-text">Centered around 63rd and Halsted, Englewood was a dynamic and prosperous community with ' +
+                    'population of over 90,000. <br><br> It hosted major departmental stores like Sears and was the busiest shopping district outside the loop.</p>' +
+                    '</div>'
+                );
                 break;
             }
             // englewood downfall
             case 1: {
-                content.append('h3').text('However the latter half of the 20th century witnessed the downfall of a thriving community');
-                content.append('h3').text('Due to the competition from the shopping malls, 63rd and Halsted shopping district lost its fame resulting in abandonment and deterioration of many shops and buildings.');
+                content.append(
+                    '<div id="step1">' +
+                    '<img src="images/masonic-demolished.jpg" width="100%"/>' +
+                    '<p id="step1-content" class="overlay-content tooltip-text">However, the latter half of the 20th century witnessed the downfall of this' +
+                    ' thriving community. <br><br> Due to the competition from shopping malls, 63rd and Halsted lost its fame resulting in abandonment and ' +
+                    'deterioration of many shops and buildings.</p>' +
+                    '</div>'
+                );
                 break;
             }
             // famous buidlings closed or demolished
@@ -750,12 +758,20 @@ var View = function(controller){
             }
             // peak of crimes and poverty
             case 3: {
-                content.append('h3').text('The years that followed were marked by high crime rate and poverty');
+                content.append(
+                    '<div id="step3">' +
+                    '<p id="step3-content" class="overlay-content tooltip-text">The years that followed were marked by high crime rate and poverty.</p>' +
+                    '</div>'
+                );
                 break;
             }
             // efforts taken: vacant lots
             case 4: {
-                content.append('h1').text('4');
+                content.append(
+                    '<div id="step4">' +
+                    '<p id="step4-content" class="overlay-content tooltip-text">But yet, the community has not given up.</p>' +
+                    '</div>'
+                );
                 break;
             }
             // vacant lots examples
