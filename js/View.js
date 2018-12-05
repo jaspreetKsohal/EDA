@@ -198,7 +198,8 @@ var View = function(controller){
                 .padAngle(0.015) // effectively dictates the gap between slices
                 .variable('count')
                 .category('race')
-                .margin({top: 13, right: 0, bottom: 0, left: 0});
+                .margin({top: 13, right: 0, bottom: 0, left: 0})
+                .id(container.replace('#', 'donut'));
 
             d3.select(container)
                 .datum(raceDist) // bind data to the div

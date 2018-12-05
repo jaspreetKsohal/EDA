@@ -2,6 +2,7 @@ function donutChart() {
     var width,
         height,
         margin = {top: 10, right: 0, bottom: 10, left: 0},
+        id,
         colorScheme = ['#a5aeff', '#5893d4', '#974d52', '#ffb997', '#f67e7d', '#843b62'];
         // colour = d3.scaleOrdinal(d3.schemeSet2), // colour scheme
     let colour = d3.scaleOrdinal().range(colorScheme), // colour scheme
@@ -45,6 +46,7 @@ function donutChart() {
             var svg = selection.append('svg')
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom)
+                .attr('id', id)
               .append('g')
                 .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
             // ===========================================================================================
@@ -63,11 +65,28 @@ function donutChart() {
                 .data(pie)
               .enter().append('path')
                 .attr('fill', function(d) { return colour(d.data[category]); })
-                .attr('d', arc);
+                .attr('d', arc)
+                .on('mouseenter', function(data) {
+                    svg.append('text')
+                        .attr('class', 'toolCircle')
+                        .attr('dy', -15) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+                        .html(toolTipHTML(data)) // add text to the circle.
+                        .style('font-size', '.9em')
+                        .style('text-anchor', 'middle'); // centres text in tooltip
+
+                    svg.append('circle')
+                        .attr('class', 'toolCircle')
+                        .attr('r', radius * 0.55) // radius of tooltip circle
+                        .style('fill', colour(data.data[category])) // colour based on category mouse is over
+                        .style('fill-opacity', 0.35);
+                })
+                .on('mouseout', function () {
+                    d3.selectAll('.toolCircle').remove();
+                });
             // ===========================================================================================
 
             // add tooltip to mouse events on slices and labels
-            d3.selectAll('.labelName text, .slices path').call(toolTip);
+            // d3.selectAll('.labelName text, .slices path').call(toolTip);
             // ===========================================================================================
 
             // ===========================================================================================
@@ -180,6 +199,12 @@ function donutChart() {
     chart.category = function(value) {
         if (!arguments.length) return category;
         category = value;
+        return chart;
+    };
+
+    chart.id = function(value) {
+        if (!arguments.length) return id;
+        id = value;
         return chart;
     };
 
