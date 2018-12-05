@@ -1,0 +1,136 @@
+{
+    "BN": {
+        "description": "Basic Needs",
+        "children": [
+            "Clothing ",
+            "Financial assistance",
+            "Food",
+            "Emergency shelter",
+            "Housing/Shelter",
+            "Safe space",
+            "Youth drop-in centers"
+        ]
+    },
+    "EC": {
+        "description": "Early Childhood & Parenting",
+        "children": [
+            "Child care/Day care ",
+            "Fatherhood programs",
+            "Head Start/Early Head Start, preschool",
+            "Home visiting for pregnant/parenting teens",
+            "Pregnant/parenting classes, counseling, support groups"
+        ]
+    },
+    "ED": {
+        "description": "Education",
+        "children": [
+            "Academic counseling",
+            "Arts (music, dance, writing, spoken word, language)",
+            "Behavioral/self-management programs/workshops",
+            "Civic engagement",
+            "College readiness, counseling, career prep",
+            "Computer literacy/training",
+            "Enrichment field trips",
+            "Financial literacy",
+            "High school/GED completion",
+            "Homework help",
+            "Leadership/character development ",
+            "Out of school, chronically truant youth counseling, re-engagement",
+            "Reading, literacy",
+            "Service learning",
+            "STEM/STEAM (science, technology, engineering, math, arts)",
+            "Tutoring ",
+            "Vocational skills"
+        ]
+    },
+    "EM": {
+        "description": "Employment",
+        "children": [
+            "Job placement (long-term)",
+            "Job training/Workforce preparation",
+            "Youth workforce preparation, employment"
+        ]
+    },
+    "FS": {
+        "description": "Family Stability",
+        "children": [
+            "Adoption services, support",
+            "Domestic violence support, counseling",
+            "Family support",
+            "Foster care services, support",
+            "Re-entry support programs for ex-offenders"
+        ]
+    },
+    "HW": {
+        "description": "Health & Wellness",
+        "children": [
+            "Anger management counseling",
+            "At-risk youth counseling",
+            "Behavioral/mental health counseling, services",
+            "Behavior self-management programs",
+            "Cessation programs",
+            "Dental care",
+            "Domestic violence support, counseling",
+            "Family and child counseling",
+            "Family planning, birth control",
+            "Health clinics (primary care, family medicine, federally-qualified health centers)",
+            "Health literacy; connect to health services.",
+            "HIV/AIDS testing, treatment",
+            "Immunizations/Vaccinations",
+            "Management of chronic conditions",
+            "Men's health services",
+            "Mental health counseling, services",
+            "Nutrition and wellness programs, counseling",
+            "Physical activity/sports",
+            "Preventive health (includes prenatal, dental, vision, cancer screenings)",
+            "Re-entry support programs for ex-offenders",
+            "School, sports physicals",
+            "Sexual assault counseling",
+            "Sexually transmitted disease (STD) testing",
+            "Substance abuse/addiction counseling, treatment",
+            "Vision care",
+            "Women's health services"
+        ]
+    },
+    "HH": {
+        "description": "Hotlines/Helplines",
+        "children": [
+            "Child abuse reporting",
+            "Crisis",
+            "Domestic violence",
+            "HIV/STI/STD Hotline",
+            "Rape",
+            "Trauma"
+        ]
+    },
+    "VP": {
+        "description": "Violence Prevention",
+        "children": [
+            "At-risk youth counseling",
+            "Domestic violence support, counseling",
+            "Engage youth to prevent gang participation",
+            "Out of school/chronically truant youth counseling, re-engagement",
+            "Re-entry support programs for ex-offenders",
+            "Safe space",
+            "Violence prevention workshop, peace circles"
+        ]
+    },
+    "YE": {
+        "description": "Youth Engagement",
+        "children": [
+            "After school programs",
+            "Arts (music, dance, writing, spoken word, language)",
+            "Civic engagement",
+            "Engage youth to prevent gang participation",
+            "Enrichment field trips",
+            "Leadership, character development",
+            "Mentoring ",
+            "Out of school, chronically truant youth counseling, re-engagement",
+            "Service learning",
+            "Sports, recreation",
+            "Summer programs, camp",
+            "Volunteer opportunities",
+            "Youth clubs"
+        ]
+    }
+}
