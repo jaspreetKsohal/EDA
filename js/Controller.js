@@ -30,6 +30,13 @@ var Controller = function(model, view){
         });
     });
 
+    $('#close-about').on('click', function(){
+        $('#about-overlay').fadeOut('slow', function() {
+            $(this).removeClass('showAbout');
+            $(this).addClass('hideAbout');
+        });
+    });
+
     $('#options').append('<p id="timeline-title">2017 Crimes</p>');
 
     $('input[type=radio]').click(function(e){
