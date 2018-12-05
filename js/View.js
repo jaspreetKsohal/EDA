@@ -273,11 +273,10 @@ var View = function(controller){
                 });
 
         chart_svg.append("text")
-            .attr("x", (width * 0.9))             
-            .attr("y", height * 0.1)
-            .attr("text-anchor", "end")  
-            .style("font-size", "13px")  
-            .style("padding", "5") 
+            .attr("x", (width * 0.5))             
+            .attr("y", 5)
+            .attr("text-anchor", "middle")  
+            .style("font-size", "13px")
             .text("Crimes by Type");
     };
 
@@ -527,13 +526,12 @@ var View = function(controller){
             .call(g => g.select(".domain").remove())
             .selectAll("text")
             .style("font-size", 7);   
-        chart_svg.append("text")
-            .attr("x", (width * 0.9))             
-            .attr("y", height * 0.1)
-            .attr("text-anchor", "end")  
-            .style("font-size", "13px")  
-            .style("padding", "5") 
-            .text("Gender and Age");    
+            chart_svg.append("text")
+            .attr("x", (width * 0.5))             
+            .attr("y", 5)
+            .attr("text-anchor", "middle")  
+            .style("font-size", "13px")
+            .text("Gender and Age");  
     };
 
 

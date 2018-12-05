@@ -1,7 +1,7 @@
 function donutChart() {
     var width,
         height,
-        margin = {top: 10, right: 0, bottom: 10, left: 0},
+        margin = {top: 15, right: 0, bottom: 0, left: 0},
         id,
         colorScheme = ['#a5aeff', '#5893d4', '#974d52', '#ffb997', '#f67e7d', '#843b62'];
         // colour = d3.scaleOrdinal(d3.schemeSet2), // colour scheme
@@ -48,7 +48,7 @@ function donutChart() {
                 .attr('height', height + margin.top + margin.bottom)
                 .attr('id', id)
               .append('g')
-                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+                .attr('transform', 'translate(' + width / 2 + ',' + (height / 2 + margin.top) + ')');
             // ===========================================================================================
 
             // ===========================================================================================
@@ -57,7 +57,7 @@ function donutChart() {
             svg.append('g').attr('class', 'labelName');
             svg.append('g').attr('class', 'lines');
             // ===========================================================================================
-
+            
             // ===========================================================================================
             // add and colour the donut slices
             var path = svg.select('.slices')
@@ -83,6 +83,14 @@ function donutChart() {
                 .on('mouseout', function () {
                     d3.selectAll('.toolCircle').remove();
                 });
+
+                //add chart title
+                selection.select('svg').append("text")
+                    .attr("x", width / 2)             
+                    .attr("y", margin.top)
+                    .attr("text-anchor", "middle")  
+                    .style("font-size", "13px")
+                    .text("Racial Dist.");
             // ===========================================================================================
 
             // add tooltip to mouse events on slices and labels

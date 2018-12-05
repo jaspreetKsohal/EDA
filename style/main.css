@@ -418,6 +418,8 @@ body {
 }
 .compareText.show {
     display: flex;
+    grid-row: 2 / 3;
+    text-align: center;
 }
 
 #block1crime {
