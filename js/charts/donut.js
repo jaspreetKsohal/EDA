@@ -3,6 +3,7 @@ function donutChart() {
         height,
         margin = {top: 15, right: 0, bottom: 0, left: 0},
         id,
+        title,
         colorScheme = ['#a5aeff', '#5893d4', '#974d52', '#ffb997', '#f67e7d', '#843b62'];
         // colour = d3.scaleOrdinal(d3.schemeSet2), // colour scheme
     let colour = d3.scaleOrdinal().range(colorScheme), // colour scheme
@@ -90,7 +91,7 @@ function donutChart() {
                     .attr("y", margin.top)
                     .attr("text-anchor", "middle")  
                     .style("font-size", "13px")
-                    .text("Racial Dist.");
+                    .text(title);
             // ===========================================================================================
 
             // add tooltip to mouse events on slices and labels
@@ -213,6 +214,12 @@ function donutChart() {
     chart.id = function(value) {
         if (!arguments.length) return id;
         id = value;
+        return chart;
+    };
+
+    chart.title = function(value) {
+        if (!arguments.length) return title;
+        title = value;
         return chart;
     };
 

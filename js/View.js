@@ -177,7 +177,7 @@ var View = function(controller){
     };
 
 
-    self.displayRaceDist = function(raceDist, container) {
+    self.displayRaceDist = function(raceDist, container, title) {
         if(raceDist === undefined) {
             d3.select(container).append("p").text("No Data Available").attr("class", "no-data-avail");
         } else {
@@ -199,7 +199,8 @@ var View = function(controller){
                 .variable('count')
                 .category('race')
                 .margin({top: 13, right: 0, bottom: 0, left: 0})
-                .id(container.replace('#', 'donut'));
+                .id(container.replace('#', 'donut'))
+                .title(title);
 
             d3.select(container)
                 .datum(raceDist) // bind data to the div
@@ -213,7 +214,7 @@ var View = function(controller){
     };
 
 
-    self.displayCrimesByCat = function(crimeData, container) {
+    self.displayCrimesByCat = function(crimeData, container, title) {
 
         var margin = {top: 13, right: 5, bottom: 0, left: 10};
         var width = $(container).width() - margin.left - margin.right;
@@ -277,7 +278,7 @@ var View = function(controller){
             .attr("y", 5)
             .attr("text-anchor", "middle")  
             .style("font-size", "13px")
-            .text("Crimes by Type");
+            .text(title);
     };
 
 
@@ -455,9 +456,9 @@ var View = function(controller){
     };
 
 
-    self.displayGenderAgeDist = function(genAgeDist, container) {
-        // console.log(genAgeDist);
-        var margin = {top: 13, right: 5, bottom: 20, left: 10};
+    self.displayGenderAgeDist = function(genAgeDist, container, title) {
+        console.log(genAgeDist);
+        var margin = {top: 13, right: 5, bottom: 25, left: 10};
         var width = $(container).width() - margin.left - margin.right;
         var height = $('.chart_gen_age').height() - margin.top - margin.bottom;
         var x0 = d3.scaleBand()
@@ -525,13 +526,15 @@ var View = function(controller){
             .call(d3.axisBottom(x0))
             .call(g => g.select(".domain").remove())
             .selectAll("text")
-            .style("font-size", 7);   
-            chart_svg.append("text")
+            .style("font-size", 7)
+            .attr("text-anchor", "middle")  
+            .attr("transform", "rotate(30)");   
+        chart_svg.append("text")
             .attr("x", (width * 0.5))             
             .attr("y", 5)
             .attr("text-anchor", "middle")  
             .style("font-size", "13px")
-            .text("Gender and Age");  
+            .text(title);  
     };
 
 
@@ -1071,16 +1074,16 @@ var View = function(controller){
         },
 
 
-        showRaceDist: function(raceDist, container) {
-            self.displayRaceDist(raceDist, container);
+        showRaceDist: function(raceDist, container, title) {
+            self.displayRaceDist(raceDist, container, title);
         },
 
         removeRaceDist: function(container) {
             self.removeRaceDist(container);
         },
 
-        showGenderAgeDist: function(genAgeDist, container) {
-            self.displayGenderAgeDist(genAgeDist, container);
+        showGenderAgeDist: function(genAgeDist, container, title) {
+            self.displayGenderAgeDist(genAgeDist, container, title);
         },
 
         removeGenAgeDist: function(container) {
@@ -1091,8 +1094,8 @@ var View = function(controller){
             self.removeCrimesByCat(container);
         },
 
-        showCrimeByCat: function(crimeDist, container) {
-            self.displayCrimesByCat(crimeDist, container);
+        showCrimeByCat: function(crimeDist, container, title) {
+            self.displayCrimesByCat(crimeDist, container, title);
         },
 
         showCrimeTimeline: function(crimes) {

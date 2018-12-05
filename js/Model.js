@@ -462,6 +462,10 @@ var Model = function() {
                 item.male = item.male + maleByAge[item.age]
             });
         });
+
+        totalDist.forEach(function(a) {
+            a.age = a.age.replace(' years', '');
+        });
         return totalDist;
     }
 
@@ -497,7 +501,7 @@ var Model = function() {
         var genAgeDist = [];
         for (var age in femaleByAge) {
             if(age != 'Total') {
-                genAgeDist.push({'age': age, 'male': maleByAge[age], 'female': femaleByAge[age]})
+                genAgeDist.push({'age': age.replace('years', ''), 'male': maleByAge[age], 'female': femaleByAge[age]})
             }
         }
         return genAgeDist;
