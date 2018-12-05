@@ -15,7 +15,7 @@ body {
     /* --gradient: linear-gradient(to bottom, #f46b45, #eea849); */
     /* --gradient: linear-gradient(to bottom, #00d2ff, #3a7bd5); */
     /* --gradient: linear-gradient(to bottom, #399ebf 0%, #6f86d6 100%); */
-
+    /*--gradient:linear-gradient(to bottom, #CBBACC 0%, #2580B3 100%);*/
 }
 
 /*landing page*/
@@ -175,6 +175,53 @@ body {
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
     grid-gap: 2px;
+}
+
+#about {
+    cursor: pointer;
+}
+
+#about-overlay {
+    position: absolute;
+    background-image: linear-gradient(to top, #434343 0%, black 100%);
+    opacity: 0.95;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2500;
+    top: 0;
+    left: 0;
+    display: grid;
+}
+
+.hideAbout {
+    visibility: hidden;
+}
+.showAbout {
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.about-content {
+    grid-row: 2 / 10;
+    grid-column: 2 / 6;
+    background-color: #E6E6E6;
+    padding: 5%;
+    text-align: center;
+}
+
+.about-text {
+    margin: 0;
+}
+
+.links {
+    text-decoration: none;
+    color: #3388ff;
+}
+
+.links:hover {
+    border-bottom: dotted 1px #6eaaff;
+    color: #6eaaff;
 }
 
 .prev {

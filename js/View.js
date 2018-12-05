@@ -986,7 +986,7 @@ var View = function(controller){
                     'Crimes can happen anywhere, what is required is a collective effort by you and the entire community. <br><br>' +
                     'Imagine what would Englewood be if all the vacant lots were repurposed, if not few passages but all the passages were safe. That is what we have to aim for. <br> <br>' +
                     '<span class="text-highlight">So, Will Englewood be brought back to life again?</span>' +
-                    '<br><br><button id="final-step-btn" class="explore-btn btn">It Will!</button> </p>' +
+                    '<br><br><button id="final-step-btn" class="explore-btn btn">Explore!</button> </p>' +
                     '</div>'
                 );
 
