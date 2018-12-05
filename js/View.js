@@ -215,7 +215,7 @@ var View = function(controller){
     self.displayCrimesByCat = function(crimeData, container) {
 
         var margin = {top: 13, right: 5, bottom: 0, left: 10};
-        var width = d3.select(container).node().getBoundingClientRect().width;
+        var width = $(container).width() - margin.left - margin.right;
         var height = $('.chart_crime_cat').height() - margin.top;
         var x = d3.scaleBand()
             .domain(crimeData.map(d => d.key))
@@ -548,9 +548,9 @@ var View = function(controller){
             svgHt = $('.timelineDIV').height(),
             svgwd = $('.timelineDIV').width(),
             height = svgHt * 0.55,
-            height2 = svgHt * 0.35,
-            margin = {top: svgHt * 0.05, right: svgwd * 0.05, bottom: svgHt * 0.4, left: svgwd * 0.05},
-            margin2 = {top: svgHt * 0.6, right: svgwd * 0.05, bottom: svgHt * 0.05, left: svgwd * 0.05},
+            height2 = svgHt * 0.24,
+            margin = {top: svgHt * 0.05, right: svgwd * 0.05, bottom: svgHt * 0.35, left: svgwd * 0.05},
+            margin2 = {top: svgHt * 0.68, right: svgwd * 0.05, bottom: svgHt * 0.05, left: svgwd * 0.05},
             width = $('.timelineDIV').width() - margin.left - margin.right;
 
         var parseDate = d3.timeParse("%Y-%m-%dT%H");
