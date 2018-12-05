@@ -218,9 +218,12 @@ var View = function(controller){
         var margin = {top: 13, right: 5, bottom: 0, left: 10};
         var width = $(container).width() - margin.left - margin.right;
         var height = $('.chart_crime_cat').height() - margin.top;
+
+        var barWidth = Math.min(20, (width/crimeData.length + 1))
+
         var x = d3.scaleBand()
             .domain(crimeData.map(d => d.key))
-            .range([margin.left, Math.min(width - margin.right, crimeData.length * 25)])
+            .range([margin.left, Math.min(width, (crimeData.length + 1) * barWidth)])
             .padding(0.1);
         var y = d3.scaleLinear()
             .domain([0, d3.max(crimeData, d => d.value)]).nice()
@@ -254,7 +257,7 @@ var View = function(controller){
             .attr("x", d => x(d.key))
             .attr("y", d => y(d.value))
             .attr("height", d => y(0) - y(d.value))
-            .attr("width", 20)
+            .attr("width", x.bandwidth())
             .on("mouseover", function(d) {
                 div.transition()
                 .duration(200)
