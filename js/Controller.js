@@ -21,7 +21,17 @@ var Controller = function(model, view){
 
     //about button
     $('#about').css({width: $('.filters')[0].getBoundingClientRect().width});
+
+    // about button selected
+    $('#about').on('click', function(){
+        $('#about-overlay').fadeIn('slow', function() {
+            $(this).removeClass('hideAbout');
+            $(this).addClass('showAbout');
+        });
+    });
+
     $('#options').append('<p id="timeline-title">2017 Crimes</p>');
+
     $('input[type=radio]').click(function(e){
         var selectedValue = $('input[name=radio1]:checked').val();
         if(selectedValue == 'heatmap'){
