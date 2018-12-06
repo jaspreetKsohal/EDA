@@ -43,8 +43,6 @@ var View = function(controller){
         info.addTo(map);
     };
 
-
-
     self.displaySchools = function(schoolData) {
         $('#map').append('<div id="numberSchools"><p class="content">'+ schoolData.length +'<span class="det_text"> Schools</span></p></div>');
         if($('#numberServices').length > 0 && $('#numberVacantLots').length > 0){
@@ -66,12 +64,12 @@ var View = function(controller){
     };
 
     function getColor(crimes){
-        if(crimes == undefined){
+        if(crimes == undefined || crimes == 0){
             return 'white';
         }
-        else if (crimes == 0){
-            return '#fef1ec';
-        }
+        // else if (crimes == 0){
+        //     return '#fef1ec';
+        // }
         else if(crimes >= 0 && crimes < 10){
             return '#eecbc7';
         }
@@ -126,16 +124,6 @@ var View = function(controller){
         if(map.hasLayer(vacantLotGroup)){
             vacantLotGroup.bringToFront();
         }
-
-        // markers = L.markerClusterGroup({
-        //     spiderfyOnMaxZoom: false
-        // });
-        // crimeData.forEach(function(c){
-        //     var marker = L.marker(new L.latLng(c.latitude, c.longitude));
-        //     markers.addLayer(marker);
-        // });
-        //
-        // map.addLayer(markers);
     };
 
 
@@ -743,6 +731,7 @@ var View = function(controller){
         }
         if(map.hasLayer(vacantLotGroup)){
             map.removeLayer(vacantLotGroup);
+            $('#numberVacantLots').remove();
             $('#vacant-lot').parent().removeClass('highlight');
         }
         if(map.hasLayer(safePassageGroup)){
@@ -755,11 +744,6 @@ var View = function(controller){
     var markergroup2 = L.layerGroup();
 
     self.showContentForIndex = function(index) {
-        // var content = d3.select('.story-content');
-        //change the content
-        //remove the current content
-        // content.selectAll("*").remove();
-
         var content = $('.story-content');
         content.empty();
 
@@ -925,7 +909,7 @@ var View = function(controller){
                                     map.removeLayer(markergroup2);
                                     map.setView(new L.latLng(41.774876, -87.656801), 14);
 
-
+                                    $('#numberVacantLots').remove();
                                     $('#vacant-lot').parent().removeClass('highlight');
                                     map.removeLayer(vacantLotGroup);
 
@@ -1036,10 +1020,12 @@ var View = function(controller){
                 break;
             }
         }
-        //change story progress
     };
 
+
+
     var publiclyAvailable = {
+
         initialize: function(){
             self.displayMap();
         },
@@ -1053,32 +1039,41 @@ var View = function(controller){
         },
 
         removeServices: function(){
-            if($('#numberServices').hasClass('double-shift')){
+            var noServices = $('#numberServices'),
+                noSchools = $('#numberSchools'),
+                noVacantLots = $('#numberVacantLots');
 
-            }
-            else if($('#numberServices').hasClass('shift')){
-                if($('#numberSchools').hasClass('double-shift')) {
-                    $('#numberSchools').removeClass('double-shift');
-                    $('#numberSchools').addClass('shift');
+            if(noServices.hasClass('double-shift')){
+            }//if
+            else if(noServices.hasClass('shift')){
+                if(noSchools.hasClass('double-shift')){
+                    noSchools.removeClass('double-shift');
+                    noSchools.addClass('shift');
                 }
-                else {
-                    $('#numberVacantLots').removeClass('double-shift');
-                    $('#numberVacantLots').addClass('shift');
+                else if(noVacantLots.hasClass('double-shift')){
+                    noVacantLots.removeClass('double-shift');
+                    noVacantLots.addClass('shift');
                 }
-            }
+            }//else-if
             else{
-                if($('#numberSchools').hasClass('double-shift')) {
-                    $('#numberSchools').removeClass('double-shift');
-                    $('#numberSchools').addClass('shift');
-                    $('#numberVacantLots').removeClass('shift');
+                if(noSchools.hasClass('double-shift')) {
+                    noSchools.removeClass('double-shift');
+                    noSchools.addClass('shift');
+                    noVacantLots.removeClass('shift');
                 }
-                else {
-                    $('#numberVacantLots').removeClass('double-shift');
-                    $('#numberVacantLots').addClass('shift');
-                    $('#numberSchools').removeClass('shift');
+                else if(noVacantLots.hasClass('double-shift')) {
+                    noVacantLots.removeClass('double-shift');
+                    noVacantLots.addClass('shift');
+                    noSchools.removeClass('shift');
                 }
-            }
-            $('#numberServices').remove();
+                else if(noSchools.hasClass('shift')){
+                    noSchools.removeClass('shift');
+                }
+                else if(noVacantLots.hasClass('shift')){
+                    noVacantLots.removeClass('shift');
+                }
+            }//else
+            noServices.remove();
             map.removeLayer(serviceGroup);
         },
 
@@ -1087,33 +1082,41 @@ var View = function(controller){
         },
 
         removeSchools: function(){
-            if($('#numberSchools').hasClass('double-shift')){
+            var noServices = $('#numberServices'),
+                noSchools = $('#numberSchools'),
+                noVacantLots = $('#numberVacantLots');
 
-            }
-            else if($('#numberSchools').hasClass('shift')){
-                if($('#numberServices').hasClass('double-shift')) {
-                    $('#numberServices').removeClass('double-shift');
-                    $('#numberServices').addClass('shift');
+            if(noSchools.hasClass('double-shift')){
+            }//if
+            else if(noSchools.hasClass('shift')){
+                if(noServices.hasClass('double-shift')){
+                    noServices.removeClass('double-shift');
+                    noServices.addClass('shift');
                 }
-                else {
-                    $('#numberVacantLots').removeClass('double-shift');
-                    $('#numberVacantLots').addClass('shift');
+                else if(noVacantLots.hasClass('double-shift')){
+                    noVacantLots.removeClass('double-shift');
+                    noVacantLots.addClass('shift');
                 }
-            }
+            }//else-if
             else{
-                if($('#numberServices').hasClass('double-shift')) {
-                    $('#numberServices').removeClass('double-shift');
-                    $('#numberServices').addClass('shift');
-                    $('#numberVacantLots').removeClass('shift');
+                if(noServices.hasClass('double-shift')) {
+                    noServices.removeClass('double-shift');
+                    noServices.addClass('shift');
+                    noVacantLots.removeClass('shift');
                 }
-                else {
-                    $('#numberVacantLots').removeClass('double-shift');
-                    $('#numberVacantLots').addClass('shift');
-                    $('#numberServices').removeClass('shift');
+                else if(noVacantLots.hasClass('double-shift')) {
+                    noVacantLots.removeClass('double-shift');
+                    noVacantLots.addClass('shift');
+                    noServices.removeClass('shift');
                 }
-            }
-            // $('#numberServices').removeClass('shift');
-            $('#numberSchools').remove();
+                else if(noServices.hasClass('shift')){
+                    noServices.removeClass('shift');
+                }
+                else if(noVacantLots.hasClass('shift')){
+                    noVacantLots.removeClass('shift');
+                }
+            }//else
+            noSchools.remove();
             map.removeLayer(schoolGroup);
         },
 
@@ -1147,38 +1150,41 @@ var View = function(controller){
         },
 
         removeVacantLots: function(){
-            if($('#numberVacantLots').hasClass('double-shift')){
+            var noServices = $('#numberServices'),
+                noSchools = $('#numberSchools'),
+                noVacantLots = $('#numberVacantLots');
 
-            }
-            else if($('#numberVacantLots').hasClass('shift')){
-                if($('#numberSchools').hasClass('double-shift')) {
-                    $('#numberSchools').removeClass('double-shift');
-                    $('#numberSchools').addClass('shift');
+            if(noVacantLots.hasClass('double-shift')){
+            }//if
+            else if(noVacantLots.hasClass('shift')){
+                if(noSchools.hasClass('double-shift')){
+                    noSchools.removeClass('double-shift');
+                    noSchools.addClass('shift');
                 }
-                else {
-                    $('#numberServices').removeClass('double-shift');
-                    $('#numberServices').addClass('shift');
+                else if(noServices.hasClass('double-shift')){
+                    noServices.removeClass('double-shift');
+                    noServices.addClass('shift');
                 }
-            }
+            }//else-if
             else{
-                if($('#numberSchools').hasClass('double-shift')) {
-                    $('#numberSchools').removeClass('double-shift');
-                    $('#numberSchools').addClass('shift');
-                    $('#numberServices').removeClass('shift');
+                if(noSchools.hasClass('double-shift')) {
+                    noSchools.removeClass('double-shift');
+                    noSchools.addClass('shift');
+                    noServices.removeClass('shift');
                 }
-                else {
-                    $('#numberServices').removeClass('double-shift');
-                    $('#numberServices').addClass('shift');
-                    $('#numberSchools').removeClass('shift');
+                else if(noServices.hasClass('double-shift')) {
+                    noServices.removeClass('double-shift');
+                    noServices.addClass('shift');
+                    noSchools.removeClass('shift');
                 }
-                if($('#numberSchools').hasClass('shift')) {
-                    $('#numberSchools').removeClass('shift');
+                else if(noServices.hasClass('shift')){
+                    noServices.removeClass('shift');
                 }
-                else {
-                    $('#numberServices').removeClass('shift');
+                else if(noSchools.hasClass('shift')){
+                    noSchools.removeClass('shift');
                 }
-            }
-            $('#numberVacantLots').remove();
+            }//else
+            noVacantLots.remove();
           map.removeLayer(vacantLotGroup);
         },
 
