@@ -365,6 +365,17 @@ body {
     background-color: white;
 }
 
+.info {
+    color: black;
+    background-color: #f5f5f5;
+    padding: 10px;
+    opacity: 0.5;
+}
+
+.info .info-content {
+    margin: 0;
+}
+
 .details {
     grid-row-start: span 2;
     grid-column: 3;
