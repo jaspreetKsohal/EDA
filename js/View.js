@@ -445,7 +445,15 @@ var View = function(controller){
 
     self.removeBlockHighlight = function(target) {
         if(target) {
-            censusLayer.resetStyle(target);
+            if(map.hasLayer(censusLayer)) {
+                target.setStyle({
+                    weight: 0.2,
+                    fillColor: '#A0A0A0',
+                    color: '#A0A0A0'
+                });
+            } else if (map.hasLayer(crimeLayer)) {
+                target.setStyle(setCrimeChoropleth(target.feature));
+            }
         }
     }
 
