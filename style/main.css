@@ -549,7 +549,7 @@ tr:hover {
 /*end filters*/
 
 /*map*/
-#numberSchools, #numberServices {
+#numberSchools, #numberServices, #numberVacantLots {
     position: absolute;
     top: 90%;
     right: 3%;
@@ -560,6 +560,10 @@ tr:hover {
 
 .shift {
     right: 22% !important;
+}
+
+.double-shift {
+    right: 41% !important;
 }
 
 .content {
