@@ -191,18 +191,33 @@ var Controller = function(model, view){
     });
 
     $(document).on('blockDeselected', function(e, info) {
-        console.log(info)
+        
+        console.log('block1 ', block1); 
+        if(isCompare) {
+            if(block1 == info.blockSelected) {
+                $('#b1CompTxt').addClass('show')
+                view.removeRaceDist('#block1race');
+                view.removeGenAgeDist('#block1gen');
+                view.removeCrimesByCat('#block1crime');
+                //update last changed
+                lastChanged = 1;
+            } else if (block2 == info.blockSelected) {
+                $('#b2CompTxt').addClass('show')
+                view.removeRaceDist('#block2race');
+                view.removeGenAgeDist('#block2gen');
+                view.removeCrimesByCat('#block2crime');
+                //update last changed
+                lastChanged = 2;
+            }
+        }
+        else {
+            showOverview();       
+        }
+        //reset the block values to ''
         if(block1 == info.blockSelected) {
             block1 = '';
         } else if (block2 == info.blockSelected) {
             block2 == '';
-        }
-        console.log('block1 ', block1); 
-        if(isCompare) {
-
-        }
-        else {
-            showOverview();       
         }
     });
 
@@ -229,15 +244,18 @@ var Controller = function(model, view){
             view.removeRaceDist('#block1race');
             view.removeGenAgeDist('#block1gen');
             view.removeCrimesByCat('#block1crime');
-            $('.detailblock1').addClass('compare')
-            $('.detailblock2').addClass('compare')
+            // $('.detailblock1').addClass('compare')
+            // $('.detailblock2').addClass('compare')
+            $('#block1race').addClass('compare');
+            $('#block1gen').addClass('compare');
+            $('#block1crime').addClass('compare');
             $('#b2CompTxt').addClass('show')
             if(block1 == '') {
                 $('#b1CompTxt').addClass('show')
             } else {
-                view.showRaceDist(model.getBlockRaceDist(block1), '#block' + lastChanged + 'race', "Racial Dist.: Block " + info.blockSelected);
-                view.showGenderAgeDist(model.getBlockGenAgeDist(block1), '#block' + lastChanged + 'gen', "Gender and Age: Block " + info.blockSelected);
-                view.showCrimeByCat(model.getCrimesByCat(block1), '#block' + lastChanged + 'crime', "Crime By Type: Block " + info.blockSelected);
+                view.showRaceDist(model.getBlockRaceDist(block1), '#block' + lastChanged + 'race', "Racial Dist.: Block " + block1);
+                view.showGenderAgeDist(model.getBlockGenAgeDist(block1), '#block' + lastChanged + 'gen', "Gender and Age: Block " + block1);
+                view.showCrimeByCat(model.getCrimesByCat(block1), '#block' + lastChanged + 'crime', "Crime By Type: Block " + block1);
             }
         }
         else {
@@ -246,8 +264,11 @@ var Controller = function(model, view){
     });
 
     function showOverview() {
-        $('.detailblock1').removeClass('compare')
-        $('.detailblock2').removeClass('compare')
+        // $('.detailblock1').removeClass('compare')
+        // $('.detailblock2').removeClass('compare')
+        $('#block1race').removeClass('compare');
+        $('#block1gen').removeClass('compare');
+        $('#block1crime').removeClass('compare');
         view.removeRaceDist('#block1race');
         view.removeGenAgeDist('#block1gen');
         view.removeCrimesByCat('#block1crime');

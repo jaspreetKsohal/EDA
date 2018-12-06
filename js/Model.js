@@ -493,6 +493,9 @@ var Model = function() {
         });
         var femaleByAge = selectedblock.properties.census['SEX_BY_AGE_(FEMALE)'];
         var maleByAge = selectedblock.properties.census['SEX_BY_AGE_(MALE)'];
+        if(femaleByAge['Total'] == 0 && maleByAge['Total'] == 0) {
+            return;
+        }
         var genAgeDist = [];
         for (var age in femaleByAge) {
             if(age != 'Total') {

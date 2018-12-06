@@ -179,7 +179,7 @@ var View = function(controller){
 
     self.displayRaceDist = function(raceDist, container, title) {
         if(raceDist === undefined) {
-            d3.select(container).append("p").text("No Data Available").attr("class", "no-data-avail");
+            d3.select(container).append("p").text("No Data Available for \n" + title).attr("class", "no-data-avail");
         } else {
             // var waffle = new WaffleChart()
             //     .selector(".chart_race")
@@ -215,7 +215,10 @@ var View = function(controller){
 
 
     self.displayCrimesByCat = function(crimeData, container, title) {
-
+        if(crimeData.length == 0) {
+            d3.select(container).append("p").text("No Data Available for \n" + title).attr("class", "no-data-avail");
+            return;
+        }
         var margin = {top: 13, right: 5, bottom: 0, left: 10};
         var width = $(container).width() - margin.left - margin.right;
         var height = $('.chart_crime_cat').height() - margin.top;
@@ -465,7 +468,10 @@ var View = function(controller){
 
 
     self.displayGenderAgeDist = function(genAgeDist, container, title) {
-        console.log(genAgeDist);
+        if(genAgeDist === undefined) {
+            d3.select(container).append("p").text("No Data Available for \n" + title).attr("class", "no-data-avail");
+            return;
+        }
         var margin = {top: 13, right: 5, bottom: 25, left: 10};
         var width = $(container).width() - margin.left - margin.right;
         var height = $('.chart_gen_age').height() - margin.top - margin.bottom;
@@ -555,8 +561,6 @@ var View = function(controller){
     };
 
     self.displayTimeline = function(data) {
-
-        console.log(data);
         var svg = d3.select(".timelineDIV").append("svg").attr("width", "100%").attr('height', "100%"),
             svgHt = $('.timelineDIV').height(),
             svgwd = $('.timelineDIV').width(),
