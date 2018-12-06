@@ -820,7 +820,7 @@ var View = function(controller){
                     '<div id="step3">' +
                     '<p id="step3-content" class="overlay-content">The years that followed were marked by high crime rate and poverty. Scores of residents abandoned' +
                     ' their homes and the population dwindled to under 50,000 in the 90s. As the neighborhood continued to deteriorate, crumbling buildings and vacant ' +
-                    'lots provided a breeding ground for crime. <br> <br> <b> By this time Englewood and West Englewood had become a part of the most ' +
+                    'lots lead to more crime. <br> <br> <b> By this time Englewood and West Englewood had become a part of the most ' +
                     'notorious neighborhoods in Chicago.</b></p>' +
                     '</div>'
                 );
@@ -993,8 +993,7 @@ var View = function(controller){
                 $('#next').remove();
                 content.append(
                     '<div id="call-to-action">' +
-                    '<p id="final-step-content" class="overlay-content">Despite all these efforts, Englewood still is one of the Chicago\'s most troubled neighborhood. The senseless killing of kids, sound of gunshots ' +
-                    ', helplessness of mothers to protect their children is aggravating Englewood\'s conditions. <br> <br>' +
+                    '<p id="final-step-content" class="overlay-content">Safe passages and community gardens represent the resiliency of Englewood residents. Despite these efforts, Englewood residents continue to deal with high levels of violence. The killing of kids, sound of gunshots, and the sometimes helplessness of mothers to protect their children is aggravating Englewood\'s conditions.  <br> <br>' +
                     'Crimes can happen anywhere, what is required is a collective effort by you and the entire community. <br><br>' +
                     'Imagine what would Englewood be if all the vacant lots were repurposed, if not few passages but all the passages were safe. That is what we have to aim for. <br> <br>' +
                     '<span class="text-highlight">So, Will Englewood be brought back to life again?</span>' +
