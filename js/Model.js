@@ -393,14 +393,9 @@ var Model = function() {
     }
 
     function getCensusData() {
-        // console.log('census Data');
-        censusData.forEach(function(d){
-            var population = d.properties.census['TOTAL_POPULATION'];
-            // if(population['Total'] != 0){
-                filteredCensusData.push(d);
-            // }
-        });
-        return filteredCensusData;
+        // console.log(censusData);
+        return censusData;
+        
     }
 
     function getDateFilteredCrime(dateRange) {
