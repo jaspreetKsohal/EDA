@@ -105,6 +105,11 @@ body {
     justify-content: center;
 }
 
+#credits-landing-page {
+    grid-column: 11 / span 3;
+    grid-row: 15 /  span 1;
+}
+
 #title-card {
     display: grid;
     align-items: center;
@@ -370,6 +375,10 @@ body {
     background-color: #f5f5f5;
     padding: 10px;
     opacity: 0.5;
+}
+
+#credits-landing-page {
+
 }
 
 .info .info-content {
