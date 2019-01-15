@@ -618,7 +618,7 @@ tr:hover {
 /*map*/
 #numberSchools, #numberServices, #numberVacantLots {
     position: absolute;
-    top: 90%;
+    top: 85%;
     right: 3%;
     width: 200px;
     height: 50px;
@@ -1006,7 +1006,7 @@ text.axis-worktime {
 
     #numberSchools, #numberServices, #numberVacantLots {
         position: absolute;
-        top: 70%
+        top: 85%
     }
 }
 
@@ -1057,8 +1057,7 @@ text.axis-worktime {
     }
 
     #numberSchools, #numberServices, #numberVacantLots {
-        position: absolute;
-        top: 70%
+        top: 85%
     }
 
 
