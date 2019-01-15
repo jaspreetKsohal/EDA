@@ -1003,6 +1003,11 @@ text.axis-worktime {
     .overlay-content {
         font-size: 0.9em;
     }
+
+    #numberSchools, #numberServices, #numberVacantLots {
+        position: absolute;
+        top: 70%
+    }
 }
 
 @media (min-width : 1200px) and (max-width: 1679px) {
@@ -1049,6 +1054,11 @@ text.axis-worktime {
     /*details*/
     #overviewBtn, #compareBtn {
         font-size: 10px;
+    }
+
+    #numberSchools, #numberServices, #numberVacantLots {
+        position: absolute;
+        top: 70%
     }
 
 
