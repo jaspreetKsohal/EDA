@@ -24,52 +24,52 @@
     </head>
 
     <body onload="App.start();">
-        <div class="landing-page">
-            <div id="img1" class="landing-page-graphics">
+        <!--<div class="landing-page">-->
+            <!--<div id="img1" class="landing-page-graphics">-->
 
-            </div>
-            <div id="img2" class="landing-page-graphics">
-
-            </div>
-            <div id="img3" class="landing-page-graphics">
-
-            </div>
-            <div id="img4" class="landing-page-graphics">
-
-            </div>
-            <div id="img5" class="landing-page-graphics">
-
-            </div>
-            <div id="img6" class="landing-page-graphics">
-
-            </div>
-            <div id="img7" class="landing-page-graphics">
-
-            </div>
-            <div id="img8" class="landing-page-graphics">
-
-            </div>
-            <div id="img9" class="landing-page-graphics">
-                <div id="title-card">
-                    <h2 id="main-title">Englewood <br> Data Hub</h2> <br>
-                    <button class="beginBtn" id="beginBtn" value="Begin">Begin</button>
-                </div>
-
-            </div>
-
-            <div id="credits-landing-page">Images from Wikipedia pages and by Tonika Johnson</div>
-        </div><!--end landing-page-->
-
-        <div id="overlay" class="overlay hidden">
-            <!--<div class="prev">-->
-                <!--<h1>Prev</h1>-->
             <!--</div>-->
-            <div id="next" class="next">
-                <button class="nextBtn"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
-            </div>
-            <div class="story-progress"></div>
-            <div class="story-content"></div>
-        </div><!--end overlay-->
+            <!--<div id="img2" class="landing-page-graphics">-->
+
+            <!--</div>-->
+            <!--<div id="img3" class="landing-page-graphics">-->
+
+            <!--</div>-->
+            <!--<div id="img4" class="landing-page-graphics">-->
+
+            <!--</div>-->
+            <!--<div id="img5" class="landing-page-graphics">-->
+
+            <!--</div>-->
+            <!--<div id="img6" class="landing-page-graphics">-->
+
+            <!--</div>-->
+            <!--<div id="img7" class="landing-page-graphics">-->
+
+            <!--</div>-->
+            <!--<div id="img8" class="landing-page-graphics">-->
+
+            <!--</div>-->
+            <!--<div id="img9" class="landing-page-graphics">-->
+                <!--<div id="title-card">-->
+                    <!--<h2 id="main-title">Englewood <br> Data Hub</h2> <br>-->
+                    <!--<button class="beginBtn" id="beginBtn" value="Begin">Begin</button>-->
+                <!--</div>-->
+
+            <!--</div>-->
+
+            <!--<div id="credits-landing-page">Images from Wikipedia pages and by Tonika Johnson</div>-->
+        <!--</div>&lt;!&ndash;end landing-page&ndash;&gt;-->
+
+        <!--<div id="overlay" class="overlay hidden">-->
+            <!--&lt;!&ndash;<div class="prev">&ndash;&gt;-->
+                <!--&lt;!&ndash;<h1>Prev</h1>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--<div id="next" class="next">-->
+                <!--<button class="nextBtn"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>-->
+            <!--</div>-->
+            <!--<div class="story-progress"></div>-->
+            <!--<div class="story-content"></div>-->
+        <!--</div>&lt;!&ndash;end overlay&ndash;&gt;-->
 
         <div class="wrapper">
             <div class="filters">
@@ -104,13 +104,6 @@
                     </tr>
                     <tr>
                         <td>
-                            <span class="icon-crimes filter-option medium" id="crime"></span>
-                            <br>
-                            <span class="title">Crimes</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             <span class="icon-vacant-lot filter-option medium" id="vacant-lot"></span>
                             <br>
                             <span class="title">Vacant Lots</span>
@@ -130,68 +123,6 @@
             <div class="map" id="map"></div>
             <!--end map-->
 
-            <div class="details">
-                <div class="comp-ctrl">
-                    <input id="overviewBtn" class="btn" type="button" value="Show Overview">
-                    <input id="compareBtn" class="btn" type="button" value="Compare Blocks">
-                </div>
-                <p class="compareText" id='b1CompTxt'>Click on a block to compare</p>
-                <div class="chart_crime_cat" id="block1crime"></div>
-                <div class="chart_race" id="block1race"></div>
-                <div class="chart_gen_age" id="block1gen"></div>
-                <p class="compareText" id='b2CompTxt'>Click on a block to compare</p>
-                <div class="chart_crime_cat" id="block2crime"></div>
-                <div class="chart_race" id="block2race"></div>
-                <div class="chart_gen_age" id="block2gen"></div>
-                <div class="crime-title"><p>Crimes</p></div>
-                <div class="demogrph-title"><p>Demographics</p></div>
-                <!-- <div class="detailblock1">
-                    <p class="compareText" id='b1CompTxt'>Click on a block to compare</p>
-                    <div class="chart_crime_cat" id="block1crime"></div>
-                    <div class="chart_race" id="block1race"></div>
-                    <div class="chart_gen_age" id="block1gen"></div>
-                </div>
-                <div class="detailblock2">
-                    <p class="compareText" id='b2CompTxt'>Click on a block to compare</p>
-                    <div class="chart_crime_cat" id="block2crime"></div>
-                    <div class="chart_race" id="block2race"></div>
-                    <div class="chart_gen_age" id="block2gen"></div>
-                </div> -->
-            </div>
-            <!--end details-->
-
-            <div class="timeline">
-                <!--options-->
-                <div id="options">
-                    <div class="pretty p-default p-round">
-                        <input type="radio" name="radio1" id="timeline" value="timeline" checked>
-                        <div class="state">
-                            <label>Timeline</label>
-                        </div>
-                    </div>
-
-                    <div class="pretty p-default p-round">
-                        <input type="radio" name="radio1" id="heatmap" value="heatmap">
-                        <div class="state">
-                            <label>Heatmap</label>
-                        </div>
-                    </div>
-                </div>
-                <!--end options-->
-
-                <!--charts - timeline or heatmap-->
-                <div id="timeline-heatmap">
-                    <div class="timelineDIV"></div>
-
-                    <div class="heatmapDIV">
-                        <div id="hour-heatmap"></div>
-                        <div id="month-heatmap"></div>
-                    </div>
-
-                </div>
-                <!--end charts - timeline or heatmap-->
-            </div>
-            <!--end timeline-->
         </div><!--end wrapper-->
 
         <div id="about">
@@ -268,8 +199,6 @@
         <script src="js/Model.js"></script>
         <script src="js/View.js"></script>
         <script src="js/Controller.js"></script>
-        <script src="js/charts/waffle.js"></script>
-        <script src="js/charts/donut.js"></script>
 
     </body>
 </html>
