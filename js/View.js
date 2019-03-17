@@ -18,6 +18,18 @@ var View = function(controller){
         .domain([0, 5]);
 
 
+    var greenSpacesIcon = L.icon({
+        iconUrl: 'images/green-spaces.svg',
+        // shadowUrl: 'leaf-shadow.png',
+
+        iconSize:     [12, 12], // size of the icon
+        // shadowSize:   [50, 64], // size of the shadow
+        // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        // shadowAnchor: [4, 62],  // the same for the shadow
+        // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+
     self.displayMap = function() {
         // L.mapbox.accessToken = 'pk.eyJ1IjoiamFzcHJlZXQxM3NvaGFsIiwiYSI6ImNqZzlpNjFjeDFkdXgzNG10ZGxta3QxYjAifQ.OdfMrevmS4Az30DQCEHCFg';
         // var map = L.mapbox.map('map', 'mapbox.light', {maxZoom: 18, minZoom: 0})
@@ -49,6 +61,12 @@ var View = function(controller){
     };
 
 
+    self.displayCensusTracts = function(censusTractsData) {
+        censusLayer = L.geoJSON(censusTractsData, {fillColor: '#A0A0A0' ,weight: 0.3, color: "black"});
+        map.addLayer(censusLayer);
+    };
+
+
     // greenSpacesData[0] = Parks | greenSpacesData[1] = green-roofs | greenSpacesData[2] = cuamp-gardens
     self.displayGreenSpaces = function(greenSpacesData){
         greenSpacesGroup = L.featureGroup();
@@ -58,14 +76,16 @@ var View = function(controller){
 
         //adding green roofs
         greenSpacesData[1].forEach(function(r, index){
-           var latlng = L.latLng(r.latitude, r.longitude);
-           L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
+           // var latlng = L.latLng(r.latitude, r.longitude);
+           // L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
+            L.marker([r.latitude, r.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup);
         });
 
         //adding cuamp gardens
         greenSpacesData[2].forEach(function(g, index){
-           var latlng = L.latLng(g.latitude, g.longitude);
-           L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
+           // var latlng = L.latLng(g.latitude, g.longitude);
+           // L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
+            L.marker([g.latitude, g.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup);
         });
 
         map.addLayer(greenSpacesGroup);
@@ -150,35 +170,6 @@ var View = function(controller){
            
         });
     };
-
-
-    function clearInterface() {
-        if(map.hasLayer(crimeLayer)){
-            map.removeLayer(crimeLayer);
-            $('#crime').parent().removeClass('highlight');
-            map.addLayer(censusLayer);
-        }
-        if(map.hasLayer(schoolGroup)){
-            map.removeLayer(schoolGroup);
-            $('#school').parent().removeClass('highlight');
-            $('#numberSchools').remove();
-        }
-        if(map.hasLayer(serviceGroup)){
-            map.removeLayer(serviceGroup);
-            $('#service').parent().removeClass('highlight');
-            $('#numberServices').remove();
-            $('#service-types').addClass('hide-services');
-        }
-        if(map.hasLayer(vacantLotGroup)){
-            map.removeLayer(vacantLotGroup);
-            $('#numberVacantLots').remove();
-            $('#vacant-lot').parent().removeClass('highlight');
-        }
-        if(map.hasLayer(safePassageGroup)){
-            map.removeLayer(safePassageGroup);
-            $('#safe-passage').parent().removeClass('highlight');
-        }
-    }
 
 
     self.showContentForIndex = function(index) {
@@ -464,6 +455,10 @@ var View = function(controller){
     var publiclyAvailable = {
         initialize: function(){
             self.displayMap();
+        },
+
+        addCensusTracts: function(censusTractsData){
+          self.displayCensusTracts(censusTractsData);
         },
 
         addGreenSpaces: function(greenSpacesData){

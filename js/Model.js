@@ -5,8 +5,23 @@
 var App = App || {};
 
 var Model = function() {
-    var parksData = [], greenRoofsData = [], cuampData = [] , schoolData = [], servicesData = [], safePassagesData = [];
+    var censusTractsData = [], parksData = [], greenRoofsData = [], cuampData = [] , schoolData = [], servicesData = [], safePassagesData = [];
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
+
+
+    function loadCensusTractsData() {
+        $.ajax({
+            url: "https://data.cityofchicago.org/resource/74p9-q2aq.geojson?$where=commarea in('67','68')",
+            type: "GET",
+            data: {
+                "$limit" : 5000,
+                // "$$app_token" : "YOURAPPTOKENHERE"
+            }
+        }).done(function(data) {
+            censusTractsData.push(data);
+            $(document).trigger('loadCensus');
+        });
+    }
 
 
     function loadGreenSpacesData() {
@@ -38,6 +53,21 @@ var Model = function() {
             .defer(d3.json, "data/serviceTaxonomy.json")
             .defer(d3.csv, "data/services.csv")
             .await(analyzeServices);
+    }
+
+
+    function loadSafePassagesData() {
+        $.ajax({
+            url: "https://data.cityofchicago.org/resource/v3t6-2wdk.json?$where=within_box(the_geom,41.793634,-87.679810,41.751014,-87.625162)",
+            type: "GET",
+            data: {
+                "$limit" : 12000
+                // "$$app_token" : "YOURAPPTOKENHERE"
+            }
+        }).done(function(data) {
+            safePassagesData.push(data);
+        });
+
     }
 
 
@@ -103,21 +133,6 @@ var Model = function() {
     }
 
 
-    function loadSafePassagesData() {
-        $.ajax({
-            url: "https://data.cityofchicago.org/resource/v3t6-2wdk.json?$where=within_box(the_geom,41.793634,-87.679810,41.751014,-87.625162)",
-            type: "GET",
-            data: {
-                "$limit" : 12000
-                // "$$app_token" : "YOURAPPTOKENHERE"
-            }
-        }).done(function(data) {
-            safePassagesData.push(data);
-        });
-
-    }
-
-
     function getGreenSpaceData() {
         return [parksData[0], greenRoofsData[0], cuampData[0]];
     }
@@ -138,7 +153,13 @@ var Model = function() {
     }
 
 
+    function getCensusTractsData() {
+        return censusTractsData[0];
+    }
+
+
     return {
+        loadCensusTractsData: loadCensusTractsData,
         loadGreenSpacesData: loadGreenSpacesData,
         loadSchoolData: loadSchoolData,
         loadServicesData: loadServicesData,
@@ -148,6 +169,7 @@ var Model = function() {
         getServiceData: getServiceData,
         getSafePassagesData: getSafePassagesData,
         getFilteredServices: getFilteredServices,
+        getCensusTractsData: getCensusTractsData
     }
 
 };

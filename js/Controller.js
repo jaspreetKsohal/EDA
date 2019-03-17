@@ -50,6 +50,11 @@ var Controller = function(model, view){
     };
 
 
+    $(document).on('loadCensus', function(e) {
+        view.addCensusTracts(model.getCensusTractsData());
+    });
+
+
     $('td').on('click', function(event){
 
         // $('.filter-option').on('click', function(event){

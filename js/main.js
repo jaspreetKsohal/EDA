@@ -15,6 +15,7 @@ var App = App || {};
         var totalBlocksSelected = 0;
 
         view.initialize();
+        model.loadCensusTractsData();
         model.loadGreenSpacesData();
         model.loadSchoolData();
         model.loadServicesData();
