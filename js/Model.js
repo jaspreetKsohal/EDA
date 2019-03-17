@@ -5,14 +5,24 @@
 var App = App || {};
 
 var Model = function() {
-    var greenSpacesData = [], schoolData = [], servicesData = [], safePassagesData = [];
+    var parksData = [], greenRoofsData = [], cuampData = [] , schoolData = [], servicesData = [], safePassagesData = [];
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
+
 
     function loadGreenSpacesData() {
         d3.json("data/parks.geojson", function(d){
-            greenSpacesData.push(d);
+            parksData.push(d);
+        });
+
+        d3.csv("data/green-roofs.csv", function(d){
+            greenRoofsData.push(d);
+        });
+
+        d3.csv("data/cuamp-gardens.csv", function(d){
+            cuampData.push(d);
         });
     }
+
 
     function loadSchoolData() {
         d3.csv("data/schools.csv", function(d){
@@ -107,14 +117,16 @@ var Model = function() {
 
     }
 
+
     function getGreenSpaceData() {
-        return greenSpacesData[0];
+        return [parksData[0], greenRoofsData[0], cuampData[0]];
     }
 
 
     function getSchoolData(){
         return schoolData;
     }
+
 
     function getServiceData(){
         return servicesData;
@@ -124,6 +136,7 @@ var Model = function() {
     function getSafePassagesData(){
         return safePassagesData[0];
     }
+
 
     return {
         loadGreenSpacesData: loadGreenSpacesData,

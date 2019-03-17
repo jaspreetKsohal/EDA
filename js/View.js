@@ -10,9 +10,13 @@ var View = function(controller){
     var map;
     var greenSpacesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer;
 
+    var markergroup1 = L.layerGroup();
+    var markergroup2 = L.layerGroup();
+
 
     var colorScale = d3.scaleSequential(d3.interpolateReds)
         .domain([0, 5]);
+
 
     self.displayMap = function() {
         // L.mapbox.accessToken = 'pk.eyJ1IjoiamFzcHJlZXQxM3NvaGFsIiwiYSI6ImNqZzlpNjFjeDFkdXgzNG10ZGxta3QxYjAifQ.OdfMrevmS4Az30DQCEHCFg';
@@ -45,11 +49,28 @@ var View = function(controller){
     };
 
 
+    // greenSpacesData[0] = Parks | greenSpacesData[1] = green-roofs | greenSpacesData[2] = cuamp-gardens
     self.displayGreenSpaces = function(greenSpacesData){
-      greenSpacesGroup = L.geoJSON(greenSpacesData, {fillColor: "#86cd86", weight: 0, fillOpacity: 0.7});
+        greenSpacesGroup = L.featureGroup();
 
-      map.addLayer(greenSpacesGroup);
+        // adding parks
+        L.geoJSON(greenSpacesData[0], {fillColor: "#86cd86", weight: 0, fillOpacity: 0.7}).addTo(greenSpacesGroup);
+
+        //adding green roofs
+        greenSpacesData[1].forEach(function(r, index){
+           var latlng = L.latLng(r.latitude, r.longitude);
+           L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
+        });
+
+        //adding cuamp gardens
+        greenSpacesData[2].forEach(function(g, index){
+           var latlng = L.latLng(g.latitude, g.longitude);
+           L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
+        });
+
+        map.addLayer(greenSpacesGroup);
     };
+
 
     self.displaySchools = function(schoolData) {
         $('#map').append('<div id="numberSchools"><p class="content">'+ schoolData.length +'<span class="det_text"> Schools</span></p></div>');
@@ -159,8 +180,6 @@ var View = function(controller){
         }
     }
 
-    var markergroup1 = L.layerGroup();
-    var markergroup2 = L.layerGroup();
 
     self.showContentForIndex = function(index) {
         var content = $('.story-content');

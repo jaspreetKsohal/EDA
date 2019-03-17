@@ -1,0 +1,8 @@
+﻿id,house_number,pre_dir,street_name,street_type,full_address_range,building_name1,month_view,total_roof_sqft,vegetated_sqft,percent_vegetated,fact_sheet,latitude,longitude,location,type
+118,6720,S,PAULINA,ST,6720-6740 S PAULINA ST,DAVIS MAGNET SCHOOL,19-Aug,"43,743","2,513",6,https://gisapps.cityofchicago.org/gisimages/Greenroofs/VR_118.pdf,41.7706296,-87.666668,"(41.77062957, -87.66666762)",Green Roof
+119,2300,W,64TH,ST,2300-2300 W 64TH ST, ,19-Aug,"45,822","3,686",8,https://gisapps.cityofchicago.org/gisimages/Greenroofs/VR_119.pdf,41.7776651,-87.681828,"(41.77766510, -87.68182799)",Green Roof
+120,1400,W,63RD,ST,1400-1400 W 63RD ST, ,19-Aug,"24,946","18,713",75,https://gisapps.cityofchicago.org/gisimages/Greenroofs/VR_120.pdf,41.7797959,-87.660146,"(41.77979591, -87.66014556)",Green Roof
+193,911,W,63RD,ST,911-0 W 63RD ST, ,19-Aug,"11,020","6,624",60,https://gisapps.cityofchicago.org/gisimages/Greenroofs/VR_193.pdf,41.7795556,-87.647814,"(41.77955559, -87.64781448)",Green Roof
+194,6311,S,HALSTED,ST,6311-6311 S HALSTED ST, ,19-Aug,"58,710","22,337",38,https://gisapps.cityofchicago.org/gisimages/Greenroofs/VR_194.pdf,41.7795006,-87.644127,"(41.77950059, -87.64412672)",Green Roof
+195,724,W,64TH,ST,724-724 W 64TH ST, ,19-Aug,"75,446","26,821",36,https://gisapps.cityofchicago.org/gisimages/Greenroofs/VR_195.pdf,41.7783614,-87.643622,"(41.77836142, -87.64362197)",Green Roof
+196,725,W,64TH,ST,725-725 W 64TH ST, ,19-Aug,"52,590","39,943",76,https://gisapps.cityofchicago.org/gisimages/Greenroofs/VR_196.pdf,41.7775186,-87.643561,"(41.77751856, -87.64356135)",Green Roof
