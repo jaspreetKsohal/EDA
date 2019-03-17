@@ -8,7 +8,7 @@ var View = function(controller){
 
     var self = this;
     var map;
-    var schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer;
+    var greenSpacesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer;
 
 
     var colorScale = d3.scaleSequential(d3.interpolateReds)
@@ -20,17 +20,18 @@ var View = function(controller){
         //     .setView([41.7753, -87.6416], 14);
 
         map = L.map('map').setView([41.774876, -87.656801], 14);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            // subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
-
-        // L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        // L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
         //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        //     subdomains: 'abcd',
+        //     // subdomains: 'abcd',
         //     maxZoom: 19
         // }).addTo(map);
+
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
 
         // var info = L.control();
 
@@ -41,6 +42,13 @@ var View = function(controller){
         // };
 
         // info.addTo(map);
+    };
+
+
+    self.displayGreenSpaces = function(greenSpacesData){
+      greenSpacesGroup = L.geoJSON(greenSpacesData, {fillColor: "#86cd86", weight: 0, fillOpacity: 0.7});
+
+      map.addLayer(greenSpacesGroup);
     };
 
     self.displaySchools = function(schoolData) {
@@ -435,9 +443,16 @@ var View = function(controller){
 
 
     var publiclyAvailable = {
-
         initialize: function(){
             self.displayMap();
+        },
+
+        addGreenSpaces: function(greenSpacesData){
+          self.displayGreenSpaces(greenSpacesData);
+        },
+
+        removeGreenSpaces: function(){
+          map.removeLayer(greenSpacesGroup);
         },
 
         addServices: function(serviceData){
@@ -539,7 +554,9 @@ var View = function(controller){
         },
 
         isLayerActive: function(layer){
-            if(layer === 'school')
+            if(layer === 'green-spaces')
+                return map.hasLayer(greenSpacesGroup);
+            else if(layer === 'school')
                 return map.hasLayer(schoolGroup);
             else if(layer === 'service')
                 return map.hasLayer(serviceGroup);

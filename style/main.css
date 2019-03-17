@@ -403,7 +403,7 @@ body {
 
     .filter-option{
         /*color: #1a1937;*/
-        font-size: 35px;
+        font-size: 30px;
     }
 
     table {
@@ -424,7 +424,7 @@ body {
     }
 
     .title {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     #service-types {

@@ -15,7 +15,8 @@ var App = App || {};
         var totalBlocksSelected = 0;
 
         view.initialize();
-        model.loadData();
+        model.loadGreenSpacesData();
+        model.loadSchoolData();
         model.loadServicesData();
         model.loadSafePassagesData();
     };

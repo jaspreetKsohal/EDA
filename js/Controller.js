@@ -59,7 +59,14 @@ var Controller = function(model, view){
         // $('#'+filter).toggleClass("highlight");
         $(event.currentTarget).toggleClass("highlight");
 
-        if(filter === 'service'){
+        if(filter === 'green-spaces'){
+            if(view.isLayerActive(filter)){
+                view.removeGreenSpaces();
+            } else {
+                view.addGreenSpaces(model.getGreenSpaceData());
+            }
+        }
+        else if(filter === 'service'){
             $('#service-types').toggleClass('hide-services');
             $('#service-types').css({height: getServiceTypePanelHeight()});
             if(view.isLayerActive(filter)){
@@ -87,6 +94,7 @@ var Controller = function(model, view){
     });
 
 
+    // explanatory phase
     $('#beginBtn').on('click', function () {
         console.log('begin');
         $('.landing-page').fadeOut('slow', function() {

@@ -10,8 +10,6 @@
         <link rel="stylesheet" type="text/css" href="style/main.css">
         <link rel="stylesheet" type="text/css" href="style/icons/style.css">
         <link rel="stylesheet" href="leaflet/leaflet.css" />
-        <link rel="stylesheet" href="leaflet_cluster/MarkerCluster.css" />
-        <link rel="stylesheet" href="leaflet_cluster/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -90,6 +88,20 @@
                 <table id="filter-options">
                     <tr>
                         <td>
+                            <span class="icon-green-spaces filter-option" id="green-spaces"></span>
+                            <br>
+                            <span class="title">Green Spaces</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="icon-landmark filter-option" id="historic-sites"></span>
+                            <br>
+                            <span class="title">Historic Sites</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <span class="icon-services filter-option" id="service"></span>
                             <br>
                             <span class="title">Services</span>
@@ -97,7 +109,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <span class="icon-schools filter-option" id="school"></span>
+                            <span class="icon-school filter-option" id="school"></span>
                             <br>
                             <span class="title">Schools</span>
                         </td>
@@ -114,6 +126,13 @@
                             <span class="icon-safe-passage filter-option medium" id="safe-passage"></span>
                             <br>
                             <span class="title"> Safe Passages</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="icon-demographics filter-option" id="demographics"></span>
+                            <br>
+                            <span class="title">Demographics</span>
                         </td>
                     </tr>
                 </table>

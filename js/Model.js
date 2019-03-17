@@ -5,10 +5,16 @@
 var App = App || {};
 
 var Model = function() {
-    var schoolData = [], servicesData = [], safePassagesData = [];
+    var greenSpacesData = [], schoolData = [], servicesData = [], safePassagesData = [];
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
 
-    function loadData() {
+    function loadGreenSpacesData() {
+        d3.json("data/parks.geojson", function(d){
+            greenSpacesData.push(d);
+        });
+    }
+
+    function loadSchoolData() {
         d3.csv("data/schools.csv", function(d){
             schoolData.push(d);
             $(document).trigger('loadSchool');
@@ -101,6 +107,10 @@ var Model = function() {
 
     }
 
+    function getGreenSpaceData() {
+        return greenSpacesData[0];
+    }
+
 
     function getSchoolData(){
         return schoolData;
@@ -116,9 +126,11 @@ var Model = function() {
     }
 
     return {
-        loadData: loadData,
+        loadGreenSpacesData: loadGreenSpacesData,
+        loadSchoolData: loadSchoolData,
         loadServicesData: loadServicesData,
         loadSafePassagesData: loadSafePassagesData,
+        getGreenSpaceData: getGreenSpaceData,
         getSchoolData: getSchoolData,
         getServiceData: getServiceData,
         getSafePassagesData: getSafePassagesData,
