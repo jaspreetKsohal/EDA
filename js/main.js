@@ -16,6 +16,8 @@ var App = App || {};
 
         view.initialize();
         model.loadCensusTractsData();
+        model.loadTaxPolygonsData();
+        model.loadHistoricSitesData();
         model.loadGreenSpacesData();
         model.loadSchoolData();
         model.loadServicesData();

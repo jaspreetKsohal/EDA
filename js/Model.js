@@ -5,7 +5,7 @@
 var App = App || {};
 
 var Model = function() {
-    var censusTractsData = [], parksData = [], greenRoofsData = [], cuampData = [] , schoolData = [], servicesData = [], safePassagesData = [];
+    var censusTractsData = [], parksData = [], greenRoofsData = [], cuampData = [], historicSitesData = [], schoolData = [], servicesData = [], safePassagesData = [];
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
 
 
@@ -24,6 +24,20 @@ var Model = function() {
     }
 
 
+    function loadTaxPolygonsData() {
+        $.ajax({
+            url: "https://datacatalog.cookcountyil.gov/resource/6gsb-287d.geojson?$where=within_box(the_geom,41.793634,-87.679810,41.751014,-87.625162)",
+            type: "GET",
+            data: {
+                "$limit" : 50000
+            }
+        }).done(function(data) {
+            alert("Retrieved " + data.length + " records from the dataset!");
+            console.log(data);
+        });
+    }
+
+
     function loadGreenSpacesData() {
         d3.json("data/parks.geojson", function(d){
             parksData.push(d);
@@ -35,6 +49,20 @@ var Model = function() {
 
         d3.csv("data/cuamp-gardens.csv", function(d){
             cuampData.push(d);
+        });
+    }
+
+
+    function loadHistoricSitesData() {
+        $.ajax({
+            url: "https://data.cityofchicago.org/resource/fpx9-pjqk.json?$where=within_box(location,41.793634,-87.679810,41.751014,-87.625162)",
+            type: "GET",
+            data: {
+                "$limit" : 5000,
+                // "$$app_token" : "YOURAPPTOKENHERE"
+            }
+        }).done(function(data) {
+            historicSitesData.push(data);
         });
     }
 
@@ -138,6 +166,11 @@ var Model = function() {
     }
 
 
+    function getHistoricSitesData() {
+        return historicSitesData[0];
+    }
+
+
     function getSchoolData(){
         return schoolData;
     }
@@ -160,11 +193,14 @@ var Model = function() {
 
     return {
         loadCensusTractsData: loadCensusTractsData,
+        loadTaxPolygonsData: loadTaxPolygonsData,
         loadGreenSpacesData: loadGreenSpacesData,
+        loadHistoricSitesData: loadHistoricSitesData,
         loadSchoolData: loadSchoolData,
         loadServicesData: loadServicesData,
         loadSafePassagesData: loadSafePassagesData,
         getGreenSpaceData: getGreenSpaceData,
+        getHistoricSitesData: getHistoricSitesData,
         getSchoolData: getSchoolData,
         getServiceData: getServiceData,
         getSafePassagesData: getSafePassagesData,

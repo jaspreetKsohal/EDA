@@ -71,6 +71,13 @@ var Controller = function(model, view){
                 view.addGreenSpaces(model.getGreenSpaceData());
             }
         }
+        else if(filter === 'historic-sites'){
+            if(view.isLayerActive(filter)){
+                view.removeHistoricSites();
+            } else {
+                view.addHistoricSites(model.getHistoricSitesData());
+            }
+        }
         else if(filter === 'service'){
             $('#service-types').toggleClass('hide-services');
             $('#service-types').css({height: getServiceTypePanelHeight()});

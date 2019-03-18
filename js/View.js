@@ -8,7 +8,7 @@ var View = function(controller){
 
     var self = this;
     var map;
-    var greenSpacesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer;
+    var greenSpacesGroup, historicSitesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer;
 
     var markergroup1 = L.layerGroup();
     var markergroup2 = L.layerGroup();
@@ -27,6 +27,12 @@ var View = function(controller){
         // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
         // shadowAnchor: [4, 62],  // the same for the shadow
         // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+
+    var historicSitesIcon = L.icon({
+        iconUrl: 'images/historic-sites.svg',
+        iconSize:     [12, 12], // size of the icon
     });
 
 
@@ -69,26 +75,75 @@ var View = function(controller){
 
     // greenSpacesData[0] = Parks | greenSpacesData[1] = green-roofs | greenSpacesData[2] = cuamp-gardens
     self.displayGreenSpaces = function(greenSpacesData){
+        console.log(greenSpacesData[0]);
         greenSpacesGroup = L.featureGroup();
 
         // adding parks
-        L.geoJSON(greenSpacesData[0], {fillColor: "#86cd86", weight: 0, fillOpacity: 0.7}).addTo(greenSpacesGroup);
+        L.geoJSON(greenSpacesData[0], {fillColor: "#86cd86", weight: 0, fillOpacity: 0.7}).addTo(greenSpacesGroup)
+            .bindPopup(function(layer){
+                var popup_text = "<b>"+ layer.feature.properties.park +"</b></br>" +
+                    "<i>" + layer.feature.properties.park_class + "</i></br>" +
+                    "Area - " + layer.feature.properties.acres + " acres</br>" +
+                    "Address - " + layer.feature.properties.location;
+                return popup_text;
+            });
 
         //adding green roofs
         greenSpacesData[1].forEach(function(r, index){
            // var latlng = L.latLng(r.latitude, r.longitude);
            // L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
-            L.marker([r.latitude, r.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup);
+            L.marker([r.latitude, r.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup)
+                .bindPopup(
+                    "<b>" + r.full_address_range + "</b></br>" +
+                    "<i>" + r.type + "</i></br>" +
+                    "Total Roof sqft - " + r.total_roof_sqft + "</br>" +
+                    "Vegetated sqft - " + r.vegetated_sqft + "</br>" +
+                    "Percent Vegetated - " + r.percent_vegetated + "%</br>"
+                );
         });
 
         //adding cuamp gardens
         greenSpacesData[2].forEach(function(g, index){
            // var latlng = L.latLng(g.latitude, g.longitude);
            // L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
-            L.marker([g.latitude, g.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup);
+            L.marker([g.latitude, g.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup)
+                .bindPopup(
+                    "<b>" + g.growing_site_name + "</b></br>" +
+                    "<i>" + g.choose_growing_site_types + "</i></br>" +
+                    getIcons(g.food_producing, g.compost_system, g.is_growing_site_dormant) + "</br>" +
+                    "Address - " + g.address
+                );
         });
 
         map.addLayer(greenSpacesGroup);
+    };
+
+
+    function getIcons(food_producing, compost_system, dormant){
+        var icons = "";
+
+        if(food_producing.trim() === 'true')
+            icons += "<span title='Food Producing' class='icon-food-producing tooltip-icon'></span>";
+        if(compost_system.trim() === 'true')
+            icons += "<span title='Compost System' class='icon-compost-system tooltip-icon'></span>";
+        if(dormant.trim() === 'true')
+            icons += "<span title='Dormant Site' class='icon-dormant tooltip-icon'></span>";
+
+        return icons;
+    }
+
+
+    self.displayHistoricSites = function(historicSitesData) {
+        historicSitesGroup = L.featureGroup();
+
+        historicSitesData.forEach(function(h, index){
+           // var latlng = L.latLng(h.latitude, h.longitude);
+           // L.circle( latlng,{radius: 30, color: "#000", weight: 0, fillOpacity: 1}).addTo(historicSitesGroup);
+            L.marker([h.latitude, h.longitude],{icon: historicSitesIcon}).addTo(historicSitesGroup)
+                .bindPopup("<b>" + h.landmark_name + "</b></br>Built - " + h.date_built + "</br>By - " + h.architect + "</br>Address - " + h.address);
+        });
+
+        map.addLayer(historicSitesGroup);
     };
 
 
@@ -128,9 +183,11 @@ var View = function(controller){
         serviceData.forEach(function(s){
             var latlng = L.latLng(s.latitude, s.longitude);
             L.circle(latlng, {radius: 25, color: '#e57287',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
-                .bindPopup("<b>" + s['name'] + "</b></br>" + "Address: " + s['address'] + "</br>" + "<a href='" + s['website'] + "' target='_blank'>Website</a></br>"
-                + "Phone Number: " + "<a href='tel:" + s['phone'] + "' target='_blank'>" + s['phone'] + "</a></br>"
-                + "Description: " + "<p class='service-description'>" + s['description'] + "</p>");
+                .bindPopup("<b>" + s['name'] + "</b></br>" +
+                    "<i><p class='service-description'>" + s['description'] + "</p></i></br>" +
+                    "<a href='" + s['website'] + "' target='_blank'>Website</a></br>" +
+                    "Address: " + s['address'] + "</br>" +
+                    "Phone Number: " + "<a href='tel:" + s['phone'] + "' target='_blank'>" + s['phone'] + "</a></br>");
         });
 
         map.addLayer(serviceGroup);
@@ -469,6 +526,14 @@ var View = function(controller){
           map.removeLayer(greenSpacesGroup);
         },
 
+        addHistoricSites: function(historicSitesData){
+            self.displayHistoricSites(historicSitesData);
+        },
+
+        removeHistoricSites: function(){
+            map.removeLayer(historicSitesGroup);
+        },
+
         addServices: function(serviceData){
             self.displayServices(serviceData);
         },
@@ -570,6 +635,8 @@ var View = function(controller){
         isLayerActive: function(layer){
             if(layer === 'green-spaces')
                 return map.hasLayer(greenSpacesGroup);
+            else if(layer === 'historic-sites')
+                return map.hasLayer(historicSitesGroup);
             else if(layer === 'school')
                 return map.hasLayer(schoolGroup);
             else if(layer === 'service')

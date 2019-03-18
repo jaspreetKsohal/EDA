@@ -612,4 +612,9 @@ body {
     .tooltip-wrapper {
         text-align: center;
     }
+
+    .tooltip-icon {
+        font-size: 20px;
+        padding: 2px;
+    }
 /*tooltip ends*/

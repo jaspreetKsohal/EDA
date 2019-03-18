@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?4xkcsf');
-  src:  url('fonts/icomoon.eot?4xkcsf#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?4xkcsf') format('truetype'),
-    url('fonts/icomoon.woff?4xkcsf') format('woff'),
-    url('fonts/icomoon.svg?4xkcsf#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?t9iasy');
+  src:  url('fonts/icomoon.eot?t9iasy#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?t9iasy') format('truetype'),
+    url('fonts/icomoon.woff?t9iasy') format('woff'),
+    url('fonts/icomoon.svg?t9iasy#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -25,23 +25,34 @@
 }
 
 .icon-vacant-lot:before {
-  content: "\e902";
+  content: "\e909";
 }
 .icon-demographics:before {
-  content: "\e903";
+  content: "\e908";
 }
 .icon-landmark:before {
   content: "\e904";
 }
 .icon-services:before {
-  content: "\e905";
+  content: "\e907";
 }
 .icon-safe-passage:before {
   content: "\e906";
 }
-.icon-green-spaces:before {
-  content: "\e900";
+.icon-food-producing:before {
+  content: "\e905";
+  color: #62af62;
+}
+.icon-dormant:before {
+  content: "\e903";
+}
+.icon-compost-system:before {
+  content: "\e902";
+  color: #e5a551;
 }
 .icon-school:before {
   content: "\e901";
+}
+.icon-green-spaces:before {
+  content: "\e900";
 }
