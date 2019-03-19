@@ -8,7 +8,7 @@ var View = function(controller){
 
     var self = this;
     var map;
-    var greenSpacesGroup, historicSitesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer;
+    var greenSpacesGroup, historicSitesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer, lotsGroup;
 
     var markergroup1 = L.layerGroup();
     var markergroup2 = L.layerGroup();
@@ -75,7 +75,6 @@ var View = function(controller){
 
     // greenSpacesData[0] = Parks | greenSpacesData[1] = green-roofs | greenSpacesData[2] = cuamp-gardens
     self.displayGreenSpaces = function(greenSpacesData){
-        console.log(greenSpacesData[0]);
         greenSpacesGroup = L.featureGroup();
 
         // adding parks
@@ -202,6 +201,33 @@ var View = function(controller){
         });
 
         map.addLayer(safePassageGroup);
+    };
+
+
+    function lotsStyle(feature){
+        var color = "";
+        var lot_status = feature.properties.property_status;
+        if(lot_status === 'Owned by City')
+            color = "#e3503e";
+        else if(lot_status === 'Sold')
+            color = "#18a46d";
+        else if(lot_status === 'In Acquisition')
+            color = "#e6ad55";
+        else
+            color = "#5c5c5c";
+
+        return {
+            fillColor: color,
+            weight: 0,
+            fillOpacity: 0.6
+        }
+    }
+
+
+    self.displayLots = function(lotsData){
+        console.log(lotsData);
+        lotsGroup = L.geoJSON(lotsData, {style: lotsStyle});
+        map.addLayer(lotsGroup);
     };
 
 
@@ -628,6 +654,14 @@ var View = function(controller){
           map.removeLayer(safePassageGroup);
         },
 
+        addLots: function(lotsData){
+            self.displayLots(lotsData);
+        },
+
+        removeLots: function(){
+            map.removeLayer(lotsGroup);
+        },
+
         showContentForIndex: function(index) {
             self.showContentForIndex(index);
         },
@@ -641,6 +675,8 @@ var View = function(controller){
                 return map.hasLayer(schoolGroup);
             else if(layer === 'service')
                 return map.hasLayer(serviceGroup);
+            else if(layer === 'lots')
+                return map.hasLayer(lotsGroup);
             else
                 return map.hasLayer(safePassageGroup);
         }

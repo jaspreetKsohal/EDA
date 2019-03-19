@@ -102,6 +102,13 @@ var Controller = function(model, view){
                 view.addSafePassages(model.getSafePassagesData());
             }
         }//if-safe-passage
+        else if(filter === 'lots'){
+            if(view.isLayerActive(filter)){
+                view.removeLots();
+            } else {
+                view.addLots(model.getLotsData());
+            }
+        }
 
     });
 

@@ -5,7 +5,7 @@
 var App = App || {};
 
 var Model = function() {
-    var censusTractsData = [], parksData = [], greenRoofsData = [], cuampData = [], historicSitesData = [], schoolData = [], servicesData = [], safePassagesData = [];
+    var censusTractsData = [], lotsData = [], parksData = [], greenRoofsData = [], cuampData = [], historicSitesData = [], schoolData = [], servicesData = [], safePassagesData = [];
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
 
 
@@ -24,16 +24,9 @@ var Model = function() {
     }
 
 
-    function loadTaxPolygonsData() {
-        $.ajax({
-            url: "https://datacatalog.cookcountyil.gov/resource/6gsb-287d.geojson?$where=within_box(the_geom,41.793634,-87.679810,41.751014,-87.625162)",
-            type: "GET",
-            data: {
-                "$limit" : 50000
-            }
-        }).done(function(data) {
-            alert("Retrieved " + data.length + " records from the dataset!");
-            console.log(data);
+    function loadLotsData() {
+        d3.json("data/lots.geojson", function(d){
+           lotsData.push(d);
         });
     }
 
@@ -191,9 +184,14 @@ var Model = function() {
     }
 
 
+    function getLotsData() {
+        return lotsData;
+    }
+
+
     return {
         loadCensusTractsData: loadCensusTractsData,
-        loadTaxPolygonsData: loadTaxPolygonsData,
+        loadLotsData: loadLotsData,
         loadGreenSpacesData: loadGreenSpacesData,
         loadHistoricSitesData: loadHistoricSitesData,
         loadSchoolData: loadSchoolData,
@@ -205,7 +203,8 @@ var Model = function() {
         getServiceData: getServiceData,
         getSafePassagesData: getSafePassagesData,
         getFilteredServices: getFilteredServices,
-        getCensusTractsData: getCensusTractsData
+        getCensusTractsData: getCensusTractsData,
+        getLotsData: getLotsData
     }
 
 };
