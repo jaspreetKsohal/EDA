@@ -226,7 +226,13 @@ var View = function(controller){
 
     self.displayLots = function(lotsData){
         console.log(lotsData);
-        lotsGroup = L.geoJSON(lotsData, {style: lotsStyle});
+        lotsGroup = L.geoJSON(lotsData, {style: lotsStyle})
+            .bindPopup(function(layer){
+                var popup_text = "<b>" + layer.feature.properties.address + "</b></br>" +
+                    "Status - " + layer.feature.properties.property_status + "</br>" +
+                    "Area - " + layer.feature.properties.sq_ft + " sqft</br>";
+                return popup_text;
+            });
         map.addLayer(lotsGroup);
     };
 
@@ -675,7 +681,7 @@ var View = function(controller){
                 return map.hasLayer(schoolGroup);
             else if(layer === 'service')
                 return map.hasLayer(serviceGroup);
-            else if(layer === 'lots')
+            else if(layer === 'vacant-lots')
                 return map.hasLayer(lotsGroup);
             else
                 return map.hasLayer(safePassageGroup);
