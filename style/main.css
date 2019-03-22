@@ -334,7 +334,7 @@ body {
         padding: 0;
         width: 100%;
         height: inherit;
-        grid-template-columns: 5% auto;
+        grid-template-columns: 6% auto;
         background-color: white;
     }
 
@@ -424,24 +424,55 @@ body {
     }
 
     .title {
-        font-size: 14px;
+        font-size: 13px;
     }
 
-    #service-types {
+    #school {
+        font-size: 40px !important;
+    }
+
+    #service {
+        font-size: 35px !important;
+    }
+
+/*end filters*/
+
+
+/*secondary controls*/
+    #secondary-controls-container{
         display: flex;
-        align-items: center;
+        flex-flow: column;
         position: absolute;
         left: 100%;
-        padding-left: 2vw;
-        width : 200px;
+
+        width : 450px;
+        height: 100%;
         z-index: 500;
+
         background-color: #dbe9f7;
+        opacity: 0.7;
+        align-items: center;
     }
 
-    .hide-services{
-        visibility: hidden !important;
+    .hide-flex-container{
+        /*visibility: hidden;*/
     }
-/*end filters*/
+
+    .flex-item {
+        display: none;
+        background: tomato;
+        padding: 5px;
+        width: 85%;
+        height: 100px;
+        margin-top: 10px;
+
+        line-height: 100px;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+    }
+/*secondary controls ends*/
 
 /*map*/
     #numberSchools, #numberServices, #numberVacantLots {

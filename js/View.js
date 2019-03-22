@@ -41,13 +41,11 @@ var View = function(controller){
         // var map = L.mapbox.map('map', 'mapbox.light', {maxZoom: 18, minZoom: 0})
         //     .setView([41.7753, -87.6416], 14);
 
-        map = L.map('map').setView([41.774876, -87.656801], 14);
-        // L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-        //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        //     // subdomains: 'abcd',
-        //     maxZoom: 19
-        // }).addTo(map);
+        map = L.map('map', {zoomControl: false}).setView([41.774876, -87.656801], 14);
 
+        L.control.zoom({
+            position:'topright'
+        }).addTo(map);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -75,6 +73,8 @@ var View = function(controller){
 
     // greenSpacesData[0] = Parks | greenSpacesData[1] = green-roofs | greenSpacesData[2] = cuamp-gardens
     self.displayGreenSpaces = function(greenSpacesData){
+        $('#green-spaces-flex-item').show();
+
         greenSpacesGroup = L.featureGroup();
 
         // adding parks
@@ -133,6 +133,8 @@ var View = function(controller){
 
 
     self.displayHistoricSites = function(historicSitesData) {
+        $('#historic-sites-flex-item').show();
+
         historicSitesGroup = L.featureGroup();
 
         historicSitesData.forEach(function(h, index){
@@ -147,13 +149,7 @@ var View = function(controller){
 
 
     self.displaySchools = function(schoolData) {
-        $('#map').append('<div id="numberSchools"><p class="content">'+ schoolData.length +'<span class="det_text"> Schools</span></p></div>');
-        if($('#numberServices').length > 0 && $('#numberVacantLots').length > 0){
-            $('#numberSchools').addClass('double-shift');
-        }
-        else if($('#numberServices').length > 0 || $('#numberVacantLots').length > 0){
-            $('#numberSchools').addClass('shift');
-        }
+        $('#schools-flex-item').show();
 
         schoolGroup = L.featureGroup();
 
@@ -168,14 +164,7 @@ var View = function(controller){
 
 
     self.displayServices = function(serviceData) {
-
-        $('#map').append('<div id="numberServices"><p class="content">'+ serviceData.length +'<span class="det_text"> Services</span></p></div>');
-        if($('#numberSchools').length > 0 && $('#numberVacantLots').length > 0){
-            $('#numberServices').addClass('double-shift');
-        }
-        else if($('#numberSchools').length > 0 || $('#numberVacantLots').length > 0 ){
-            $('#numberServices').addClass('shift');
-        }
+        $('#services-flex-item').show();
 
         serviceGroup = L.featureGroup();
 
@@ -194,6 +183,8 @@ var View = function(controller){
 
 
     self.displaySafePassages = function(safePassagesData){
+        $('#safe-passages-flex-item').show();
+
         safePassageGroup = L.featureGroup();
 
         safePassagesData.forEach(function(s){
@@ -208,13 +199,13 @@ var View = function(controller){
         var color = "";
         var lot_status = feature.properties.property_status;
         if(lot_status === 'Owned by City')
-            color = "#e3503e";
+            color = "#e66101";
         else if(lot_status === 'Sold')
-            color = "#18a46d";
+            color = "#5e3c99";
         else if(lot_status === 'In Acquisition')
             color = "#e6ad55";
         else
-            color = "#5c5c5c";
+            color = "#404040";
 
         return {
             fillColor: color,
@@ -225,7 +216,8 @@ var View = function(controller){
 
 
     self.displayLots = function(lotsData){
-        console.log(lotsData);
+        $('#vacant-lots-flex-item').show();
+
         lotsGroup = L.geoJSON(lotsData, {style: lotsStyle})
             .bindPopup(function(layer){
                 var popup_text = "<b>" + layer.feature.properties.address + "</b></br>" +
@@ -555,7 +547,8 @@ var View = function(controller){
         },
 
         removeGreenSpaces: function(){
-          map.removeLayer(greenSpacesGroup);
+            $('#green-spaces-flex-item').hide();
+            map.removeLayer(greenSpacesGroup);
         },
 
         addHistoricSites: function(historicSitesData){
@@ -563,6 +556,7 @@ var View = function(controller){
         },
 
         removeHistoricSites: function(){
+            $('#historic-sites-flex-item').hide();
             map.removeLayer(historicSitesGroup);
         },
 
@@ -571,41 +565,7 @@ var View = function(controller){
         },
 
         removeServices: function(){
-            var noServices = $('#numberServices'),
-                noSchools = $('#numberSchools'),
-                noVacantLots = $('#numberVacantLots');
-
-            if(noServices.hasClass('double-shift')){
-            }//if
-            else if(noServices.hasClass('shift')){
-                if(noSchools.hasClass('double-shift')){
-                    noSchools.removeClass('double-shift');
-                    noSchools.addClass('shift');
-                }
-                else if(noVacantLots.hasClass('double-shift')){
-                    noVacantLots.removeClass('double-shift');
-                    noVacantLots.addClass('shift');
-                }
-            }//else-if
-            else{
-                if(noSchools.hasClass('double-shift')) {
-                    noSchools.removeClass('double-shift');
-                    noSchools.addClass('shift');
-                    noVacantLots.removeClass('shift');
-                }
-                else if(noVacantLots.hasClass('double-shift')) {
-                    noVacantLots.removeClass('double-shift');
-                    noVacantLots.addClass('shift');
-                    noSchools.removeClass('shift');
-                }
-                else if(noSchools.hasClass('shift')){
-                    noSchools.removeClass('shift');
-                }
-                else if(noVacantLots.hasClass('shift')){
-                    noVacantLots.removeClass('shift');
-                }
-            }//else
-            noServices.remove();
+            $('#services-flex-item').hide();
             map.removeLayer(serviceGroup);
         },
 
@@ -614,41 +574,7 @@ var View = function(controller){
         },
 
         removeSchools: function(){
-            var noServices = $('#numberServices'),
-                noSchools = $('#numberSchools'),
-                noVacantLots = $('#numberVacantLots');
-
-            if(noSchools.hasClass('double-shift')){
-            }//if
-            else if(noSchools.hasClass('shift')){
-                if(noServices.hasClass('double-shift')){
-                    noServices.removeClass('double-shift');
-                    noServices.addClass('shift');
-                }
-                else if(noVacantLots.hasClass('double-shift')){
-                    noVacantLots.removeClass('double-shift');
-                    noVacantLots.addClass('shift');
-                }
-            }//else-if
-            else{
-                if(noServices.hasClass('double-shift')) {
-                    noServices.removeClass('double-shift');
-                    noServices.addClass('shift');
-                    noVacantLots.removeClass('shift');
-                }
-                else if(noVacantLots.hasClass('double-shift')) {
-                    noVacantLots.removeClass('double-shift');
-                    noVacantLots.addClass('shift');
-                    noServices.removeClass('shift');
-                }
-                else if(noServices.hasClass('shift')){
-                    noServices.removeClass('shift');
-                }
-                else if(noVacantLots.hasClass('shift')){
-                    noVacantLots.removeClass('shift');
-                }
-            }//else
-            noSchools.remove();
+           $('#schools-flex-item').hide();
             map.removeLayer(schoolGroup);
         },
 
@@ -657,6 +583,7 @@ var View = function(controller){
         },
 
         removeSafePassages: function(){
+            $('#safe-passages-flex-item').hide();
           map.removeLayer(safePassageGroup);
         },
 
@@ -665,6 +592,7 @@ var View = function(controller){
         },
 
         removeLots: function(){
+            $('#vacant-lots-flex-item').hide();
             map.removeLayer(lotsGroup);
         },
 

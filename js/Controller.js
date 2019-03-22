@@ -57,11 +57,8 @@ var Controller = function(model, view){
 
     $('td').on('click', function(event){
 
-        // $('.filter-option').on('click', function(event){
-        // console.log(view.isLayerActive());
         var filter = $(event.currentTarget).find(':first-child').attr('id');
 
-        // $('#'+filter).toggleClass("highlight");
         $(event.currentTarget).toggleClass("highlight");
 
         if(filter === 'green-spaces'){
@@ -79,8 +76,6 @@ var Controller = function(model, view){
             }
         }
         else if(filter === 'service'){
-            $('#service-types').toggleClass('hide-services');
-            $('#service-types').css({height: getServiceTypePanelHeight()});
             if(view.isLayerActive(filter)){
                 view.removeServices();
             } else {
