@@ -74,6 +74,7 @@ var View = function(controller){
     // greenSpacesData[0] = Parks | greenSpacesData[1] = green-roofs | greenSpacesData[2] = cuamp-gardens
     self.displayGreenSpaces = function(greenSpacesData){
         $('#green-spaces-flex-item').show();
+        $('#green-spaces-flex-item > .dataLength').text('#');
 
         greenSpacesGroup = L.featureGroup();
 
@@ -134,6 +135,7 @@ var View = function(controller){
 
     self.displayHistoricSites = function(historicSitesData) {
         $('#historic-sites-flex-item').show();
+        $('#historic-sites-flex-item > .dataLength').text(historicSitesData.length);
 
         historicSitesGroup = L.featureGroup();
 
@@ -150,6 +152,7 @@ var View = function(controller){
 
     self.displaySchools = function(schoolData) {
         $('#schools-flex-item').show();
+        $('#schools-flex-item > .dataLength').text(schoolData.length);
 
         schoolGroup = L.featureGroup();
 
@@ -165,6 +168,7 @@ var View = function(controller){
 
     self.displayServices = function(serviceData) {
         $('#services-flex-item').show();
+        $('#services-flex-item > .dataLength').text(serviceData.length);
 
         serviceGroup = L.featureGroup();
 
@@ -183,7 +187,7 @@ var View = function(controller){
 
 
     self.displaySafePassages = function(safePassagesData){
-        $('#safe-passages-flex-item').show();
+        // $('#safe-passages-flex-item').show();
 
         safePassageGroup = L.featureGroup();
 
@@ -583,7 +587,7 @@ var View = function(controller){
         },
 
         removeSafePassages: function(){
-            $('#safe-passages-flex-item').hide();
+            // $('#safe-passages-flex-item').hide();
           map.removeLayer(safePassageGroup);
         },
 

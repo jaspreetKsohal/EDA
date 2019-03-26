@@ -450,7 +450,7 @@ body {
         z-index: 500;
 
         background-color: #dbe9f7;
-        opacity: 0.7;
+        opacity: 0.8;
         align-items: center;
     }
 
@@ -460,17 +460,31 @@ body {
 
     .flex-item {
         display: none;
-        background: tomato;
-        padding: 5px;
+        background: #7c9cba;
+        padding: 15px;
         width: 85%;
         height: 100px;
         margin-top: 10px;
 
-        line-height: 100px;
-        color: white;
+        /*line-height: 100px;*/
+        color: black;
         font-weight: bold;
         font-size: 16px;
-        text-align: center;
+        /*text-align: center;*/
+    }
+
+    #historic-sites-flex-item, #schools-flex-item {
+        height: 30px;
+        line-height: 34px;
+    }
+
+    .dataLength{
+        float: right;
+        font-size: 20px;
+    }
+
+    #schools-flex-item > span {
+        font-size: 20px;
     }
 /*secondary controls ends*/
 
