@@ -44,15 +44,49 @@ var Controller = function(model, view){
     });
 
 
-    function getServiceTypePanelHeight() {
-        var height = $('#map')[0].getBoundingClientRect().height;
-        return height;
-    };
-
-
     $(document).on('loadCensus', function(e) {
         view.addCensusTracts(model.getCensusTractsData());
     });
+
+
+    //on clicking the sub-types of green spaces
+    $('.gs-inner-flex').on('click', function(event){
+        var subType = event.target.id;
+
+        $("#"+ subType).toggleClass('gs-selected');
+
+        // view.updateGreenSpaces(model.getGreenSpaceData(), subType);
+        var arr = [];
+        $('.gs-selected').each(function(){
+           arr.push(this.id);
+        });
+
+        if(view.isLayerActive('green-spaces')){
+            view.removeGreenSpaces();
+        }
+
+        view.addGreenSpaces(model.getFilteredGreenSpaces(arr));
+    });
+
+
+    //on clicking the sub services
+    $('.services-inner-flex').on('click', function(event){
+        var subService = event.target.id;
+
+        $("#"+ subService).toggleClass('srv-selected');
+
+        var arrServices = [];
+        $('.srv-selected').each(function(){
+            arrServices.push(this.id);
+        });
+
+        if(view.isLayerActive('service')){
+            view.removeServices();
+        }
+
+        view.addServices(model.getFilteredServices(arrServices));
+    });
+
 
 
     $('td').on('click', function(event){
@@ -64,8 +98,10 @@ var Controller = function(model, view){
         if(filter === 'green-spaces'){
             if(view.isLayerActive(filter)){
                 view.removeGreenSpaces();
+                $('.gs-inner-flex').addClass('gs-selected');
             } else {
                 view.addGreenSpaces(model.getGreenSpaceData());
+                // view.addGreenSpaces(model.getFilteredGreenSpaces(['gs-community-garden']));
             }
         }
         else if(filter === 'historic-sites'){
@@ -77,9 +113,9 @@ var Controller = function(model, view){
         }
         else if(filter === 'service'){
             if(view.isLayerActive(filter)){
+                $('.services-inner-flex').addClass('srv-selected');
                 view.removeServices();
             } else {
-                $('.chkbox').prop('checked', true);
                 view.addServices(model.getServiceData());
             }
         }//if-service

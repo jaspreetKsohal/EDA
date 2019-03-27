@@ -463,7 +463,7 @@ body {
         background: #7c9cba;
         padding: 15px;
         width: 85%;
-        height: 100px;
+        /*height: 100px;*/
         margin-top: 10px;
 
         /*line-height: 100px;*/
@@ -485,6 +485,64 @@ body {
 
     #schools-flex-item > span {
         font-size: 20px;
+    }
+
+    #green-spaces-marker{
+        color: #86cd86;
+    }
+
+    /*green-spaces inner container*/
+    .inner-flex-container {
+        padding: 0;
+        margin-top: 8px;
+        margin-bottom: 0;
+        list-style: none;
+
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+
+        -webkit-flex-flow: row wrap;
+        justify-content: space-around;
+    }
+
+    .gs-inner-flex {
+        background: white;
+        padding: 5px;
+        width: 100px;
+        /*height: 30px;*/
+        margin-top: 5px;
+        /*line-height: 150px;*/
+        color: black;
+        font-weight: bold;
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .services-inner-flex {
+        background: white;
+        padding: 5px;
+        width: 150px;
+        /*height: 30px;*/
+        margin-top: 5px;
+        /*line-height: 150px;*/
+        color: black;
+        font-weight: bold;
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .gs-inner-flex:hover, .services-inner-flex:hover {
+        background: #86cd86;
+    }
+
+    .gs-selected, .srv-selected {
+        background: #507b50;
+        /*color: white;*/
     }
 /*secondary controls ends*/
 

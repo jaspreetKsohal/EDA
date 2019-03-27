@@ -7,6 +7,7 @@ var App = App || {};
 var Model = function() {
     var censusTractsData = [], lotsData = [], parksData = [], greenRoofsData = [], cuampData = [], historicSitesData = [], schoolData = [], servicesData = [], safePassagesData = [];
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
+    var cuampGreenSpaceTypes = ['gs-community-garden', 'gs-school-garden', 'gs-urban-farm', 'gs-other'];
 
 
     function loadCensusTractsData() {
@@ -154,6 +155,37 @@ var Model = function() {
     }
 
 
+    function getFilteredGreenSpaces(arr){
+        var filteredGreenSpaces = [[],[],[]];
+
+        if(arr.length!= 0){
+            var filteredCUAMPData = [];
+            arr.forEach(function(subType){
+                if(subType === 'gs-parks'){
+                    filteredGreenSpaces[0] = parksData[0];
+                }
+
+                else if(subType === 'gs-green-roofs'){
+                    filteredGreenSpaces[1] = greenRoofsData[0];
+                }
+
+                else if(cuampGreenSpaceTypes.includes(subType)){
+
+                    cuampData[0].forEach(function(d){
+                       if('gs-' + d['type'].toLowerCase().replace(' ','-') === subType){
+                           filteredCUAMPData.push(d);
+                       }
+                    });
+
+                    filteredGreenSpaces[2] = filteredCUAMPData;
+                }
+            });//forEach
+        }//if
+
+        return filteredGreenSpaces;
+    }
+
+
     function getGreenSpaceData() {
         return [parksData[0], greenRoofsData[0], cuampData[0]];
     }
@@ -202,9 +234,10 @@ var Model = function() {
         getSchoolData: getSchoolData,
         getServiceData: getServiceData,
         getSafePassagesData: getSafePassagesData,
-        getFilteredServices: getFilteredServices,
         getCensusTractsData: getCensusTractsData,
-        getLotsData: getLotsData
+        getLotsData: getLotsData,
+        getFilteredServices: getFilteredServices,
+        getFilteredGreenSpaces: getFilteredGreenSpaces
     }
 
 };

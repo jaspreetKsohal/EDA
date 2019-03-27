@@ -74,48 +74,58 @@ var View = function(controller){
     // greenSpacesData[0] = Parks | greenSpacesData[1] = green-roofs | greenSpacesData[2] = cuamp-gardens
     self.displayGreenSpaces = function(greenSpacesData){
         $('#green-spaces-flex-item').show();
-        $('#green-spaces-flex-item > .dataLength').text('#');
+
+        var numberOfGreenSpaces = greenSpacesData[1].length + greenSpacesData[2].length;
+        if(greenSpacesData[0].length !== 0){
+            numberOfGreenSpaces += greenSpacesData[0].features.length;
+        }
+
+        $('#green-spaces-flex-item > .dataLength').text(numberOfGreenSpaces);
 
         greenSpacesGroup = L.featureGroup();
 
-        // adding parks
-        L.geoJSON(greenSpacesData[0], {fillColor: "#86cd86", weight: 0, fillOpacity: 0.7}).addTo(greenSpacesGroup)
-            .bindPopup(function(layer){
-                var popup_text = "<b>"+ layer.feature.properties.park +"</b></br>" +
-                    "<i>" + layer.feature.properties.park_class + "</i></br>" +
-                    "Area - " + layer.feature.properties.acres + " acres</br>" +
-                    "Address - " + layer.feature.properties.location;
-                return popup_text;
+        if(greenSpacesData.length!= 0){
+            // adding parks
+            L.geoJSON(greenSpacesData[0], {fillColor: "#86cd86", weight: 0, fillOpacity: 0.7}).addTo(greenSpacesGroup)
+                .bindPopup(function(layer){
+                    var popup_text = "<b>"+ layer.feature.properties.park +"</b></br>" +
+                        "<i>" + layer.feature.properties.park_class + "</i></br>" +
+                        "Area - " + layer.feature.properties.acres + " acres</br>" +
+                        "Address - " + layer.feature.properties.location;
+                    return popup_text;
+                });
+
+            //adding green roofs
+            greenSpacesData[1].forEach(function(r, index){
+                // var latlng = L.latLng(r.latitude, r.longitude);
+                // L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
+                L.marker([r.latitude, r.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup)
+                    .bindPopup(
+                        "<b>" + r.full_address_range + "</b></br>" +
+                        "<i>" + r.type + "</i></br>" +
+                        "Total Roof sqft - " + r.total_roof_sqft + "</br>" +
+                        "Vegetated sqft - " + r.vegetated_sqft + "</br>" +
+                        "Percent Vegetated - " + r.percent_vegetated + "%</br>"
+                    );
             });
 
-        //adding green roofs
-        greenSpacesData[1].forEach(function(r, index){
-           // var latlng = L.latLng(r.latitude, r.longitude);
-           // L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
-            L.marker([r.latitude, r.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup)
-                .bindPopup(
-                    "<b>" + r.full_address_range + "</b></br>" +
-                    "<i>" + r.type + "</i></br>" +
-                    "Total Roof sqft - " + r.total_roof_sqft + "</br>" +
-                    "Vegetated sqft - " + r.vegetated_sqft + "</br>" +
-                    "Percent Vegetated - " + r.percent_vegetated + "%</br>"
-                );
-        });
+            //adding cuamp gardens
+            greenSpacesData[2].forEach(function(g, index){
+                // var latlng = L.latLng(g.latitude, g.longitude);
+                // L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
+                L.marker([g.latitude, g.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup)
+                    .bindPopup(
+                        "<b>" + g.growing_site_name + "</b></br>" +
+                        "<i>" + g.choose_growing_site_types + "</i></br>" +
+                        getIcons(g.food_producing, g.compost_system, g.is_growing_site_dormant) + "</br>" +
+                        "Address - " + g.address
+                    );
+            });
 
-        //adding cuamp gardens
-        greenSpacesData[2].forEach(function(g, index){
-           // var latlng = L.latLng(g.latitude, g.longitude);
-           // L.circle( latlng, {radius: 30, color: "#6ba46b", weight: 0, fillOpacity: 1}).addTo(greenSpacesGroup);
-            L.marker([g.latitude, g.longitude], {icon: greenSpacesIcon}).addTo(greenSpacesGroup)
-                .bindPopup(
-                    "<b>" + g.growing_site_name + "</b></br>" +
-                    "<i>" + g.choose_growing_site_types + "</i></br>" +
-                    getIcons(g.food_producing, g.compost_system, g.is_growing_site_dormant) + "</br>" +
-                    "Address - " + g.address
-                );
-        });
+            map.addLayer(greenSpacesGroup);
+        }
 
-        map.addLayer(greenSpacesGroup);
+
     };
 
 
