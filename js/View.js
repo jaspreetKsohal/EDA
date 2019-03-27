@@ -232,6 +232,24 @@ var View = function(controller){
     self.displayLots = function(lotsData){
         $('#vacant-lots-flex-item').show();
 
+        var numSold = 0, numOwnedByCity = 0, numInAcquisition = 0, numUnknown = 0;
+        lotsData[0].features.forEach(function(d){
+            var propertyStatus = '';
+            if(d.properties.property_status !== undefined){
+                propertyStatus = (d.properties.property_status).toLowerCase().replace(/ /g,'-');
+            }
+
+            if( propertyStatus === 'sold') numSold++;
+            else if (propertyStatus === 'owned-by-city') numOwnedByCity++;
+            else if (propertyStatus === 'in-acquisition') numInAcquisition++;
+            else numUnknown++;
+        });
+
+        $('#sold > span').text(numSold);
+        $('#owned-by-city > span').text(numOwnedByCity);
+        $('#in-acquisition > span').text(numInAcquisition);
+        $('#unknown-status > span').text(numUnknown);
+
         lotsGroup = L.geoJSON(lotsData, {style: lotsStyle})
             .bindPopup(function(layer){
                 var popup_text = "<b>" + layer.feature.properties.address + "</b></br>" +

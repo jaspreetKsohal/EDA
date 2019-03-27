@@ -172,7 +172,7 @@ var Model = function() {
                 else if(cuampGreenSpaceTypes.includes(subType)){
 
                     cuampData[0].forEach(function(d){
-                       if('gs-' + d['type'].toLowerCase().replace(' ','-') === subType){
+                       if('gs-' + d['type'].toLowerCase().replace(/ /g,'-') === subType){
                            filteredCUAMPData.push(d);
                        }
                     });
