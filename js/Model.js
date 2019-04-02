@@ -5,7 +5,8 @@
 var App = App || {};
 
 var Model = function() {
-    var censusTractsData = [], lotsData = [], parksData = [], greenRoofsData = [], cuampData = [], historicSitesData = [], schoolData = [], servicesData = [], safePassagesData = [];
+    var censusTractsData = [], lotsData = [], parksData = [], greenRoofsData = [], cuampData = [], historicSitesData = [], schoolData = [], servicesData = [], safePassagesData = [],
+        demographicsData = [];
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
     var cuampGreenSpaceTypes = ['gs-community-garden', 'gs-school-garden', 'gs-urban-farm', 'gs-other'];
 
@@ -29,6 +30,14 @@ var Model = function() {
         d3.json("data/lots.geojson", function(d){
            lotsData.push(d);
         });
+    }
+
+
+    function loadDemographicsData() {
+        d3.json("data/demographics.json", function(d){
+            demographicsData.push(d);
+        });
+        console.log('demographics data', demographicsData);
     }
 
 
@@ -229,6 +238,7 @@ var Model = function() {
         loadSchoolData: loadSchoolData,
         loadServicesData: loadServicesData,
         loadSafePassagesData: loadSafePassagesData,
+        loadDemographicsData: loadDemographicsData,
         getGreenSpaceData: getGreenSpaceData,
         getHistoricSitesData: getHistoricSitesData,
         getSchoolData: getSchoolData,

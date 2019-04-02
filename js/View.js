@@ -8,7 +8,7 @@ var View = function(controller){
 
     var self = this;
     var map;
-    var greenSpacesGroup, historicSitesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer, lotsGroup;
+    var greenSpacesGroup, historicSitesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer, lotsGroup, demographicsGroup;
 
     var markergroup1 = L.layerGroup();
     var markergroup2 = L.layerGroup();
@@ -282,6 +282,11 @@ var View = function(controller){
             }
            
         });
+    };
+
+
+    self.displayDemographics = function(demographicsData) {
+        $('#demographics-flex-item').show();
     };
 
 
@@ -626,6 +631,15 @@ var View = function(controller){
         removeLots: function(){
             $('#vacant-lots-flex-item').hide();
             map.removeLayer(lotsGroup);
+        },
+
+        addDemographics: function(demographicsData){
+            self.displayDemographics(demographicsData);
+        },
+
+        removeDemographics: function(){
+            $('#demographics-flex-item').hide();
+            map.removeLayer(demographicsGroup);
         },
 
         showContentForIndex: function(index) {

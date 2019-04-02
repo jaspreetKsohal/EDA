@@ -140,6 +140,13 @@ var Controller = function(model, view){
                 view.addLots(model.getLotsData());
             }
         }
+        else if(filter === 'demographics'){
+            if(view.isLayerActive(filter)){
+                view.removeDemographics();
+            } else {
+                view.addDemographics();
+            }
+        }
 
     });
 
