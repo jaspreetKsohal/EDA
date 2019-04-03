@@ -449,7 +449,7 @@ body {
         height: 100%;
         z-index: 500;
 
-        background-color: #dbe9f7;
+        background-color: #ededed;
         opacity: 0.8;
         align-items: center;
     }
@@ -460,7 +460,7 @@ body {
 
     .flex-item {
         display: none;
-        background: #7c9cba;
+        background: white;
         padding: 15px;
         width: 85%;
         /*height: 100px;*/
@@ -471,6 +471,7 @@ body {
         font-weight: bold;
         font-size: 16px;
         /*text-align: center;*/
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     }
 
     #historic-sites-flex-item, #schools-flex-item {
@@ -483,12 +484,22 @@ body {
         font-size: 20px;
     }
 
-    #schools-flex-item > span {
+    #services-flex-item > span.icon-circle {
+        color: #e57287;
+    }
+
+    #schools-flex-item > span.icon-circle {
+        font-size: 16px;
+        color: #2d97f2;
+    }
+
+    #vacant-lots-flex-item > span.icon-vacant-lots2 {
         font-size: 20px;
+        color: #e66101;
     }
 
     #green-spaces-marker{
-        color: #86cd86;
+        color: #6BA46B;
     }
 
     /*green-spaces inner container*/
@@ -509,62 +520,65 @@ body {
     }
 
     .gs-inner-flex {
-        background: white;
-        padding: 5px;
+        /*background: white;*/
+        padding: 5px 10px;
         width: 100px;
         /*height: 30px;*/
         margin-top: 5px;
         /*line-height: 150px;*/
-        color: black;
-        font-weight: bold;
+        color: #212121;
         font-size: 14px;
         text-align: center;
         cursor: pointer;
+
+        border: 1px solid #b0b0b0;
+        border-radius: 6px;
     }
 
     .services-inner-flex {
-        background: white;
-        padding: 5px;
+        padding: 5px 10px;
         width: 150px;
         /*height: 30px;*/
         margin-top: 5px;
         /*line-height: 150px;*/
-        color: black;
-        font-weight: bold;
+        color:  #212121;;
         font-size: 14px;
         text-align: center;
         cursor: pointer;
+
+        border: 1px solid #b0b0b0;
+        border-radius: 6px;
     }
 
     .vl-inner-flex {
-        padding: 5px;
+        padding: 8px 12px;
         width: 150px;
         /*height: 30px;*/
         margin-top: 5px;
         /*line-height: 150px;*/
         color: black;
-        font-weight: bold;
+        /*font-weight: bold;*/
         font-size: 14px;
         text-align: left;
         /*cursor: pointer;*/
+        /*border: 1px solid #b0b0b0;*/
+        border-radius: 6px;
     }
 
     #sold {
-        background: #5e3c99;
-        color: white;
+        background: rgba(94, 60, 153, 0.6);
     }
 
     #owned-by-city {
-        background: #e66101;
+        background: rgba(230, 97, 1, 0.6);
     }
 
     #in-acquisition {
-        background: #e6ad55;
+        background: rgba(230, 173, 85, 0.6);
     }
 
     #unknown-status {
-        background: #404040;
-        color: white;
+        background: rgba(64, 64, 64, 0.6);
     }
 
     .numLots {
@@ -572,13 +586,20 @@ body {
         float: right;
     }
 
-    .gs-inner-flex:hover, .services-inner-flex:hover {
-        background: #86cd86;
+    .gs-inner-flex:hover{
+         background: rgba(107, 164, 107, 0.4);
+     }
+
+    .services-inner-flex:hover {
+        background: rgba(229, 114, 135, 0.4);
     }
 
-    .gs-selected, .srv-selected {
-        background: #507b50;
-        /*color: white;*/
+    .gs-selected {
+        background: rgba(107, 164, 107, 0.8);
+    }
+
+    .srv-selected {
+        background: rgba(229, 114, 135, 0.8);
     }
 /*secondary controls ends*/
 

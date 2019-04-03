@@ -580,6 +580,7 @@ var View = function(controller){
         },
 
         addGreenSpaces: function(greenSpacesData){
+            console.log(greenSpacesData);
           self.displayGreenSpaces(greenSpacesData);
         },
 

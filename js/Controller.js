@@ -98,10 +98,10 @@ var Controller = function(model, view){
         if(filter === 'green-spaces'){
             if(view.isLayerActive(filter)){
                 view.removeGreenSpaces();
-                $('.gs-inner-flex').addClass('gs-selected');
+                // $('.gs-inner-flex').addClass('gs-selected');
             } else {
-                view.addGreenSpaces(model.getGreenSpaceData());
-                // view.addGreenSpaces(model.getFilteredGreenSpaces(['gs-community-garden']));
+                // view.addGreenSpaces(model.getGreenSpaceData());
+                view.addGreenSpaces(model.getFilteredGreenSpaces(['gs-community-garden']));
             }
         }
         else if(filter === 'historic-sites'){
@@ -113,10 +113,11 @@ var Controller = function(model, view){
         }
         else if(filter === 'service'){
             if(view.isLayerActive(filter)){
-                $('.services-inner-flex').addClass('srv-selected');
+                // $('.services-inner-flex').addClass('srv-selected');
                 view.removeServices();
             } else {
-                view.addServices(model.getServiceData());
+                // view.addServices(model.getServiceData());
+                view.addServices(model.getFilteredServices(['BN']));
             }
         }//if-service
         else if(filter === 'school'){

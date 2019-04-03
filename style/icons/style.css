@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?t9iasy');
-  src:  url('fonts/icomoon.eot?t9iasy#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?t9iasy') format('truetype'),
-    url('fonts/icomoon.woff?t9iasy') format('woff'),
-    url('fonts/icomoon.svg?t9iasy#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?s909iu');
+  src:  url('fonts/icomoon.eot?s909iu#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?s909iu') format('truetype'),
+    url('fonts/icomoon.woff?s909iu') format('woff'),
+    url('fonts/icomoon.svg?s909iu#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-vacant-lots2:before {
+  content: "\e90a";
+}
 .icon-vacant-lot:before {
   content: "\e909";
 }
@@ -49,6 +52,9 @@
 .icon-compost-system:before {
   content: "\e902";
   color: #e5a551;
+}
+.icon-circle:before {
+  content: "\e90e";
 }
 .icon-school:before {
   content: "\e901";
