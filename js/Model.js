@@ -12,17 +12,42 @@ var Model = function() {
 
 
     function loadCensusTractsData() {
-        $.ajax({
-            url: "https://data.cityofchicago.org/resource/74p9-q2aq.geojson?$where=commarea in('67','68')",
-            type: "GET",
-            data: {
-                "$limit" : 5000,
-                // "$$app_token" : "YOURAPPTOKENHERE"
-            }
-        }).done(function(data) {
-            censusTractsData.push(data);
-            $(document).trigger('loadCensus');
-        });
+        // $.ajax({
+        //     url: "https://data.cityofchicago.org/resource/74p9-q2aq.geojson?$where=commarea in('67','68')",
+        //     type: "GET",
+        //     data: {
+        //         "$limit" : 5000,
+        //         // "$$app_token" : "YOURAPPTOKENHERE"
+        //     }
+        // }).done(function(data) {
+        //     censusTractsData.push(data);
+        //     $(document).trigger('loadCensus');
+        // });
+
+        d3.queue()
+            .defer(d3.json, "data/census-tracts.geojson")
+            .defer(d3.json, "data/demographics.json")
+            .await(combineData);
+    }
+
+
+    function combineData(error, tractsData, demogrData){
+        // console.log('tracts', tractsData);
+        // console.log('demographics data', demogrData);
+
+        censusTractsData.push(tractsData);
+        $(document).trigger('loadCensus');
+
+        for(var i = 0; i < tractsData.features.length; i++) {
+            for(var j = 0; j < demogrData.length; j++) {
+                if (tractsData.features[i].properties.geoid10 === demogrData[j]['year_2010'].geoid) {
+                    censusTractsData[0].features[i].properties['demographics'] = demogrData[j];
+                    break;
+                }
+            }//inner loop
+        }//outer loop
+
+        console.log(censusTractsData);
     }
 
 
@@ -33,12 +58,11 @@ var Model = function() {
     }
 
 
-    function loadDemographicsData() {
-        d3.json("data/demographics.json", function(d){
-            demographicsData.push(d);
-        });
-        console.log('demographics data', demographicsData);
-    }
+    // function loadDemographicsData() {
+    //     d3.json("data/demographics.json", function(d){
+    //         demographicsData.push(d);
+    //     });
+    // }
 
 
     function loadGreenSpacesData() {
@@ -238,7 +262,7 @@ var Model = function() {
         loadSchoolData: loadSchoolData,
         loadServicesData: loadServicesData,
         loadSafePassagesData: loadSafePassagesData,
-        loadDemographicsData: loadDemographicsData,
+        // loadDemographicsData: loadDemographicsData,
         getGreenSpaceData: getGreenSpaceData,
         getHistoricSitesData: getHistoricSitesData,
         getSchoolData: getSchoolData,

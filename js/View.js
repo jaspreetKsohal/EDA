@@ -41,7 +41,7 @@ var View = function(controller){
         // var map = L.mapbox.map('map', 'mapbox.light', {maxZoom: 18, minZoom: 0})
         //     .setView([41.7753, -87.6416], 14);
 
-        map = L.map('map', {zoomControl: false}).setView([41.774876, -87.656801], 14);
+        map = L.map('map', {zoomControl: false, zoomSnap: 0.5}).setView([41.774876, -87.656801], 14.5);
 
         L.control.zoom({
             position:'topright'
@@ -580,7 +580,6 @@ var View = function(controller){
         },
 
         addGreenSpaces: function(greenSpacesData){
-            console.log(greenSpacesData);
           self.displayGreenSpaces(greenSpacesData);
         },
 

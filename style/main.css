@@ -449,7 +449,7 @@ body {
         height: 100%;
         z-index: 500;
 
-        background-color: #ededed;
+        background-color: #dddddd;
         opacity: 0.8;
         align-items: center;
     }
@@ -495,7 +495,7 @@ body {
 
     #vacant-lots-flex-item > span.icon-vacant-lots2 {
         font-size: 20px;
-        color: #e66101;
+        color: rgba(230, 97, 1, 0.8);
     }
 
     #green-spaces-marker{
@@ -535,6 +535,14 @@ body {
         border-radius: 6px;
     }
 
+    .gs-inner-flex:hover{
+        background: rgba(107, 164, 107, 0.4);
+    }
+
+    .gs-selected {
+        background: rgba(107, 164, 107, 0.8);
+    }
+
     .services-inner-flex {
         padding: 5px 10px;
         width: 150px;
@@ -550,6 +558,14 @@ body {
         border-radius: 6px;
     }
 
+    .services-inner-flex:hover {
+        background: rgba(229, 114, 135, 0.4);
+    }
+
+    .srv-selected {
+        background: rgba(229, 114, 135, 0.8);
+    }
+
     .vl-inner-flex {
         padding: 8px 12px;
         width: 150px;
@@ -563,6 +579,29 @@ body {
         /*cursor: pointer;*/
         /*border: 1px solid #b0b0b0;*/
         border-radius: 6px;
+    }
+
+    .demographics-inner-flex {
+        padding: 5px 10px;
+        width: 100px;
+        /*height: 30px;*/
+        margin-top: 5px;
+        /*line-height: 150px;*/
+        color:  #212121;;
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
+
+        border: 1px solid #b0b0b0;
+        border-radius: 6px;
+    }
+
+    .demographics-inner-flex:hover {
+        background: rgba(178, 178, 178, 0.3);
+    }
+
+    .demogr-selected {
+        background: rgba(178, 178, 178, 0.9);
     }
 
     #sold {
@@ -584,22 +623,6 @@ body {
     .numLots {
         font-size: 14px;
         float: right;
-    }
-
-    .gs-inner-flex:hover{
-         background: rgba(107, 164, 107, 0.4);
-     }
-
-    .services-inner-flex:hover {
-        background: rgba(229, 114, 135, 0.4);
-    }
-
-    .gs-selected {
-        background: rgba(107, 164, 107, 0.8);
-    }
-
-    .srv-selected {
-        background: rgba(229, 114, 135, 0.8);
     }
 /*secondary controls ends*/
 

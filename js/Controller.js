@@ -88,6 +88,21 @@ var Controller = function(model, view){
     });
 
 
+    function resetDemogrTypesSelection(currentlyActive){
+        $('#demographics-sub-types > li').removeClass('demogr-selected');
+        $("#" + currentlyActive).toggleClass('demogr-selected');
+    }
+
+
+    //on clicking sub categories of demographics - race, age_gender, income
+    $('.demographics-inner-flex').on('click', function(event){
+        var demogrType = event.target.id;
+
+        resetDemogrTypesSelection(demogrType);
+
+        console.log(demogrType);
+    });
+
 
     $('td').on('click', function(event){
 
