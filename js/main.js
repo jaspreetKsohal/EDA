@@ -22,7 +22,6 @@ var App = App || {};
         model.loadSchoolData();
         model.loadServicesData();
         model.loadSafePassagesData();
-        // model.loadDemographicsData();
     };
 
 }) ();

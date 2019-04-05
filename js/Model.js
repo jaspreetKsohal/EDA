@@ -46,8 +46,6 @@ var Model = function() {
                 }
             }//inner loop
         }//outer loop
-
-        console.log(censusTractsData);
     }
 
 
@@ -254,6 +252,11 @@ var Model = function() {
     }
 
 
+    function getDemographicsData() {
+        return censusTractsData[0];
+    }
+
+
     return {
         loadCensusTractsData: loadCensusTractsData,
         loadLotsData: loadLotsData,
@@ -271,7 +274,8 @@ var Model = function() {
         getCensusTractsData: getCensusTractsData,
         getLotsData: getLotsData,
         getFilteredServices: getFilteredServices,
-        getFilteredGreenSpaces: getFilteredGreenSpaces
+        getFilteredGreenSpaces: getFilteredGreenSpaces,
+        getDemographicsData: getDemographicsData
     }
 
 };

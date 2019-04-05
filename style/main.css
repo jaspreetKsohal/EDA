@@ -596,6 +596,10 @@ body {
         border-radius: 6px;
     }
 
+    .show-demographics-controls {
+        display: block;
+    }
+
     .demographics-inner-flex:hover {
         background: rgba(178, 178, 178, 0.3);
     }

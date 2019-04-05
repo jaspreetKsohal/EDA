@@ -12,6 +12,9 @@ var Controller = function(model, view){
     //Current step for the story progress
     var storyIndex = 0;
 
+    //demographics data year
+    var year = 2017;
+
     //about button
     $('#about').css({width: $('.filters')[0].getBoundingClientRect().width});
 
@@ -90,7 +93,10 @@ var Controller = function(model, view){
 
     function resetDemogrTypesSelection(currentlyActive){
         $('#demographics-sub-types > li').removeClass('demogr-selected');
-        $("#" + currentlyActive).toggleClass('demogr-selected');
+        if(currentlyActive){
+            $("#" + currentlyActive).toggleClass('demogr-selected');
+        }
+
     }
 
 
@@ -98,10 +104,15 @@ var Controller = function(model, view){
     $('.demographics-inner-flex').on('click', function(event){
         var demogrType = event.target.id;
 
+        if(view.isLayerActive('demographics')){
+            view.removeDemographics();
+        }
+
         resetDemogrTypesSelection(demogrType);
 
-        console.log(demogrType);
+        view.addDemographicsData(year, demogrType, model.getDemographicsData());
     });
+
 
 
     $('td').on('click', function(event){
@@ -157,10 +168,10 @@ var Controller = function(model, view){
             }
         }
         else if(filter === 'demographics'){
+            $('#demographics-flex-item').toggleClass('show-demographics-controls');
             if(view.isLayerActive(filter)){
+                resetDemogrTypesSelection();
                 view.removeDemographics();
-            } else {
-                view.addDemographics();
             }
         }
 
