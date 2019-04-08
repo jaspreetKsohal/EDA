@@ -41,7 +41,7 @@ var View = function(controller){
         // var map = L.mapbox.map('map', 'mapbox.light', {maxZoom: 18, minZoom: 0})
         //     .setView([41.7753, -87.6416], 14);
 
-        map = L.map('map', {zoomControl: false, zoomSnap: 0.5}).setView([41.774876, -87.656801], 14.5);
+        map = L.map('map', {zoomControl: false, zoomSnap: 0.5}).setView([41.774876, -87.659901], 14.5);
 
         L.control.zoom({
             position:'topright'
@@ -81,7 +81,16 @@ var View = function(controller){
     self.displayCensusTracts = function(censusTractsData) {
         censusLayer = L.geoJSON(censusTractsData, {fillColor: style.default.fillColor ,weight: style.default.weight, color: style.default.color, onEachFeature: onEachFeature})
             .bindTooltip(function(layer){
-                var tract_text = "<b>" + layer.feature.properties.geoid10 + "</b>";
+                var polygon = L.polygon(layer.feature.geometry.coordinates[0]);
+                var bounds = polygon.getBounds();
+
+                //get x and y limits of the bounds
+                var x_max = bounds.getEast();
+                var x_min = bounds.getWest();
+                var y_max = bounds.getSouth();
+                var y_min = bounds.getNorth();
+
+                var tract_text = "<b>" + layer.feature.properties.geoid10 + "</b></br>";
                 return tract_text;
             });
         map.addLayer(censusLayer);
@@ -292,22 +301,26 @@ var View = function(controller){
         var color;
         if(demogrType === 'race'){
             if(prop === 'white'){
-                color = '#6a3d9a';
-            }
-            else if(prop === 'black_or_african_american'){
-                color = '#cecece';
-            }
-            else if(prop === 'asian'){
+                // color = '#6a3d9a';
+                // color = '#ff4040';
                 color = '#e41a1c';
             }
+            else if(prop === 'black_or_african_american'){
+                color = '#d3c99d';
+            }
+            else if(prop === 'asian'){
+                color = '#2962FF';
+            }
             else if(prop === 'american_indian_and_alaska_native'){
-                color = '#000';
+                // color = '#000';
+                color = '#6200EA';
             }
             else if(prop === 'native_hawaiian_other_pacific_islander'){
-                color = '#ff7f00';
+                // color = '#ff7f00';
+                color = '#880E4F';
             }
             else {
-                color = '#ff4040';
+                color = '#263238';
             }
         }
         else if(demogrType === 'age_gender'){
@@ -369,15 +382,19 @@ var View = function(controller){
 
         //for each census tract
         data.features.forEach(function(d){
-            // console.log(d.geometry.coordinates[0][0]);
+            // if(d.properties.geoid10 === "17031680900"){
+            // console.log('polygon', d.geometry.coordinates[0]);
+            var poly = turf.polygon(d.geometry.coordinates[0]);
             var polygon = L.polygon(d.geometry.coordinates[0]);
+            // var polygon = turf.polygon(d.geometry.coordinates[0]);
             var bounds = polygon.getBounds();
-
-            //get x and y limits of the bounds
+            //
+            // //get x and y limits of the bounds
             var x_max = bounds.getEast();
             var x_min = bounds.getWest();
             var y_max = bounds.getSouth();
             var y_min = bounds.getNorth();
+            // console.log(x_max, x_min, y_max, y_min);
 
             var path = d.properties.demographics['year_' + year][demogrType];
             var data;
@@ -396,15 +413,42 @@ var View = function(controller){
             for (var prop in data){
                 // console.log(prop, data[prop]);
                 var numPeople = data[prop];
-                var points = turf.randomPoint(numPeople, {bbox: [x_min, y_min, x_max, y_max]});
+
+                var points = {
+                    type: "FeatureCollection",
+                    features: []
+                };
+                // for(var i = 0; i < numPeople; i++){
+                //     points.features.push(turf.pointOnFeature(polygon));
+                // }
+
+                for(var i = 0; i < numPeople; i++){
+                    var pt = turf.randomPoint(1, {bbox: [x_min, y_min, x_max, y_max]});
+                    var point = turf.point([pt.features[0].geometry.coordinates[1], pt.features[0].geometry.coordinates[0]]);
+
+                    if(turf.booleanPointInPolygon(point, poly)){
+                        points.features.push(pt.features[0]);
+                        // console.log('in polygon');
+                    }
+                    else {
+                        i--;
+                        // console.log('outside polygon');
+                    }
+                }
+
+
+                // var points = turf.randomPoint(numPeople, {bbox: [x_min, y_min, x_max, y_max]});
+
                 var color = dotColor(demogrType, prop);
 
-                // console.log(points);
+                // console.log('points', points);
                 points.features.forEach(function(p){
+                    // console.log(p.geometry.coordinates[0], p.geometry.coordinates[1]);
                     var latLng = p.geometry.coordinates;
+                    // console.log(latLng);
                     L.circle(latLng, {
                         renderer: renderer,
-                        radius: 5,
+                        radius: 6,
                         weight: 0,
                         fillOpacity: 0.8,
                         fillColor: color
@@ -412,8 +456,10 @@ var View = function(controller){
                 });//points
             }//for
             // console.log('-------------------------');
+            // }
         });//for each census tract
 
+        // console.log('demographicsGroup ', demographicsGroup);
         map.addLayer(demographicsGroup);
     };
 
