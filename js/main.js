@@ -8,6 +8,7 @@ var App = App || {};
 
     App.start = function(){
         console.log('application started');
+        $('#secondary-controls-container').hide();
         var model = new Model();
         var view = new View();
         var controller = new Controller(model, view);

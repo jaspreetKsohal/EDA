@@ -14,6 +14,7 @@ var Controller = function(model, view){
 
     //demographics data year
     var year = 2017;
+    var allLayers = ['green-spaces, historic-sites, service, school, safe-passage, vacant-lots, demographics'];
 
     //about button
     $('#about').css({width: $('.filters')[0].getBoundingClientRect().width});
@@ -173,6 +174,22 @@ var Controller = function(model, view){
                 resetDemogrTypesSelection();
                 view.removeDemographics();
             }
+        }
+
+
+        var arr = [];
+
+        $('#filter-options td').each(function(){
+            if( $(this).hasClass("highlight") ){
+                arr.push($(this).text());
+            }
+        });
+
+        if(arr.length != 0){
+            $('#secondary-controls-container').show();
+        }
+        else {
+            $('#secondary-controls-container').hide();
         }
 
     });

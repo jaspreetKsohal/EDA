@@ -454,8 +454,8 @@ body {
         align-items: center;
     }
 
-    .hide-flex-container{
-        /*visibility: hidden;*/
+    .show-flex-container{
+        display: flex;
     }
 
     .flex-item {
