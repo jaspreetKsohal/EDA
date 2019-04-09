@@ -170,6 +170,9 @@ var Controller = function(model, view){
         }
         else if(filter === 'demographics'){
             $('#demographics-flex-item').toggleClass('show-demographics-controls');
+
+            view.showRaceSummary(model.getDemographicsData());
+
             if(view.isLayerActive(filter)){
                 resetDemogrTypesSelection();
                 view.removeDemographics();

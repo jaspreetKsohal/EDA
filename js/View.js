@@ -78,6 +78,7 @@ var View = function(controller){
         }
     };
 
+
     self.displayCensusTracts = function(censusTractsData) {
         censusLayer = L.geoJSON(censusTractsData, {fillColor: style.default.fillColor ,weight: style.default.weight, color: style.default.color, onEachFeature: onEachFeature})
             .bindTooltip(function(layer){
@@ -320,52 +321,58 @@ var View = function(controller){
                 color = '#880E4F';
             }
             else {
-                color = '#263238';
+                color = '#455A64';
             }
         }
         else if(demogrType === 'age_gender'){
             if(prop === 'total_0_to_4'){
-                color = '#fdd0a2';
+                color = '#2196F3';
+                // color = '#fafafa';
             }
             else if(prop === 'total_5_to_14'){
-                color = '#fdae6b';
+                color = '#795548';
+                // color = '#fafafa';
             }
             else if(prop === 'total_15_to_24'){
-                color = '#fd8d3c';
+                color = '#E91E63';
+                // color = '#fafafa';
             }
             else if(prop === 'total_25_to_54'){
-                color = '#f16913';
+                // color = '#fafafa';
+                color = '#FFA726';
             }
             else if(prop === 'total_55_to_64'){
-                color = '#d94801';
+                // color = '#fafafa';
+                color = '#CDDC39';
             }
             else {
-                color = '#a63603';
+                // color = '#fafafa';
+                color = '#AB47BC';
             }
         }
         else if(demogrType === 'income'){
             if(prop === 'less_than_10000'){
-                color = '#1f78b4';
+                color = '#EF5350';
                 // color =  '#e5e5e5';
             }
             else if(prop === 'bw_10000_and_24999'){
                 // color = '#33a02c';
-                color =  '#e5e5e5';
+                color = '#AB47BC';
             }
             else if(prop === 'bw_25000_and_49999'){
                 // color = '#e31a1c';
-                color =  '#e5e5e5';
+                color = '#5C6BC0';
             }
             else if(prop === 'bw_50000_and_99999'){
                 // color = '#ff7f00';
-                color =  '#e5e5e5';
+                color = '#26C6DA';
             }
             else if(prop === 'bw_100000_and_199999'){
                 // color = '#6a3d9a';
-                color = '#e5e5e5';
+                color = '#9CCC65';
             }
             else{
-                color = '#b15928';
+                color = '#FFA726';
                 // color = '#e5e5e5';
             }
         }
@@ -422,7 +429,7 @@ var View = function(controller){
                 //     points.features.push(turf.pointOnFeature(polygon));
                 // }
 
-                for(var i = 0; i < numPeople; i++){
+                for(var i = 0; i < parseInt(numPeople/2); i++){
                     var pt = turf.randomPoint(1, {bbox: [x_min, y_min, x_max, y_max]});
                     var point = turf.point([pt.features[0].geometry.coordinates[1], pt.features[0].geometry.coordinates[0]]);
 
@@ -461,6 +468,11 @@ var View = function(controller){
 
         // console.log('demographicsGroup ', demographicsGroup);
         map.addLayer(demographicsGroup);
+    };
+
+
+    self.displayRaceSummary = function(data){
+        console.log('demographics data', data);
     };
 
 
@@ -813,6 +825,10 @@ var View = function(controller){
 
         removeDemographics: function() {
             map.removeLayer(demographicsGroup);
+        },
+
+        showRaceSummary: function(data) {
+            self.displayRaceSummary(data);
         },
 
         showContentForIndex: function(index) {

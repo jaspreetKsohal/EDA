@@ -6,7 +6,7 @@ var App = App || {};
 
 var Model = function() {
     var censusTractsData = [], lotsData = [], parksData = [], greenRoofsData = [], cuampData = [], historicSitesData = [], schoolData = [], servicesData = [], safePassagesData = [],
-        demographicsData = [];
+        overviewDemographicsData = [];
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
     var cuampGreenSpaceTypes = ['gs-community-garden', 'gs-school-garden', 'gs-urban-farm', 'gs-other'];
 
@@ -28,6 +28,10 @@ var Model = function() {
             .defer(d3.json, "data/census-tracts.geojson")
             .defer(d3.json, "data/demographics.json")
             .await(combineData);
+
+        d3.json('data/overview_demographics.json', function(data){
+            overviewDemographicsData.push(data);
+        })
     }
 
 
@@ -40,7 +44,7 @@ var Model = function() {
 
         for(var i = 0; i < tractsData.features.length; i++) {
             for(var j = 0; j < demogrData.length; j++) {
-                if (tractsData.features[i].properties.geoid10 === demogrData[j]['year_2010'].geoid) {
+                if (tractsData.features[i].properties.geoid10 === demogrData[j]['year_2017'].geoid) {
                     censusTractsData[0].features[i].properties['demographics'] = demogrData[j];
                     break;
                 }
@@ -257,6 +261,11 @@ var Model = function() {
     }
 
 
+    function getOverviewDemographicsData() {
+        return overviewDemographicsData;
+    }
+
+
     return {
         loadCensusTractsData: loadCensusTractsData,
         loadLotsData: loadLotsData,
@@ -266,6 +275,7 @@ var Model = function() {
         loadServicesData: loadServicesData,
         loadSafePassagesData: loadSafePassagesData,
         // loadDemographicsData: loadDemographicsData,
+        getOverviewDemographicsData: getOverviewDemographicsData,
         getGreenSpaceData: getGreenSpaceData,
         getHistoricSitesData: getHistoricSitesData,
         getSchoolData: getSchoolData,
