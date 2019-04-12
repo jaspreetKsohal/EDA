@@ -29,9 +29,9 @@ var Model = function() {
             .defer(d3.json, "data/demographics.json")
             .await(combineData);
 
-        d3.json('data/overview_demographics.json', function(data){
-            overviewDemographicsData.push(data);
-        })
+        // d3.json('data/overview_demographics.json', function(data){
+        //         //     overviewDemographicsData.push(data);
+        //         // })
     }
 
 

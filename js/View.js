@@ -22,7 +22,7 @@ var View = function(controller){
         iconUrl: 'images/green-spaces.svg',
         // shadowUrl: 'leaf-shadow.png',
 
-        iconSize:     [12, 12], // size of the icon
+        iconSize:     [16, 16], // size of the icon
         // shadowSize:   [50, 64], // size of the shadow
         // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
         // shadowAnchor: [4, 62],  // the same for the shadow
@@ -32,7 +32,7 @@ var View = function(controller){
 
     var historicSitesIcon = L.icon({
         iconUrl: 'images/historic-sites.svg',
-        iconSize:     [12, 12], // size of the icon
+        iconSize:     [16, 16], // size of the icon
     });
 
 
@@ -471,6 +471,162 @@ var View = function(controller){
     };
 
 
+    self.displayCircularChart = function(year, demogrType, data){
+        // L.svg().addTo(map);
+
+        data.features.forEach(function(d, index){
+            //computing center of geometry
+            var center = turf.center(d).geometry.coordinates; /* [longitude, latitude] */
+
+            //adding center to the data
+            data.features[index].center = center;
+        });//forEach()
+
+        // console.log(data);
+
+        var circleSvg = d3.select('#map')
+            .select('svg')
+            .append('g')
+            .attr('id', 'demographics-circular-charts');
+
+
+        circleSvg
+            .selectAll('circular-chart')
+            .data(data.features)
+            .enter()
+            .append('circle')
+                .attr('cx', function(d) {
+                    // console.log(d.center);
+                    return map.latLngToLayerPoint([d.center[1], d.center[0]]).x
+                })
+                .attr('cy', function(d) {
+                    return map.latLngToLayerPoint([d.center[1], d.center[0]]).y
+                })
+                .attr('r', 34)
+                .attr('class', 'circular-chart')
+                .attr('transform' , function(d){
+                    return 'rotate(45, '+ map.latLngToLayerPoint([d.center[1], d.center[0]]).x +',' + map.latLngToLayerPoint([d.center[1], d.center[0]]).y +') ';
+                })
+                .attr("opacity","0.6")
+                .style('fill', function(d, index){
+                    getSlices(index, year, demogrType, d, circleSvg);
+                    return 'url(#grad'+ index +')';
+                });
+
+        map.on('moveend', updateCircularChartPosition);
+        console.log(circleSvg);
+    };
+
+
+    function getSlices(index, year, demogrType, data, circleSvg){
+        // console.log(year, demogrType, data);
+
+        var grad = circleSvg.append("defs").append("linearGradient").attr("id", "grad" + index)
+            .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+            // .attr('gradientTransform','rotate(45,' + map.latLngToLayerPoint([data.center[1], data.center[0]]).x + ',' + map.latLngToLayerPoint([data.center[1], data.center[0]]).y + ')');
+
+        var path = data.properties.demographics['year_' + year][demogrType];
+
+        if(demogrType === 'race'){
+            var pct_white, pct_black, pct_asian, pct_ai, pct_nh, pct_others;
+            var total = path.total_one_race;
+
+            pct_white = (path.one_race.white / total) * 100;
+            pct_black = (path.one_race.black_or_african_american / total) * 100;
+            pct_asian = (path.one_race.asian / total) * 100;
+            pct_ai = (path.one_race.american_indian_and_alaska_native / total) * 100;
+            pct_nh = (path.one_race.native_hawaiian_other_pacific_islander / total) * 100;
+            pct_others = (path.one_race.others / total) * 100;
+
+            // console.log(pct_white, pct_black, pct_asian, pct_ai, pct_nh, pct_others);
+            // console.log(Math.round(pct_white), Math.round(pct_black), Math.round(pct_asian), Math.round(pct_ai), Math.round(pct_nh), Math.round(pct_others));
+
+            // console.log(data.properties.geoid10, pct_white + pct_black + pct_asian + pct_ai + pct_nh + pct_others + "%");
+
+            var stop1 = "0%";
+            var stop2 = pct_white + "%";
+            var stop3 = pct_white + pct_black + "%";
+            var stop4 = pct_white + pct_black + pct_asian + "%";
+            var stop5 = pct_white + pct_black + pct_asian + pct_ai + "%";
+            var stop6 = pct_white + pct_black + pct_asian + pct_ai + pct_nh + "%";
+            var stop7 = pct_white + pct_black + pct_asian + pct_ai + pct_nh + pct_others + "%";
+
+            grad.append("stop").attr("offset", stop1).style("stop-color", "#D50000");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#D50000");
+
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#9FA8DA");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#9FA8DA");
+
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#F7B32B");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#F7B32B");
+
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#A9E5BB");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#A9E5BB");
+
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#880E4F");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#880E4F");
+
+            grad.append("stop").attr("offset", stop6).style("stop-color", "black");
+            grad.append("stop").attr("offset", stop7).style("stop-color", "black");
+        }
+        else if(demogrType === 'age_gender'){
+
+        }
+        else if(demogrType === 'income'){
+            var total_households = path.total_households;
+            var pct_income_g1, pct_income_g2, pct_income_g3, pct_income_g4, pct_income_g5, pct_income_g6;
+
+            pct_income_g1 = (path.income_groups.less_than_10000 / total_households) * 100;
+            pct_income_g2 = (path.income_groups.bw_10000_and_24999 / total_households) * 100;
+            pct_income_g3 = (path.income_groups.bw_25000_and_49999 / total_households) * 100;
+            pct_income_g4 = (path.income_groups.bw_50000_and_99999 / total_households) * 100;
+            pct_income_g5 = (path.income_groups.bw_100000_and_199999 / total_households) * 100;
+            pct_income_g6 = (path.income_groups.more_than_200000 / total_households) * 100;
+
+            var stop1 = "0%";
+            var stop2 = pct_income_g1 + "%";
+            var stop3 = pct_income_g1 + pct_income_g2 + "%";
+            var stop4 = pct_income_g1 + pct_income_g2 + pct_income_g3 + "%";
+            var stop5 = pct_income_g1 + pct_income_g2 + pct_income_g3 + pct_income_g4 + "%";
+            var stop6 = pct_income_g1 + pct_income_g2 + pct_income_g3 + pct_income_g4 + pct_income_g5 + "%";
+            var stop7 = pct_income_g1 + pct_income_g2 + pct_income_g3 + pct_income_g4 + pct_income_g5 + pct_income_g6 + "%";
+
+            grad.append("stop").attr("offset", stop1).style("stop-color", "#D50000");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#D50000");
+
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#9FA8DA");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#9FA8DA");
+
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#F7B32B");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#F7B32B");
+
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#A9E5BB");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#A9E5BB");
+
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#880E4F");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#880E4F");
+
+            grad.append("stop").attr("offset", stop6).style("stop-color", "black");
+            grad.append("stop").attr("offset", stop7).style("stop-color", "black");
+        }
+    }
+
+
+    function updateCircularChartPosition() {
+        d3.selectAll('.circular-chart')
+            .attr('cx', function(d) {
+                // console.log(d.center);
+                return map.latLngToLayerPoint([d.center[1], d.center[0]]).x
+            })
+            .attr('cy', function(d) {
+                return map.latLngToLayerPoint([d.center[1], d.center[0]]).y
+            })
+            .attr('transform' , function(d){
+                return 'rotate(45, '+ map.latLngToLayerPoint([d.center[1], d.center[0]]).x +',' + map.latLngToLayerPoint([d.center[1], d.center[0]]).y +') ';
+            })
+    }
+
+
     self.displayRaceSummary = function(data){
         console.log('demographics data', data);
     };
@@ -820,11 +976,14 @@ var View = function(controller){
         },
 
         addDemographicsData: function(year, demogrType, data){
-            self.displayDotDistribution(year, demogrType, data);
+            // self.displayDotDistribution(year, demogrType, data);
+            self.displayCircularChart(year, demogrType, data);
         },
 
         removeDemographics: function() {
-            map.removeLayer(demographicsGroup);
+            // map.removeLayer(demographicsGroup);
+            console.log('removing demographics data');
+            d3.select('#demographics-circular-charts').remove();
         },
 
         showRaceSummary: function(data) {
@@ -850,6 +1009,11 @@ var View = function(controller){
                 return map.hasLayer(demographicsGroup);
             else
                 return map.hasLayer(safePassageGroup);
+        },
+
+        isDemogrTypeActive: function(){
+            var temp = d3.select('#map').select('#demographics-circular-charts');
+            return temp.empty();
         }
 
     };

@@ -19,6 +19,7 @@ var Controller = function(model, view){
     //about button
     $('#about').css({width: $('.filters')[0].getBoundingClientRect().width});
 
+
     // about button selected
     $('#about').on('click', function(){
         $('#about-overlay').fadeIn('slow', function() {
@@ -26,6 +27,7 @@ var Controller = function(model, view){
             $(this).addClass('showAbout');
         });
     });
+
 
     $('#close-about').on('click', function(){
         $('#about-overlay').fadeOut('slow', function() {
@@ -93,27 +95,30 @@ var Controller = function(model, view){
 
 
     function resetDemogrTypesSelection(currentlyActive){
-        $('#demographics-sub-types > li').removeClass('demogr-selected');
-        if(currentlyActive){
-            $("#" + currentlyActive).toggleClass('demogr-selected');
-        }
-
+        // $('#demographics-sub-types > li:not(#'+ currentlyActive +')').removeClass('demogr-selected');
+        // if(currentlyActive){
+        // $("#" + currentlyActive).toggleClass('demogr-selected');
+        // }
     }
 
 
     //on clicking sub categories of demographics - race, age_gender, income
     $('.demographics-inner-flex').on('click', function(event){
         var demogrType = event.target.id;
+        
+        // if(view.isLayerActive('demographics')){
+        //     view.removeDemographics();
+        // }
 
-        if(view.isLayerActive('demographics')){
+        if(!view.isDemogrTypeActive()){
             view.removeDemographics();
+        }
+        else {
+            view.addDemographicsData(year, demogrType, model.getDemographicsData());
         }
 
         resetDemogrTypesSelection(demogrType);
-
-        view.addDemographicsData(year, demogrType, model.getDemographicsData());
     });
-
 
 
     $('td').on('click', function(event){
