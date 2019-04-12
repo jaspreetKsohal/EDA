@@ -95,17 +95,17 @@ var Controller = function(model, view){
 
 
     function resetDemogrTypesSelection(currentlyActive){
-        // $('#demographics-sub-types > li:not(#'+ currentlyActive +')').removeClass('demogr-selected');
-        // if(currentlyActive){
-        // $("#" + currentlyActive).toggleClass('demogr-selected');
-        // }
+        $('#demographics-sub-types > li').removeClass('demogr-selected');
+        if(currentlyActive){
+        $("#" + currentlyActive).toggleClass('demogr-selected');
+        }
     }
 
 
     //on clicking sub categories of demographics - race, age_gender, income
     $('.demographics-inner-flex').on('click', function(event){
         var demogrType = event.target.id;
-        
+
         // if(view.isLayerActive('demographics')){
         //     view.removeDemographics();
         // }
@@ -113,9 +113,8 @@ var Controller = function(model, view){
         if(!view.isDemogrTypeActive()){
             view.removeDemographics();
         }
-        else {
-            view.addDemographicsData(year, demogrType, model.getDemographicsData());
-        }
+
+        view.addDemographicsData(year, demogrType, model.getDemographicsData());
 
         resetDemogrTypesSelection(demogrType);
     });
@@ -178,10 +177,15 @@ var Controller = function(model, view){
 
             view.showRaceSummary(model.getDemographicsData());
 
-            if(view.isLayerActive(filter)){
+            if(!view.isDemogrTypeActive()){
                 resetDemogrTypesSelection();
                 view.removeDemographics();
             }
+
+            // if(view.isLayerActive(filter)){
+            //     resetDemogrTypesSelection();
+            //     view.removeDemographics();
+            // }
         }
 
 

@@ -570,7 +570,43 @@ var View = function(controller){
             grad.append("stop").attr("offset", stop7).style("stop-color", "black");
         }
         else if(demogrType === 'age_gender'){
+            var total_population_female = path.total_population_female;
+            var total_population_male = path.total_population_male;
+            var total_population = total_population_male + total_population_female;
+            var pct_age_gender_g1, pct_age_gender_g2, pct_age_gender_g3, pct_age_gender_g4, pct_age_gender_g5, pct_age_gender_g6;
 
+            pct_age_gender_g1 = (path.total.total_0_to_4 / total_population) * 100;
+            pct_age_gender_g2 = (path.total.total_5_to_14 / total_population) * 100;
+            pct_age_gender_g3 = (path.total.total_15_to_24 / total_population) * 100;
+            pct_age_gender_g4 = (path.total.total_25_to_54 / total_population) * 100;
+            pct_age_gender_g5 = (path.total.total_55_to_64 / total_population) * 100;
+            pct_age_gender_g6 = (path.total.total_65_and_over / total_population) * 100;
+
+            var stop1 = "0%";
+            var stop2 = pct_age_gender_g1 + "%";
+            var stop3 = pct_age_gender_g1 + pct_age_gender_g2 + "%";
+            var stop4 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + "%";
+            var stop5 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + pct_age_gender_g4 + "%";
+            var stop6 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + pct_age_gender_g4 + pct_age_gender_g5 + "%";
+            var stop7 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + pct_age_gender_g4 + pct_age_gender_g5 + pct_age_gender_g6 + "%";
+
+            grad.append("stop").attr("offset", stop1).style("stop-color", "#D50000");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#D50000");
+
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#9FA8DA");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#9FA8DA");
+
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#F7B32B");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#F7B32B");
+
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#A9E5BB");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#A9E5BB");
+
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#880E4F");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#880E4F");
+
+            grad.append("stop").attr("offset", stop6).style("stop-color", "black");
+            grad.append("stop").attr("offset", stop7).style("stop-color", "black");
         }
         else if(demogrType === 'income'){
             var total_households = path.total_households;
