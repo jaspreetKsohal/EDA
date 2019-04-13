@@ -29,9 +29,9 @@ var Model = function() {
             .defer(d3.json, "data/demographics.json")
             .await(combineData);
 
-        // d3.json('data/overview_demographics.json', function(data){
-        //         //     overviewDemographicsData.push(data);
-        //         // })
+        d3.json('data/overview_demographics.json', function(data){
+            overviewDemographicsData.push(data);
+        })
     }
 
 
@@ -58,13 +58,6 @@ var Model = function() {
            lotsData.push(d);
         });
     }
-
-
-    // function loadDemographicsData() {
-    //     d3.json("data/demographics.json", function(d){
-    //         demographicsData.push(d);
-    //     });
-    // }
 
 
     function loadGreenSpacesData() {
@@ -262,7 +255,86 @@ var Model = function() {
 
 
     function getOverviewDemographicsData() {
-        return overviewDemographicsData;
+        return overviewDemographicsData[0];
+    }
+
+
+    function computePercentChange(data, baseYear, recentYear) {
+        console.log('function computePercentChange()');
+        console.log(data);
+
+        var result = {
+            race: {},
+            income: {}
+        };
+
+        var old = data['year_' + baseYear];
+
+        var counter = 0;
+
+        for (var prop in data){
+            if(prop === 'year_' + baseYear) continue;
+
+            //percent change for race
+            var raceData = data[prop].race.one_race;
+
+            for (var race in raceData){
+                if(counter === 0) result.race[race] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pct_change: pctChange(raceData[race], old.race.one_race[race]),
+                    pop_share: popShare(raceData[race], data[prop].total_population)
+                };
+
+                result.race[race].push(temp);
+            }//for
+
+
+            //percent change for income
+            var incomeData = data[prop].income.income_groups;
+
+            for (var incomeGroup in incomeData){
+                if(counter === 0) result.income[incomeGroup] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pct_change: pctChange(incomeData[incomeGroup], old.income.income_groups[incomeGroup]),
+                    pop_share: popShare(incomeData[incomeGroup], data[prop].income.total_households)
+                };
+
+                result.income[incomeGroup].push(temp);
+            }//for
+
+            counter = 1;
+        }//for
+
+
+        console.log(result);
+    }
+
+
+    function popShare(value, total){
+        var result;
+
+        result = (value / total) * 100;
+
+        return parseFloat(result.toFixed(2));
+    }
+
+
+    function pctChange(newValue, oldValue){
+        var result = 0;
+
+        var diff = newValue - oldValue;
+
+        if(diff === 0 || oldValue === 0){
+            return 0;
+        }
+
+        result = (diff / oldValue) * 100;
+
+        return parseFloat(result.toFixed(2));
     }
 
 
@@ -285,7 +357,8 @@ var Model = function() {
         getLotsData: getLotsData,
         getFilteredServices: getFilteredServices,
         getFilteredGreenSpaces: getFilteredGreenSpaces,
-        getDemographicsData: getDemographicsData
+        getDemographicsData: getDemographicsData,
+        computePercentChange: computePercentChange
     }
 
 };

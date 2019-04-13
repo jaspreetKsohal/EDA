@@ -14,6 +14,7 @@ var Controller = function(model, view){
 
     //demographics data year
     var year = 2017;
+    var baseYear = 2010; //with respect to which percent change will be computed
     var allLayers = ['green-spaces, historic-sites, service, school, safe-passage, vacant-lots, demographics'];
 
     //about button
@@ -106,10 +107,6 @@ var Controller = function(model, view){
     $('.demographics-inner-flex').on('click', function(event){
         var demogrType = event.target.id;
 
-        // if(view.isLayerActive('demographics')){
-        //     view.removeDemographics();
-        // }
-
         if(!view.isDemogrTypeActive()){
             view.removeDemographics();
         }
@@ -175,17 +172,13 @@ var Controller = function(model, view){
         else if(filter === 'demographics'){
             $('#demographics-flex-item').toggleClass('show-demographics-controls');
 
-            view.showRaceSummary(model.getDemographicsData());
-
             if(!view.isDemogrTypeActive()){
                 resetDemogrTypesSelection();
                 view.removeDemographics();
             }
 
-            // if(view.isLayerActive(filter)){
-            //     resetDemogrTypesSelection();
-            //     view.removeDemographics();
-            // }
+            model.computePercentChange(model.getOverviewDemographicsData(), baseYear, year);
+            // view.showOverviewPlots(model.getOverviewDemographicsData());
         }
 
 

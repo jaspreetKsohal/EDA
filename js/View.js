@@ -480,6 +480,7 @@ var View = function(controller){
 
             //adding center to the data
             data.features[index].center = center;
+
         });//forEach()
 
         // console.log(data);
@@ -514,7 +515,7 @@ var View = function(controller){
                 });
 
         map.on('moveend', updateCircularChartPosition);
-        console.log(circleSvg);
+        // console.log(circleSvg);
     };
 
 
@@ -663,8 +664,9 @@ var View = function(controller){
     }
 
 
-    self.displayRaceSummary = function(data){
-        console.log('demographics data', data);
+    self.displayOverviewPlots = function(data){
+        console.log('overview data:', data);
+
     };
 
 
@@ -1017,13 +1019,11 @@ var View = function(controller){
         },
 
         removeDemographics: function() {
-            // map.removeLayer(demographicsGroup);
-            console.log('removing demographics data');
             d3.select('#demographics-circular-charts').remove();
         },
 
-        showRaceSummary: function(data) {
-            self.displayRaceSummary(data);
+        showOverviewPlots: function(data){
+          self.displayOverviewPlots(data);
         },
 
         showContentForIndex: function(index) {
