@@ -10,10 +10,11 @@ var App = App || {};
         console.log('application started');
         $('#secondary-controls-container').hide();
         var model = new Model();
-        var view = new View();
+        var view = new View(model);
         var controller = new Controller(model, view);
 
-        var totalBlocksSelected = 0;
+
+        // var totalBlocksSelected = 0;
 
         view.initialize();
         model.loadCensusTractsData();

@@ -177,8 +177,14 @@ var Controller = function(model, view){
                 view.removeDemographics();
             }
 
-            model.computePercentChange(model.getOverviewDemographicsData(), baseYear, year);
-            // view.showOverviewPlots(model.getOverviewDemographicsData());
+            if($('#demographics-flex-item').hasClass('show-demographics-controls')){
+                var result = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
+                view.showOverviewPlots(result);
+            } else {
+                $('.barcode-plot').empty();
+                $('#tooltip-chart').empty();
+            }
+
         }
 
 
@@ -222,5 +228,11 @@ var Controller = function(model, view){
     $('.prev').on('click', function() {
         storyIndex--;
         view.showContentForIndex(storyIndex);
+    });
+
+    $('#skipBtn').on('click', function() {
+        console.log('skip');
+        $('.overlay').fadeOut('slow');
+        // $('#final-step-btn').trigger("click");
     });
 };

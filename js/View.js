@@ -4,7 +4,9 @@
 
 var App = App || {};
 
-var View = function(controller){
+var View = function(model){
+
+    var model = model;
 
     var self = this;
     var map;
@@ -81,19 +83,10 @@ var View = function(controller){
 
     self.displayCensusTracts = function(censusTractsData) {
         censusLayer = L.geoJSON(censusTractsData, {fillColor: style.default.fillColor ,weight: style.default.weight, color: style.default.color, onEachFeature: onEachFeature})
-            .bindTooltip(function(layer){
-                var polygon = L.polygon(layer.feature.geometry.coordinates[0]);
-                var bounds = polygon.getBounds();
-
-                //get x and y limits of the bounds
-                var x_max = bounds.getEast();
-                var x_min = bounds.getWest();
-                var y_max = bounds.getSouth();
-                var y_min = bounds.getNorth();
-
-                var tract_text = "<b>" + layer.feature.properties.geoid10 + "</b></br>";
-                return tract_text;
-            });
+            // .bindTooltip(function(layer){
+                // var tract_text = "<b>" + layer.feature.properties.geoid10 + "</b></br>";
+                // return tract_text;
+            // });
         map.addLayer(censusLayer);
     };
 
@@ -474,6 +467,21 @@ var View = function(controller){
     self.displayCircularChart = function(year, demogrType, data){
         // L.svg().addTo(map);
 
+        censusLayer.bindPopup(function(layer){
+            // var tract = "<b>" + layer.feature.properties.geoid10 + "</b></br>";
+            //
+            // tract += "<div id='tooltip-chart' class='tooltip-barcode-plot'></div>";
+
+            var layerData = layer.feature.properties.demographics;
+            // console.log(model.computePercentChange(layerData, year));
+            var pctChangeData = model.computePercentChange(layerData, 2010);
+
+            var tooltip = drawTooltipChart('tooltip-chart', pctChangeData[demogrType], demogrType);
+
+            return tooltip;
+        });
+
+
         data.features.forEach(function(d, index){
             //computing center of geometry
             var center = turf.center(d).geometry.coordinates; /* [longitude, latitude] */
@@ -483,7 +491,6 @@ var View = function(controller){
 
         });//forEach()
 
-        // console.log(data);
 
         var circleSvg = d3.select('#map')
             .select('svg')
@@ -515,7 +522,6 @@ var View = function(controller){
                 });
 
         map.on('moveend', updateCircularChartPosition);
-        // console.log(circleSvg);
     };
 
 
@@ -628,23 +634,23 @@ var View = function(controller){
             var stop6 = pct_income_g1 + pct_income_g2 + pct_income_g3 + pct_income_g4 + pct_income_g5 + "%";
             var stop7 = pct_income_g1 + pct_income_g2 + pct_income_g3 + pct_income_g4 + pct_income_g5 + pct_income_g6 + "%";
 
-            grad.append("stop").attr("offset", stop1).style("stop-color", "#D50000");
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#D50000");
+            grad.append("stop").attr("offset", stop1).style("stop-color", "#5679a3");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#5679a3");
 
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#9FA8DA");
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#9FA8DA");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#e59244");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#e59244");
 
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#F7B32B");
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#F7B32B");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#d2605d");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#d2605d");
 
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#A9E5BB");
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#A9E5BB");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#84b5b2");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#84b5b2");
 
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#880E4F");
-            grad.append("stop").attr("offset", stop6).style("stop-color", "#880E4F");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#6a9f58");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#6a9f58");
 
-            grad.append("stop").attr("offset", stop6).style("stop-color", "black");
-            grad.append("stop").attr("offset", stop7).style("stop-color", "black");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#977662");
+            grad.append("stop").attr("offset", stop7).style("stop-color", "#977662");
         }
     }
 
@@ -667,8 +673,383 @@ var View = function(controller){
     self.displayOverviewPlots = function(data){
         console.log('overview data:', data);
 
+        drawBarCodeChart('race-barcode-plot', data.race, 'race');
+        drawBarCodeChart('income-barcode-plot', data.income, 'income');
     };
 
+
+    function drawTooltipChart(container, data, type){
+        console.log('drawing barcode chart');
+
+        var div = d3.create('div')
+            .attr('id', 'tooltip-chart')
+            .attr('class', 'tooltip-barcode-chart')
+            .attr('width', 300)
+            .attr('height', 200);
+
+        var margin = {top: 30, right: 10, bottom: 15, left: 30};
+
+        var constHeight = 200;
+        var constWidth = 300;
+
+        var width = constWidth - margin.left - margin.right,
+            height = constHeight - margin.top - margin.bottom;
+
+        var rectPadding = 10;
+        var rectHeight = height / 6 - rectPadding;
+        var legendWidth = 10;
+
+
+        //append svg to chart container div
+        var svg = div.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom )
+            .attr('id', 'barcode-svg-' + type)
+            .append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+        //create x scale
+        var xScale = d3.scaleTime().range([0, width]);
+
+        //define the x axis styles
+        var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .tickPadding(8)
+            .ticks(5)
+            .tickSize(0)
+            .tickFormat(function(d) { return d * 1 + '%' });
+
+
+        //defines the xscale max
+        var min = 10, max = -10; // random initialization
+        for (var prop in data){
+            var min_temp = d3.min(data[prop], function(d) { return d.pct_change; });
+            var max_temp = d3.max(data[prop], function(d) { return d.pct_change; });
+
+            if(min_temp < min) min = min_temp;
+            if(max_temp > max) max = max_temp;
+        }
+
+        xScale.domain([min, max]);
+
+        //append the x axis
+        var xAxisGroup = svg.append('g')
+            .attr('class', 'x-axis')
+            .attr('transform', 'translate(' + 0 + ',' + -margin.top + ')')
+            .call(xAxis);
+
+        xAxisGroup.select('.domain').attr('stroke', 'none');
+
+        var xAxisLabel = svg.append('text')
+            .attr('class', 'x-axis-label')
+            .text('Percentage Change from 2010')
+            .attr('transform', 'translate(' + width/2 + ',' + height + ')')
+            .attr('text-anchor', 'middle');
+
+
+        var zeroLine = svg.append('line')
+            .attr('x1', xScale(0))
+            .attr('x2', xScale(0))
+            .attr('y1', -10)
+            .attr('y2', height - 10)
+            .attr('class', 'zero-line');
+
+
+        var y = 0;
+
+        for (var prop in data) {
+            // console.log(prop, data[prop]);
+
+            var rectData = data[prop];
+
+            svg.append('rect')
+                .attr('x', 0)
+                .attr('y', y)
+                .attr('width', width)
+                .attr('height', rectHeight)
+                .attr('class', 'g-rect');
+
+
+            svg.append('rect')
+                .attr('x', 0)
+                .attr('y', y)
+                .attr('width', legendWidth)
+                .attr('height', rectHeight)
+                .attr('transform', 'translate(' + -legendWidth + ',0)')
+                .attr('class', 'g-legend')
+                .attr('fill', getLegendColor(prop, type));
+
+            svg.append('text')
+                .attr('class', 'y-axis')
+                .attr('x', 0)
+                .attr('y', y)
+                .attr('transform', 'translate(' + -legendWidth + ',0)')
+                .text(getLegendText(prop, type));
+
+
+            var drawStrips = svg.selectAll('line.percent')
+                .data(rectData)
+                .enter()
+                .append('line')
+                .attr('class', function(d) { return 'g-line g-' + d.year; })
+                .attr('x1', function(d, i) { return xScale(d.pct_change); })
+                .attr('x2', function(d) { return xScale(d.pct_change); })
+                .attr('y1', y)
+                .attr('y2', y + rectHeight)
+                .on('mouseover', function(d){
+                    var selectedClass = (d3.select(this).attr('class')).split(' ')[1];
+                    d3.selectAll('line.' + selectedClass)
+                        .style('stroke', '#3D5AFE');
+
+                    d3.selectAll('text.' + selectedClass)
+                        .style('fill', '#3D5AFE');
+                })
+                .on('mouseout', function(d){
+                    var selectedClass = (d3.select(this).attr('class')).split(' ')[1];
+
+                    d3.selectAll('line.' + selectedClass)
+                        .style('stroke', '#757575');
+
+                    d3.selectAll('text.' + selectedClass)
+                        .style('fill', 'none');
+                });
+
+
+            var text = svg.selectAll('text.percent')
+                .data(rectData)
+                .enter()
+                .append('text')
+                .attr('class', function(d) { return 'g-text g-' + d.year; })
+                .attr('x', function(d) { return xScale(d.pct_change); })
+                .attr('y', y - 3)
+                .text(function(d) { return d.year + ': ' + d.pct_change + '%'; });
+
+
+            y += rectHeight + rectPadding;
+        }//for-in
+
+        return div.node();
+        console.log('---------------------');
+    }//drawTooltipChart()
+
+    function drawBarCodeChart(container, data, type){
+        console.log('drawing barcode chart');
+
+        var margin = {top: 30, right: 10, bottom: 15, left: 30};
+
+        // var constWidth = d3.select('#barcode-plot').node().clientWidth; //node() - finds the first DOM element in the selection
+        // console.log($('#barcode-plot').width());
+
+        var constHeight = $('.barcode-plot').height();
+        var constWidth = 370;
+
+        var width = constWidth - margin.left - margin.right,
+            height = constHeight - margin.top - margin.bottom;
+
+        var rectPadding = 10;
+        var rectHeight = height / 6 - rectPadding;
+        var legendWidth = 10;
+
+        console.log(d3.select('#' + container));
+
+        //append svg to chart container div
+        var svg = d3.select('#' + container)
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom )
+            .attr('id', 'barcode-svg-' + type)
+            .append('g')
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+        //create x scale
+        var xScale = d3.scaleTime().range([0, width]);
+
+        //define the x axis styles
+        var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .tickPadding(8)
+            .ticks(5)
+            .tickSize(0)
+            .tickFormat(function(d) { return d * 1 + '%' });
+
+
+        //defines the xscale max
+        var min = 10, max = -10; // random initialization
+        for (var prop in data){
+            var min_temp = d3.min(data[prop], function(d) { return d.pct_change; });
+            var max_temp = d3.max(data[prop], function(d) { return d.pct_change; });
+
+            if(min_temp < min) min = min_temp;
+            if(max_temp > max) max = max_temp;
+        }
+        console.log(min, max);
+
+        if(type === 'race')  xScale.domain([-1000, max]);
+        else xScale.domain([min, max]);
+
+        //append the x axis
+        var xAxisGroup = svg.append('g')
+            .attr('class', 'x-axis')
+            .attr('transform', 'translate(' + 0 + ',' + -margin.top + ')')
+            .call(xAxis);
+
+        xAxisGroup.select('.domain').attr('stroke', 'none');
+
+        var xAxisLabel = svg.append('text')
+            .attr('class', 'x-axis-label')
+            .text('Percentage Change from 2010')
+            .attr('transform', 'translate(' + width/2 + ',' + height + ')')
+            .attr('text-anchor', 'middle');
+
+
+        var zeroLine = svg.append('line')
+            .attr('x1', xScale(0))
+            .attr('x2', xScale(0))
+            .attr('y1', -10)
+            .attr('y2', height - 10)
+            .attr('class', 'zero-line');
+
+
+        var y = 0;
+
+        for (var prop in data) {
+                // console.log(prop, data[prop]);
+
+            var rectData = data[prop];
+
+            svg.append('rect')
+                .attr('x', 0)
+                .attr('y', y)
+                .attr('width', width)
+                .attr('height', rectHeight)
+                .attr('class', 'g-rect');
+
+
+            svg.append('rect')
+                .attr('x', 0)
+                .attr('y', y)
+                .attr('width', legendWidth)
+                .attr('height', rectHeight)
+                .attr('transform', 'translate(' + -legendWidth + ',0)')
+                .attr('class', 'g-legend')
+                .attr('fill', getLegendColor(prop, type));
+
+            svg.append('text')
+                .attr('class', 'y-axis')
+                .attr('x', 0)
+                .attr('y', y)
+                .attr('transform', 'translate(' + -legendWidth + ',0)')
+                .text(getLegendText(prop, type));
+
+
+            var drawStrips = svg.selectAll('line.percent')
+                .data(rectData)
+                .enter()
+                .append('line')
+                .attr('class', function(d) { return 'g-line g-' + d.year; })
+                .attr('x1', function(d, i) { return xScale(d.pct_change); })
+                .attr('x2', function(d) { return xScale(d.pct_change); })
+                .attr('y1', y)
+                .attr('y2', y + rectHeight)
+                .on('mouseover', function(d){
+                     var selectedClass = (d3.select(this).attr('class')).split(' ')[1];
+                     d3.selectAll('line.' + selectedClass)
+                         .style('stroke', '#3D5AFE');
+
+                     d3.selectAll('text.' + selectedClass)
+                         .style('fill', '#3D5AFE');
+                })
+                .on('mouseout', function(d){
+                     var selectedClass = (d3.select(this).attr('class')).split(' ')[1];
+
+                     d3.selectAll('line.' + selectedClass)
+                         .style('stroke', '#757575');
+
+                     d3.selectAll('text.' + selectedClass)
+                         .style('fill', 'none');
+                });
+
+
+            var text = svg.selectAll('text.percent')
+                .data(rectData)
+                .enter()
+                .append('text')
+                .attr('class', function(d) { return 'g-text g-' + d.year; })
+                .attr('x', function(d) { return xScale(d.pct_change); })
+                .attr('y', y - 3)
+                .text(function(d) { return d.year + ': ' + d.pct_change + '%'; });
+
+
+            y += rectHeight + rectPadding;
+        }//for-in
+
+        console.log('---------------------');
+    }//drawBarCodeChart()
+
+    function getLegendText(prop, type){
+        if(type === 'race'){
+            if(prop === 'white') return 'white';
+            else if(prop === 'black_or_african_american') return 'black';
+            else if(prop === 'asian') return 'asian';
+            else if(prop === 'native_hawaiian_other_pacific_islander') return 'NH/PI';
+            else if(prop === 'american_indian_and_alaska_native') return 'AI/AN';
+            else if(prop === 'others') return 'others';
+        }
+        else if(type === 'income'){
+            if(prop === 'less_than_10000') return '<10,000';
+            else if(prop === 'bw_10000_and_24999') return '[10,000 - 24,999]';
+            else if(prop === 'bw_25000_and_49999') return '[25,000 - 49,999]';
+            else if(prop === 'bw_50000_and_99999') return '[50,000 - 99,999]';
+            else if(prop === 'bw_100000_and_199999') return '[100,000 - 199,999]';
+            else if(prop === 'more_than_200000') return '>200,000';
+        }
+
+    }
+
+    function getLegendColor(prop, type){
+        if(type === 'race'){
+            if(prop === 'white') return '#D50000';
+            else if(prop === 'black_or_african_american') return '#9FA8DA';
+            else if(prop === 'asian') return '#F7B32B';
+            else if(prop === 'native_hawaiian_other_pacific_islander') return '#A9E5BB';
+            else if(prop === 'american_indian_and_alaska_native') return '#880E4F';
+            else if(prop === 'others') return 'black';
+        }
+        else if(type === 'income'){
+            if(prop === 'less_than_10000') return '#5679a3';
+            else if(prop === 'bw_10000_and_24999') return '#e59244';
+            else if(prop === 'bw_25000_and_49999') return '#d2605d';
+            else if(prop === 'bw_50000_and_99999') return '#84b5b2';
+            else if(prop === 'bw_100000_and_199999') return '#6a9f58';
+            else if(prop === 'more_than_200000') return '#977662';
+        }
+    }
+
+    function clearInterface() {
+        if(map.hasLayer(schoolGroup)){
+            map.removeLayer(schoolGroup);
+            $('#school').parent().removeClass('highlight');
+            $('#numberSchools').remove();
+        }
+        if(map.hasLayer(serviceGroup)){
+            map.removeLayer(serviceGroup);
+            $('#service').parent().removeClass('highlight');
+            $('#numberServices').remove();
+            $('#service-types').addClass('hide-services');
+        }
+        if(map.hasLayer(lotsGroup)){
+            map.removeLayer(lotsGroup);
+            $('#vacant-lots').parent().removeClass('highlight');
+        }
+        if(map.hasLayer(safePassageGroup)){
+            map.removeLayer(safePassageGroup);
+            $('#safe-passage').parent().removeClass('highlight');
+        }
+
+        $('#secondary-controls-container').hide();
+    }
 
     self.showContentForIndex = function(index) {
         var content = $('.story-content');
@@ -714,7 +1095,7 @@ var View = function(controller){
                    });
 
                    container1.html(
-                       '<img src="images/MasonicTemple.jpg" id="masonic-temple" /> <br>' +
+                       '<img src="images/MasonicTemple.jpg" id="masonic-temple" width="100%"/> <br>' +
                        '<h2 class="tooltip-title">Masonic Temple</h2>' +
                        '<p class="tooltip-text custom-margin">An extraordinary landmark, reminder of Englewood\'s past glory. <br>Demolished in February 2018.</p> <br>' +
                        '<button id="masonic-btn" class="btn-width btn">Next</button>'
@@ -727,7 +1108,7 @@ var View = function(controller){
                     // });
 
                    masonic.bindPopup(container1[0], {closeOnClick: false}).openPopup();
-                   map.setView(new L.latLng(41.794124, -87.654949), 14);
+                   map.setView(new L.latLng(41.794124, -87.654949), 14.5);
 
                    var container2 = $('<div class="tooltip-wrapper"/>');
 
@@ -737,12 +1118,12 @@ var View = function(controller){
                        clearInterface();
                        map.removeLayer(markergroup1);
 
-                       map.setView(new L.latLng(41.774876, -87.656801), 14);
+                       map.setView(new L.latLng(41.774876, -87.656801), 14.5);
                        self.showContentForIndex(3);
                    });
 
                    container2.html(
-                       '<img src="images/southtown.jpg" id="southtown" /> <br>' +
+                       '<img src="images/southtown.jpg" id="southtown" width="100%"/> <br>' +
                        '<h2 class="tooltip-title">Southtown Theatre</h2>' +
                        '<p class="tooltip-text custom-margin">The phenominal Southtown Theatre, known for its grandeur and duck pond loby, was converted to discount store and ultimately ' +
                        'demolished in 1991.</p> <br>' +
@@ -783,10 +1164,11 @@ var View = function(controller){
             case 5: {
                 $('.overlay').fadeOut('slow').promise().done(function() {
                     var story = true, step5 = true;
-                    var position = $('#vacant-lot')[0].getBoundingClientRect();
+                    var position = $('#vacant-lots')[0].getBoundingClientRect();
                     var top = position.top, left = position.left;
                     var width = position.width, height = position.height;
                     var topPos = height/2 + top, leftPos = width/2 + left;
+
                     var filtersWidth = $('.filters')[0].getBoundingClientRect().width;
 
                     $('body').append('<div id="pulse" class="pulsating-circle"></div>');
@@ -800,7 +1182,7 @@ var View = function(controller){
                     $('td').on('click', function() {
                         if(story && step5){
                             var filter = $(event.currentTarget).find(':first-child').attr('id');
-                            if(filter == 'vacant-lot' && story){
+                            if(filter == 'vacant-lots' && story){
                                 $('#pulse').remove();
                                 $('#selectVacantLots').remove();
                                 var yale = L.marker([41.774570, -87.631220]).addTo(markergroup2);
@@ -825,7 +1207,7 @@ var View = function(controller){
                                 );
 
                                 honroe.bindPopup(container1[0], {closeOnClick: false,  autoClose: false}).openPopup();
-                                map.setView(new L.latLng(41.795978, -87.654860), 14);
+                                map.setView(new L.latLng(41.775805, -87.671119), 14.5);
 
                                 var container2 = $('<div class="tooltip-wrapper"/>');
 
@@ -834,42 +1216,37 @@ var View = function(controller){
                                     yale.closePopup();
 
                                     map.removeLayer(markergroup2);
-                                    map.setView(new L.latLng(41.774876, -87.656801), 14);
+                                    map.setView(new L.latLng(41.774876, -87.656801), 14.5);
 
                                     $('#numberVacantLots').remove();
-                                    $('#vacant-lot').parent().removeClass('highlight');
-                                    map.removeLayer(vacantLotGroup);
+                                    $('#vacant-lots').parent().removeClass('highlight');
+                                    map.removeLayer(lotsGroup);
 
                                     var schoolPos = $('#school')[0].getBoundingClientRect();
-                                    var crimePos = $('#crime')[0].getBoundingClientRect();
                                     var passagePos = $('#safe-passage')[0].getBoundingClientRect();
 
                                     clearInterface();
                                     var schoolTop = schoolPos.height / 2 + schoolPos.top,
                                         schoolLeft = schoolPos.width / 2 + schoolPos.left,
-                                        crimeTop = crimePos.height / 2 + crimePos.top,
-                                        crimeLeft = crimePos.width / 2 + crimePos.left,
                                         passageTop = passagePos.height / 2 + passagePos.top,
                                         passageLeft = passagePos.width / 2 + passagePos.left;
 
                                     $('body').append('<div id="schools-pulse" class="pulsating-circle"></div>');
-                                    $('body').append('<div id="crimes-pulse" class="pulsating-circle"></div>');
                                     $('body').append('<div id="passages-pulse" class="pulsating-circle"></div>');
 
                                     $('#schools-pulse').css({top: schoolTop, left: schoolLeft, width: '50px', height: '50px'});
-                                    $('#crimes-pulse').css({top: crimeTop, left: crimeLeft, width: '50px', height: '50px'});
                                     $('#passages-pulse').css({top: passageTop, left: passageLeft, width: '50px', height: '50px'});
 
-                                    $('body').append('<div id="selectFilters" class="instructions-tooltip"> Select the Schools, Crimes and Safe-Passages filter</div>');
+                                    $('body').append('<div id="selectFilters" class="instructions-tooltip"> Select the Schools and Safe-Passages filter</div>');
 
-                                    $('#selectFilters').css({top: crimeTop, left: filtersWidth + 10});
+                                    // $('#selectFilters').css({top: crimeTop, left: filtersWidth + 10});
 
                                     var filtersSelected=[], step6 = true;
                                     $('td').on('click', function(){
                                        if(story && step6){
                                            var filter = $(event.currentTarget).find(':first-child').attr('id');
 
-                                           if(filter == 'crime' || filter == 'safe-passage' || filter == 'school') {
+                                           if(filter == 'safe-passage' || filter == 'school') {
                                                if(!filtersSelected.includes(filter)) {
                                                    filtersSelected.push(filter);
                                                }
@@ -879,9 +1256,8 @@ var View = function(controller){
                                                }
                                            }
 
-                                           if(filtersSelected.length == 3){
+                                           if(filtersSelected.length == 2){
                                                $('#schools-pulse').remove();
-                                               $('#crimes-pulse').remove();
                                                $('#passages-pulse').remove();
                                                $('#selectFilters').remove();
                                                story = false;
@@ -896,7 +1272,7 @@ var View = function(controller){
                                                    '</div></div>'
                                                );
 
-                                               $('#step6').css({top: filtersWidth/2, left: filtersWidth + 60});
+                                               $('#step6').css({top: 0 , right: 0});
 
                                                $('#passage').on('click', function(){
                                                     clearInterface();
@@ -942,6 +1318,7 @@ var View = function(controller){
                 );
 
                 $('#final-step-btn').on('click', function(){
+                    console.log('final-step');
                     $('.overlay').fadeOut('slow');
                 });
                 break;

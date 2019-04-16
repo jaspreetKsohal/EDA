@@ -259,9 +259,9 @@ var Model = function() {
     }
 
 
-    function computePercentChange(data, baseYear, recentYear) {
-        console.log('function computePercentChange()');
-        console.log(data);
+    function computePercentChange(data, baseYear) {
+        console.log('computing percent change...');
+        // console.log(data);
 
         var result = {
             race: {},
@@ -310,7 +310,8 @@ var Model = function() {
         }//for
 
 
-        console.log(result);
+        // console.log(result);
+        return result;
     }
 
 
