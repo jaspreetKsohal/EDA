@@ -265,7 +265,13 @@ var Model = function() {
 
         var result = {
             race: {},
-            income: {}
+            age_gender: {
+                total:{},
+                female: {},
+                male: {}
+            },
+            income: {
+            }
         };
 
         var old = data['year_' + baseYear];
@@ -306,11 +312,57 @@ var Model = function() {
                 result.income[incomeGroup].push(temp);
             }//for
 
+
+            //percent change for age-gender: total
+            var ageGenderData = data[prop].age_gender.total;
+
+            for (var ageGroup in ageGenderData){
+                if(counter === 0) result.age_gender.total[ageGroup] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pct_change: pctChange(ageGenderData[ageGroup], old.age_gender.total[ageGroup]),
+                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female + data[prop].age_gender.total_population_male)
+                };
+
+                result.age_gender.total[ageGroup].push(temp);
+            }//for
+
+            //percent change for age-gender: female
+            var ageGenderData = data[prop].age_gender.female;
+
+            for (var ageGroup in ageGenderData){
+                if(counter === 0) result.age_gender.female[ageGroup] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pct_change: pctChange(ageGenderData[ageGroup], old.age_gender.female[ageGroup]),
+                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female + data[prop].age_gender.total_population_male)
+                };
+
+                result.age_gender.female[ageGroup].push(temp);
+            }//for
+
+            //percent change for age-gender: male
+            var ageGenderData = data[prop].age_gender.male;
+
+            for (var ageGroup in ageGenderData){
+                if(counter === 0) result.age_gender.male[ageGroup] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pct_change: pctChange(ageGenderData[ageGroup], old.age_gender.male[ageGroup]),
+                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female + data[prop].age_gender.total_population_male)
+                };
+
+                result.age_gender.male[ageGroup].push(temp);
+            }//for
+
             counter = 1;
         }//for
 
 
-        // console.log(result);
+        // console.log('result', result);
         return result;
     }
 

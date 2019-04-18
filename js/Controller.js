@@ -117,6 +117,26 @@ var Controller = function(model, view){
     });
 
 
+    //gender filter
+    $(".chkbox").change(function(e){
+       var filter = [];
+
+        $('input:checkbox').each(function(){
+            var id = $(this).attr('id');
+            if($(this).is(':checked')){
+                filter.push(id);
+            }
+        });
+
+        console.log(filter);
+        $('#age-gender-barcode-plot').empty();
+        var result = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
+        view.updateAgeGenderPlot(result, filter);
+
+    });
+
+
+
     $('td').on('click', function(event){
 
         var filter = $(event.currentTarget).find(':first-child').attr('id');
@@ -208,7 +228,7 @@ var Controller = function(model, view){
 
     // explanatory phase
     $('#beginBtn').on('click', function () {
-        console.log('begin');
+        // console.log('begin');
         $('.landing-page').fadeOut('slow', function() {
             $('.landing-page').remove();
             $('.overlay').fadeIn( 'slow', function() {
@@ -231,8 +251,6 @@ var Controller = function(model, view){
     });
 
     $('#skipBtn').on('click', function() {
-        console.log('skip');
         $('.overlay').fadeOut('slow');
-        // $('#final-step-btn').trigger("click");
     });
 };

@@ -76,27 +76,47 @@ var View = function(model){
         highlight: {
             fillColor: '#A0A0A0',
             weight: 1.5,
-            color: "black"
+            color: "#616161"
+        },
+        selected: {
+            fillColor: '#A0A0A0',
+            weight: 2,
+            color: "#212121"
         }
     };
 
 
     self.displayCensusTracts = function(censusTractsData) {
-        censusLayer = L.geoJSON(censusTractsData, {fillColor: style.default.fillColor ,weight: style.default.weight, color: style.default.color, onEachFeature: onEachFeature})
-            // .bindTooltip(function(layer){
-                // var tract_text = "<b>" + layer.feature.properties.geoid10 + "</b></br>";
-                // return tract_text;
-            // });
+        censusLayer = L.geoJSON(censusTractsData, {fillColor: style.default.fillColor ,weight: style.default.weight, color: style.default.color, onEachFeature: onEachFeature});
         map.addLayer(censusLayer);
     };
 
 
+    var elClicked;
     function onEachFeature(feature, layer){
+        layer.on('click', function(e){
+            e.target.feature.properties.isSelected = true;
+
+            if(elClicked != e.target && elClicked){
+                elClicked.feature.properties.isSelected = false;
+                elClicked.setStyle(style.default);
+                elClicked = e.target;
+            }
+            else {
+                elClicked = e.target;
+            }
+
+            e.target.setStyle(style.selected);
+        });
         layer.on('mouseover', function(e){
-            e.target.setStyle(style.highlight);
+            if(elClicked !== e.target){
+                e.target.setStyle(style.highlight);
+            }
         });
         layer.on('mouseout', function (e) {
-            layer.setStyle(style.default);
+            if(e.target.feature.properties.isSelected !== true)
+                layer.setStyle(style.default);
+
         });
     }
 
@@ -475,8 +495,13 @@ var View = function(model){
             var layerData = layer.feature.properties.demographics;
             // console.log(model.computePercentChange(layerData, year));
             var pctChangeData = model.computePercentChange(layerData, 2010);
+            console.log(pctChangeData);
 
-            var tooltip = drawTooltipChart('tooltip-chart', pctChangeData[demogrType], demogrType);
+            var finalData;
+            if(demogrType === 'age_gender') finalData = pctChangeData[demogrType].total;
+            else finalData = pctChangeData[demogrType];
+
+            var tooltip = drawTooltipChart('tooltip-chart', finalData, demogrType);
 
             return tooltip;
         });
@@ -597,23 +622,23 @@ var View = function(model){
             var stop6 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + pct_age_gender_g4 + pct_age_gender_g5 + "%";
             var stop7 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + pct_age_gender_g4 + pct_age_gender_g5 + pct_age_gender_g6 + "%";
 
-            grad.append("stop").attr("offset", stop1).style("stop-color", "#D50000");
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#D50000");
+            grad.append("stop").attr("offset", stop1).style("stop-color", "#33a02c");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#33a02c");
 
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#9FA8DA");
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#9FA8DA");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#bf5b17");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#bf5b17");
 
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#F7B32B");
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#F7B32B");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#fb8072");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#fb8072");
 
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#A9E5BB");
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#A9E5BB");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#80b1d3");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#80b1d3");
 
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#880E4F");
-            grad.append("stop").attr("offset", stop6).style("stop-color", "#880E4F");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#fdb462");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#fdb462");
 
-            grad.append("stop").attr("offset", stop6).style("stop-color", "black");
-            grad.append("stop").attr("offset", stop7).style("stop-color", "black");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#b3de69");
+            grad.append("stop").attr("offset", stop7).style("stop-color", "#b3de69");
         }
         else if(demogrType === 'income'){
             var total_households = path.total_households;
@@ -671,15 +696,29 @@ var View = function(model){
 
 
     self.displayOverviewPlots = function(data){
-        console.log('overview data:', data);
+        // console.log('overview data:', data);
 
         drawBarCodeChart('race-barcode-plot', data.race, 'race');
         drawBarCodeChart('income-barcode-plot', data.income, 'income');
+        drawBarCodeChart('age-gender-barcode-plot', data.age_gender.total, 'age_gender')
+    };
+
+
+    self.updateAgeGenderPlot = function(data, filter){
+        if((filter.includes('male') && filter.includes('female')) || filter.length === 0){
+            drawBarCodeChart('age-gender-barcode-plot', data.age_gender.total, 'age_gender');
+        }
+        else if(filter.includes('female')){
+            drawBarCodeChart('age-gender-barcode-plot', data.age_gender.female, 'age_gender');
+        }
+        else if(filter.includes('male')) {
+            drawBarCodeChart('age-gender-barcode-plot', data.age_gender.male, 'age_gender');
+        }
     };
 
 
     function drawTooltipChart(container, data, type){
-        console.log('drawing barcode chart');
+        // console.log('drawing barcode chart');
 
         var div = d3.create('div')
             .attr('id', 'tooltip-chart')
@@ -823,18 +862,20 @@ var View = function(model){
                 .attr('class', function(d) { return 'g-text g-' + d.year; })
                 .attr('x', function(d) { return xScale(d.pct_change); })
                 .attr('y', y - 3)
-                .text(function(d) { return d.year + ': ' + d.pct_change + '%'; });
+                // .text(function(d) { return d.year + ': ' + d.pct_change + '%'; });
+                .text(function(d) { return d.year });
 
 
             y += rectHeight + rectPadding;
         }//for-in
 
         return div.node();
-        console.log('---------------------');
+        // console.log('---------------------');
     }//drawTooltipChart()
 
+
     function drawBarCodeChart(container, data, type){
-        console.log('drawing barcode chart');
+        // console.log('drawing barcode chart');
 
         var margin = {top: 30, right: 10, bottom: 15, left: 30};
 
@@ -851,7 +892,7 @@ var View = function(model){
         var rectHeight = height / 6 - rectPadding;
         var legendWidth = 10;
 
-        console.log(d3.select('#' + container));
+        // console.log(d3.select('#' + container));
 
         //append svg to chart container div
         var svg = d3.select('#' + container)
@@ -862,9 +903,9 @@ var View = function(model){
             .append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-
         //create x scale
         var xScale = d3.scaleTime().range([0, width]);
+        // var xScale = d3.scaleLog().range([0, width]);
 
         //define the x axis styles
         var xAxis = d3.axisBottom()
@@ -873,6 +914,7 @@ var View = function(model){
             .ticks(5)
             .tickSize(0)
             .tickFormat(function(d) { return d * 1 + '%' });
+
 
 
         //defines the xscale max
@@ -884,10 +926,12 @@ var View = function(model){
             if(min_temp < min) min = min_temp;
             if(max_temp > max) max = max_temp;
         }
-        console.log(min, max);
+        // console.log(min, max);
 
-        if(type === 'race')  xScale.domain([-1000, max]);
-        else xScale.domain([min, max]);
+        if(type === 'race')  xScale.domain([-max/2, max]);
+        else
+            xScale.domain([min, max]);
+
 
         //append the x axis
         var xAxisGroup = svg.append('g')
@@ -979,13 +1023,13 @@ var View = function(model){
                 .attr('class', function(d) { return 'g-text g-' + d.year; })
                 .attr('x', function(d) { return xScale(d.pct_change); })
                 .attr('y', y - 3)
-                .text(function(d) { return d.year + ': ' + d.pct_change + '%'; });
-
+                // .text(function(d) { return d.year + ': ' + d.pct_change + '%'; });
+                .text(function(d) { return d.year });
 
             y += rectHeight + rectPadding;
         }//for-in
 
-        console.log('---------------------');
+        // console.log('---------------------');
     }//drawBarCodeChart()
 
     function getLegendText(prop, type){
@@ -1004,6 +1048,9 @@ var View = function(model){
             else if(prop === 'bw_50000_and_99999') return '[50,000 - 99,999]';
             else if(prop === 'bw_100000_and_199999') return '[100,000 - 199,999]';
             else if(prop === 'more_than_200000') return '>200,000';
+        }
+        else if(type === 'age_gender'){
+            return prop;
         }
 
     }
@@ -1024,6 +1071,14 @@ var View = function(model){
             else if(prop === 'bw_50000_and_99999') return '#84b5b2';
             else if(prop === 'bw_100000_and_199999') return '#6a9f58';
             else if(prop === 'more_than_200000') return '#977662';
+        }
+        else if(type === 'age_gender'){
+            if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#33a02c';
+            else if(prop === 'total_5_to_14' || prop === 'male_5_to_14' || prop === 'female_5_to_14') return '#bf5b17';
+            else if(prop === 'total_15_to_24' || prop === 'male_15_to_24' || prop === 'female_15_to_24') return '#fb8072';
+            else if(prop === 'total_25_to_54' || prop === 'male_25_to_54' || prop === 'female_25_to_54') return '#80b1d3';
+            else if(prop === 'total_55_to_64' || prop === 'male_55_to_64' || prop === 'female_55_to_64') return '#fdb462';
+            else if(prop === 'total_65_and_over' || prop === 'male_65_and_over' || prop === 'female_65_and_over') return '#b3de69';
         }
     }
 
@@ -1401,6 +1456,10 @@ var View = function(model){
 
         showOverviewPlots: function(data){
           self.displayOverviewPlots(data);
+        },
+
+        updateAgeGenderPlot: function(data, filter){
+          self.updateAgeGenderPlot(data, filter);
         },
 
         showContentForIndex: function(index) {

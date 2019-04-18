@@ -625,7 +625,28 @@ body {
     /*}*/
 
     .heading {
-        font-size: 12px;
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    #income-heading, #age-gender-heading {
+        margin-top: 20px;
+    }
+
+    #demogr-main-heading {
+        text-align: center;
+        padding-bottom: 15px;
+    }
+
+    #gender-filter {
+        text-align: center;
+        font-size: 13px;
+        padding: 6px 0;
+    }
+
+    #chk-male{
+        margin-right: 30px;
     }
 
     #sold {
@@ -682,7 +703,7 @@ body {
 
     .g-text {
         /*font-family: sans-serif;*/
-        font-size: 11px;
+        font-size: 10px;
         fill: none;
         text-anchor: end;
     }
