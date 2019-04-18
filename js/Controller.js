@@ -111,15 +111,27 @@ var Controller = function(model, view){
             view.removeDemographics();
         }
 
-        view.addDemographicsData(year, demogrType, model.getDemographicsData());
+        var filter = checkGenderFilterStatus();
+        var genderFilter;
+
+        if((filter.includes('male') && filter.includes('female')) || filter.length === 0){
+            genderFilter = 'total';
+        }
+        else if(filter.includes('female')){
+            genderFilter = 'female';
+        }
+        else if(filter.includes('male')) {
+            genderFilter = 'male';
+        }
+
+        view.addDemographicsData(year, demogrType, model.getDemographicsData(), genderFilter);
 
         resetDemogrTypesSelection(demogrType);
     });
 
 
-    //gender filter
-    $(".chkbox").change(function(e){
-       var filter = [];
+    function checkGenderFilterStatus(){
+        var filter = [];
 
         $('input:checkbox').each(function(){
             var id = $(this).attr('id');
@@ -128,10 +140,18 @@ var Controller = function(model, view){
             }
         });
 
-        console.log(filter);
-        $('#age-gender-barcode-plot').empty();
-        var result = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
-        view.updateAgeGenderPlot(result, filter);
+        return filter;
+    }
+
+
+    //gender filter
+    $(".chkbox").change(function(e){
+       var filter = checkGenderFilterStatus();
+
+       $('#age-gender-barcode-plot').empty();
+       var result = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
+       view.updateAgeGenderPlot(result, filter);
+
 
     });
 

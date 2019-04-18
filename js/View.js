@@ -484,7 +484,7 @@ var View = function(model){
     };
 
 
-    self.displayCircularChart = function(year, demogrType, data){
+    self.displayCircularChart = function(year, demogrType, data, genderFilter){
         // L.svg().addTo(map);
 
         censusLayer.bindPopup(function(layer){
@@ -498,7 +498,9 @@ var View = function(model){
             console.log(pctChangeData);
 
             var finalData;
-            if(demogrType === 'age_gender') finalData = pctChangeData[demogrType].total;
+            if(demogrType === 'age_gender') {
+                finalData = pctChangeData[demogrType][genderFilter];
+            }
             else finalData = pctChangeData[demogrType];
 
             var tooltip = drawTooltipChart('tooltip-chart', finalData, demogrType);
@@ -1445,9 +1447,9 @@ var View = function(model){
             map.removeLayer(lotsGroup);
         },
 
-        addDemographicsData: function(year, demogrType, data){
+        addDemographicsData: function(year, demogrType, data, genderFilter){
             // self.displayDotDistribution(year, demogrType, data);
-            self.displayCircularChart(year, demogrType, data);
+            self.displayCircularChart(year, demogrType, data, genderFilter);
         },
 
         removeDemographics: function() {
