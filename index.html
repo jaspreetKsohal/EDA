@@ -172,28 +172,34 @@
 
                         <div id="demogr-main-heading">Overview of Englewood and West Englewood</div>
                         <div class="heading" id="race-heading">Race/Ethnicity</div>
-                        <div id="race-barcode-plot" class="barcode-plot"></div>
+                        <div id="race-line-plot" class="demogr-plot"></div>
 
                         <div class="heading" id="age-gender-heading">Age-Gender</div>
                         <div id="gender-filter">
-                            <div class="pretty p-default p-curve p-fill" id="chk-male">
-                                <input type="checkbox" class="chkbox" id="male" checked/>
+                            <div class="pretty p-default p-round">
+                                <input type="radio" name="radioBtn" class="radioBtn" value="total" checked>
+                                <div class="state p-primary">
+                                    <label>Total</label>
+                                </div>
+                            </div>
+                            <div class="pretty p-default p-round">
+                                <input type="radio" name="radioBtn" class="radioBtn" value="male">
                                 <div class="state p-primary">
                                     <label>Male</label>
                                 </div>
                             </div>
 
-                            <div class="pretty p-default p-curve p-fill" id="chk-female">
-                                <input type="checkbox" class="chkbox" id="female" checked/>
+                            <div class="pretty p-default p-round">
+                                <input type="radio" name="radioBtn" class="radioBtn" value="female">
                                 <div class="state p-primary">
                                     <label>Female</label>
                                 </div>
                             </div>
                         </div>
-                        <div id="age-gender-barcode-plot" class="barcode-plot"></div>
+                        <div id="age-gender-line-plot" class="demogr-plot"></div>
 
                         <div class="heading" id="income-heading">Income</div>
-                        <div id="income-barcode-plot" class="barcode-plot"></div>
+                        <div id="income-line-plot" class="demogr-plot"></div>
                     </div>
                 </div>
 

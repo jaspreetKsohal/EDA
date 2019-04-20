@@ -111,18 +111,7 @@ var Controller = function(model, view){
             view.removeDemographics();
         }
 
-        var filter = checkGenderFilterStatus();
-        var genderFilter;
-
-        if((filter.includes('male') && filter.includes('female')) || filter.length === 0){
-            genderFilter = 'total';
-        }
-        else if(filter.includes('female')){
-            genderFilter = 'female';
-        }
-        else if(filter.includes('male')) {
-            genderFilter = 'male';
-        }
+        var genderFilter = $('input[name=radioBtn]:checked').val();
 
         view.addDemographicsData(year, demogrType, model.getDemographicsData(), genderFilter);
 
@@ -130,28 +119,32 @@ var Controller = function(model, view){
     });
 
 
-    function checkGenderFilterStatus(){
-        var filter = [];
-
-        $('input:checkbox').each(function(){
-            var id = $(this).attr('id');
-            if($(this).is(':checked')){
-                filter.push(id);
-            }
-        });
-
-        return filter;
-    }
+    // function checkGenderFilterStatus(){
+    //     var filter = [];
+    //
+    //     $('input:checkbox').each(function(){
+    //         var id = $(this).attr('id');
+    //         if($(this).is(':checked')){
+    //             filter.push(id);
+    //         }
+    //     });
+    //
+    //     return filter;
+    // }
 
 
     //gender filter
-    $(".chkbox").change(function(e){
-       var filter = checkGenderFilterStatus();
+    $(".radioBtn").change(function(e){
+        var value = $('input[name=radioBtn]:checked').val();
 
-       $('#age-gender-barcode-plot').empty();
-       var result = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
-       view.updateAgeGenderPlot(result, filter);
+       $('#age-gender-line-plot').empty();
+       var result = model.computePopShare(model.getOverviewDemographicsData());
+       view.updateAgeGenderPlot(result, value);
 
+       if($('#age_gender').hasClass('demogr-selected')){
+           view.removeDemographics();
+           view.addDemographicsData(year, 'age_gender', model.getDemographicsData(), value);
+       }
 
     });
 
@@ -218,10 +211,12 @@ var Controller = function(model, view){
             }
 
             if($('#demographics-flex-item').hasClass('show-demographics-controls')){
-                var result = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
+                var result = model.computePopShare(model.getOverviewDemographicsData());
+                // var result = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
+                // console.log('result', result);
                 view.showOverviewPlots(result);
             } else {
-                $('.barcode-plot').empty();
+                $('.demogr-plot').empty();
                 $('#tooltip-chart').empty();
             }
 

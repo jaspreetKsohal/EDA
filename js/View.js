@@ -493,15 +493,14 @@ var View = function(model){
             // tract += "<div id='tooltip-chart' class='tooltip-barcode-plot'></div>";
 
             var layerData = layer.feature.properties.demographics;
-            // console.log(model.computePercentChange(layerData, year));
-            var pctChangeData = model.computePercentChange(layerData, 2010);
-            console.log(pctChangeData);
+            // var pctChangeData = model.computePercentChange(layerData, 2010);
+            var popShareData = model.computePopShare(layerData);
 
             var finalData;
             if(demogrType === 'age_gender') {
-                finalData = pctChangeData[demogrType][genderFilter];
+                finalData = popShareData[demogrType][genderFilter];
             }
-            else finalData = pctChangeData[demogrType];
+            else finalData = popShareData[demogrType];
 
             var tooltip = drawTooltipChart('tooltip-chart', finalData, demogrType);
 
@@ -544,7 +543,7 @@ var View = function(model){
                 })
                 .attr("opacity","0.6")
                 .style('fill', function(d, index){
-                    getSlices(index, year, demogrType, d, circleSvg);
+                    getSlices(index, year, demogrType, d, circleSvg, genderFilter);
                     return 'url(#grad'+ index +')';
                 });
 
@@ -552,12 +551,11 @@ var View = function(model){
     };
 
 
-    function getSlices(index, year, demogrType, data, circleSvg){
+    function getSlices(index, year, demogrType, data, circleSvg, genderFilter){
         // console.log(year, demogrType, data);
 
         var grad = circleSvg.append("defs").append("linearGradient").attr("id", "grad" + index)
             .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
-            // .attr('gradientTransform','rotate(45,' + map.latLngToLayerPoint([data.center[1], data.center[0]]).x + ',' + map.latLngToLayerPoint([data.center[1], data.center[0]]).y + ')');
 
         var path = data.properties.demographics['year_' + year][demogrType];
 
@@ -609,38 +607,43 @@ var View = function(model){
             var total_population = total_population_male + total_population_female;
             var pct_age_gender_g1, pct_age_gender_g2, pct_age_gender_g3, pct_age_gender_g4, pct_age_gender_g5, pct_age_gender_g6;
 
-            pct_age_gender_g1 = (path.total.total_0_to_4 / total_population) * 100;
-            pct_age_gender_g2 = (path.total.total_5_to_14 / total_population) * 100;
-            pct_age_gender_g3 = (path.total.total_15_to_24 / total_population) * 100;
-            pct_age_gender_g4 = (path.total.total_25_to_54 / total_population) * 100;
-            pct_age_gender_g5 = (path.total.total_55_to_64 / total_population) * 100;
-            pct_age_gender_g6 = (path.total.total_65_and_over / total_population) * 100;
+            var divider;
+            if(genderFilter === 'total') divider = total_population;
+            else if(genderFilter === 'female') divider = total_population_female;
+            else if(genderFilter === 'male') divider = total_population_male;
+
+            pct_age_gender_g1 = (path[genderFilter][genderFilter + '_0_to_4'] / divider) * 100;
+            pct_age_gender_g2 = (path[genderFilter][genderFilter + '_5_to_14'] / divider) * 100;
+            pct_age_gender_g3 = (path[genderFilter][genderFilter + '_15_to_24'] / divider) * 100;
+            pct_age_gender_g4 = (path[genderFilter][genderFilter + '_25_to_54'] / divider) * 100;
+            pct_age_gender_g5 = (path[genderFilter][genderFilter + '_55_to_64'] / divider) * 100;
+            pct_age_gender_g6 = (path[genderFilter][genderFilter + '_65_and_over'] / divider) * 100;
 
             var stop1 = "0%";
-            var stop2 = pct_age_gender_g1 + "%";
-            var stop3 = pct_age_gender_g1 + pct_age_gender_g2 + "%";
-            var stop4 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + "%";
-            var stop5 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + pct_age_gender_g4 + "%";
-            var stop6 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + pct_age_gender_g4 + pct_age_gender_g5 + "%";
-            var stop7 = pct_age_gender_g1 + pct_age_gender_g2 + pct_age_gender_g3 + pct_age_gender_g4 + pct_age_gender_g5 + pct_age_gender_g6 + "%";
+            var stop2 = pct_age_gender_g6 + "%";
+            var stop3 = pct_age_gender_g6 + pct_age_gender_g5 + "%";
+            var stop4 = pct_age_gender_g6 + pct_age_gender_g5 + pct_age_gender_g4 + "%";
+            var stop5 = pct_age_gender_g6 + pct_age_gender_g5 + pct_age_gender_g4 + pct_age_gender_g3 + "%";
+            var stop6 = pct_age_gender_g6 + pct_age_gender_g5 + pct_age_gender_g4 + pct_age_gender_g3 + pct_age_gender_g2 + "%";
+            var stop7 = pct_age_gender_g6 + pct_age_gender_g5 + pct_age_gender_g4 + pct_age_gender_g3 + pct_age_gender_g2 + pct_age_gender_g1 + "%";
 
-            grad.append("stop").attr("offset", stop1).style("stop-color", "#33a02c");
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#33a02c");
+            grad.append("stop").attr("offset", stop1).style("stop-color", "#4d004b");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#4d004b");
 
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#bf5b17");
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#bf5b17");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#810f7c");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#810f7c");
 
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#fb8072");
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#fb8072");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#88419d");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#88419d");
 
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#80b1d3");
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#80b1d3");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#8c6bb1");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#8c6bb1");
 
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#fdb462");
-            grad.append("stop").attr("offset", stop6).style("stop-color", "#fdb462");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#8c96c6");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#8c96c6");
 
-            grad.append("stop").attr("offset", stop6).style("stop-color", "#b3de69");
-            grad.append("stop").attr("offset", stop7).style("stop-color", "#b3de69");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#9ebcda");
+            grad.append("stop").attr("offset", stop7).style("stop-color", "#9ebcda");
         }
         else if(demogrType === 'income'){
             var total_households = path.total_households;
@@ -654,30 +657,30 @@ var View = function(model){
             pct_income_g6 = (path.income_groups.more_than_200000 / total_households) * 100;
 
             var stop1 = "0%";
-            var stop2 = pct_income_g1 + "%";
-            var stop3 = pct_income_g1 + pct_income_g2 + "%";
-            var stop4 = pct_income_g1 + pct_income_g2 + pct_income_g3 + "%";
-            var stop5 = pct_income_g1 + pct_income_g2 + pct_income_g3 + pct_income_g4 + "%";
-            var stop6 = pct_income_g1 + pct_income_g2 + pct_income_g3 + pct_income_g4 + pct_income_g5 + "%";
-            var stop7 = pct_income_g1 + pct_income_g2 + pct_income_g3 + pct_income_g4 + pct_income_g5 + pct_income_g6 + "%";
+            var stop2 = pct_income_g6 + "%";
+            var stop3 = pct_income_g6 + pct_income_g5 + "%";
+            var stop4 = pct_income_g6 + pct_income_g5 + pct_income_g4 + "%";
+            var stop5 = pct_income_g6 + pct_income_g5 + pct_income_g4 + pct_income_g3 + "%";
+            var stop6 = pct_income_g6 + pct_income_g5 + pct_income_g4 + pct_income_g3 + pct_income_g2 + "%";
+            var stop7 = pct_income_g6 + pct_income_g5 + pct_income_g4 + pct_income_g3 + pct_income_g2 + pct_income_g1 + "%";
 
-            grad.append("stop").attr("offset", stop1).style("stop-color", "#5679a3");
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#5679a3");
+            grad.append("stop").attr("offset", stop1).style("stop-color", "#52000a");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#52000a");
 
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#e59244");
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#e59244");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#a50f15");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#a50f15");
 
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#d2605d");
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#d2605d");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#cb181d");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#cb181d");
 
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#84b5b2");
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#84b5b2");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#ef3b2c");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#ef3b2c");
 
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#6a9f58");
-            grad.append("stop").attr("offset", stop6).style("stop-color", "#6a9f58");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#fb6a4a");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#fb6a4a");
 
-            grad.append("stop").attr("offset", stop6).style("stop-color", "#977662");
-            grad.append("stop").attr("offset", stop7).style("stop-color", "#977662");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#fcbba1");
+            grad.append("stop").attr("offset", stop7).style("stop-color", "#fcbba1");
         }
     }
 
@@ -700,180 +703,194 @@ var View = function(model){
     self.displayOverviewPlots = function(data){
         // console.log('overview data:', data);
 
-        drawBarCodeChart('race-barcode-plot', data.race, 'race');
-        drawBarCodeChart('income-barcode-plot', data.income, 'income');
-        drawBarCodeChart('age-gender-barcode-plot', data.age_gender.total, 'age_gender')
+        // drawBarCodeChart('race-barcode-plot', data.race, 'race');
+        // drawBarCodeChart('income-barcode-plot', data.income, 'income');
+        // drawBarCodeChart('age-gender-barcode-plot', data.age_gender.total, 'age_gender')
+
+        drawLineChart('race-line-plot', data.race, 'race');
+        drawLineChart('age-gender-line-plot', data.age_gender.total, 'age_gender');
+        drawLineChart('income-line-plot', data.income, 'income');
     };
 
 
     self.updateAgeGenderPlot = function(data, filter){
-        if((filter.includes('male') && filter.includes('female')) || filter.length === 0){
-            drawBarCodeChart('age-gender-barcode-plot', data.age_gender.total, 'age_gender');
+        if(filter === 'male'){
+            drawLineChart('age-gender-line-plot', data.age_gender.male, 'age_gender');
         }
-        else if(filter.includes('female')){
-            drawBarCodeChart('age-gender-barcode-plot', data.age_gender.female, 'age_gender');
+        else if(filter === 'female') {
+            drawLineChart('age-gender-line-plot', data.age_gender.female, 'age_gender');
         }
-        else if(filter.includes('male')) {
-            drawBarCodeChart('age-gender-barcode-plot', data.age_gender.male, 'age_gender');
+        else {
+            drawLineChart('age-gender-line-plot', data.age_gender.total, 'age_gender');
         }
+
+        // if((filter.includes('male') && filter.includes('female')) || filter.length === 0){
+        //     drawBarCodeChart('age-gender-barcode-plot', data.age_gender.total, 'age_gender');
+        // }
+        // else if(filter.includes('female')){
+        //     drawBarCodeChart('age-gender-barcode-plot', data.age_gender.female, 'age_gender');
+        // }
+        // else if(filter.includes('male')) {
+        //     drawBarCodeChart('age-gender-barcode-plot', data.age_gender.male, 'age_gender');
+        // }
     };
 
 
-    function drawTooltipChart(container, data, type){
-        // console.log('drawing barcode chart');
-
-        var div = d3.create('div')
-            .attr('id', 'tooltip-chart')
-            .attr('class', 'tooltip-barcode-chart')
-            .attr('width', 300)
-            .attr('height', 200);
-
-        var margin = {top: 30, right: 10, bottom: 15, left: 30};
-
-        var constHeight = 200;
-        var constWidth = 300;
-
-        var width = constWidth - margin.left - margin.right,
-            height = constHeight - margin.top - margin.bottom;
-
-        var rectPadding = 10;
-        var rectHeight = height / 6 - rectPadding;
-        var legendWidth = 10;
-
-
-        //append svg to chart container div
-        var svg = div.append('svg')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom )
-            .attr('id', 'barcode-svg-' + type)
-            .append('g')
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-
-        //create x scale
-        var xScale = d3.scaleTime().range([0, width]);
-
-        //define the x axis styles
-        var xAxis = d3.axisBottom()
-            .scale(xScale)
-            .tickPadding(8)
-            .ticks(5)
-            .tickSize(0)
-            .tickFormat(function(d) { return d * 1 + '%' });
-
-
-        //defines the xscale max
-        var min = 10, max = -10; // random initialization
-        for (var prop in data){
-            var min_temp = d3.min(data[prop], function(d) { return d.pct_change; });
-            var max_temp = d3.max(data[prop], function(d) { return d.pct_change; });
-
-            if(min_temp < min) min = min_temp;
-            if(max_temp > max) max = max_temp;
-        }
-
-        xScale.domain([min, max]);
-
-        //append the x axis
-        var xAxisGroup = svg.append('g')
-            .attr('class', 'x-axis')
-            .attr('transform', 'translate(' + 0 + ',' + -margin.top + ')')
-            .call(xAxis);
-
-        xAxisGroup.select('.domain').attr('stroke', 'none');
-
-        var xAxisLabel = svg.append('text')
-            .attr('class', 'x-axis-label')
-            .text('Percentage Change from 2010')
-            .attr('transform', 'translate(' + width/2 + ',' + height + ')')
-            .attr('text-anchor', 'middle');
-
-
-        var zeroLine = svg.append('line')
-            .attr('x1', xScale(0))
-            .attr('x2', xScale(0))
-            .attr('y1', -10)
-            .attr('y2', height - 10)
-            .attr('class', 'zero-line');
-
-
-        var y = 0;
-
-        for (var prop in data) {
-            // console.log(prop, data[prop]);
-
-            var rectData = data[prop];
-
-            svg.append('rect')
-                .attr('x', 0)
-                .attr('y', y)
-                .attr('width', width)
-                .attr('height', rectHeight)
-                .attr('class', 'g-rect');
-
-
-            svg.append('rect')
-                .attr('x', 0)
-                .attr('y', y)
-                .attr('width', legendWidth)
-                .attr('height', rectHeight)
-                .attr('transform', 'translate(' + -legendWidth + ',0)')
-                .attr('class', 'g-legend')
-                .attr('fill', getLegendColor(prop, type));
-
-            svg.append('text')
-                .attr('class', 'y-axis')
-                .attr('x', 0)
-                .attr('y', y)
-                .attr('transform', 'translate(' + -legendWidth + ',0)')
-                .text(getLegendText(prop, type));
-
-
-            var drawStrips = svg.selectAll('line.percent')
-                .data(rectData)
-                .enter()
-                .append('line')
-                .attr('class', function(d) { return 'g-line g-' + d.year; })
-                .attr('x1', function(d, i) { return xScale(d.pct_change); })
-                .attr('x2', function(d) { return xScale(d.pct_change); })
-                .attr('y1', y)
-                .attr('y2', y + rectHeight)
-                .on('mouseover', function(d){
-                    var selectedClass = (d3.select(this).attr('class')).split(' ')[1];
-                    d3.selectAll('line.' + selectedClass)
-                        .style('stroke', '#3D5AFE');
-
-                    d3.selectAll('text.' + selectedClass)
-                        .style('fill', '#3D5AFE');
-                })
-                .on('mouseout', function(d){
-                    var selectedClass = (d3.select(this).attr('class')).split(' ')[1];
-
-                    d3.selectAll('line.' + selectedClass)
-                        .style('stroke', '#757575');
-
-                    d3.selectAll('text.' + selectedClass)
-                        .style('fill', 'none');
-                });
-
-
-            var text = svg.selectAll('text.percent')
-                .data(rectData)
-                .enter()
-                .append('text')
-                .attr('class', function(d) { return 'g-text g-' + d.year; })
-                .attr('x', function(d) { return xScale(d.pct_change); })
-                .attr('y', y - 3)
-                // .text(function(d) { return d.year + ': ' + d.pct_change + '%'; });
-                .text(function(d) { return d.year });
-
-
-            y += rectHeight + rectPadding;
-        }//for-in
-
-        return div.node();
-        // console.log('---------------------');
-    }//drawTooltipChart()
+    // function drawTooltipChart(container, data, type){
+    //     // console.log('drawing barcode chart');
+    //
+    //     var div = d3.create('div')
+    //         .attr('id', 'tooltip-chart')
+    //         .attr('class', 'tooltip-barcode-chart')
+    //         .attr('width', 300)
+    //         .attr('height', 200);
+    //
+    //     var margin = {top: 30, right: 10, bottom: 15, left: 30};
+    //
+    //     var constHeight = 200;
+    //     var constWidth = 300;
+    //
+    //     var width = constWidth - margin.left - margin.right,
+    //         height = constHeight - margin.top - margin.bottom;
+    //
+    //     var rectPadding = 10;
+    //     var rectHeight = height / 6 - rectPadding;
+    //     var legendWidth = 10;
+    //
+    //
+    //     //append svg to chart container div
+    //     var svg = div.append('svg')
+    //         .attr('width', width + margin.left + margin.right)
+    //         .attr('height', height + margin.top + margin.bottom )
+    //         .attr('id', 'barcode-svg-' + type)
+    //         .append('g')
+    //         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    //
+    //
+    //     //create x scale
+    //     var xScale = d3.scaleTime().range([0, width]);
+    //
+    //     //define the x axis styles
+    //     var xAxis = d3.axisBottom()
+    //         .scale(xScale)
+    //         .tickPadding(8)
+    //         .ticks(5)
+    //         .tickSize(0)
+    //         .tickFormat(function(d) { return d * 1 + '%' });
+    //
+    //
+    //     //defines the xscale max
+    //     var min = 10, max = -10; // random initialization
+    //     for (var prop in data){
+    //         var min_temp = d3.min(data[prop], function(d) { return d.pct_change; });
+    //         var max_temp = d3.max(data[prop], function(d) { return d.pct_change; });
+    //
+    //         if(min_temp < min) min = min_temp;
+    //         if(max_temp > max) max = max_temp;
+    //     }
+    //
+    //     xScale.domain([min, max]);
+    //
+    //     //append the x axis
+    //     var xAxisGroup = svg.append('g')
+    //         .attr('class', 'x-axis')
+    //         .attr('transform', 'translate(' + 0 + ',' + -margin.top + ')')
+    //         .call(xAxis);
+    //
+    //     xAxisGroup.select('.domain').attr('stroke', 'none');
+    //
+    //     var xAxisLabel = svg.append('text')
+    //         .attr('class', 'x-axis-label')
+    //         .text('Percentage Change from 2010')
+    //         .attr('transform', 'translate(' + width/2 + ',' + height + ')')
+    //         .attr('text-anchor', 'middle');
+    //
+    //
+    //     var zeroLine = svg.append('line')
+    //         .attr('x1', xScale(0))
+    //         .attr('x2', xScale(0))
+    //         .attr('y1', -10)
+    //         .attr('y2', height - 10)
+    //         .attr('class', 'zero-line');
+    //
+    //
+    //     var y = 0;
+    //
+    //     for (var prop in data) {
+    //         // console.log(prop, data[prop]);
+    //
+    //         var rectData = data[prop];
+    //
+    //         svg.append('rect')
+    //             .attr('x', 0)
+    //             .attr('y', y)
+    //             .attr('width', width)
+    //             .attr('height', rectHeight)
+    //             .attr('class', 'g-rect');
+    //
+    //
+    //         svg.append('rect')
+    //             .attr('x', 0)
+    //             .attr('y', y)
+    //             .attr('width', legendWidth)
+    //             .attr('height', rectHeight)
+    //             .attr('transform', 'translate(' + -legendWidth + ',0)')
+    //             .attr('class', 'g-legend')
+    //             .attr('fill', getLegendColor(prop, type));
+    //
+    //         svg.append('text')
+    //             .attr('class', 'y-axis')
+    //             .attr('x', 0)
+    //             .attr('y', y)
+    //             .attr('transform', 'translate(' + -legendWidth + ',0)')
+    //             .text(getLegendText(prop, type));
+    //
+    //
+    //         var drawStrips = svg.selectAll('line.percent')
+    //             .data(rectData)
+    //             .enter()
+    //             .append('line')
+    //             .attr('class', function(d) { return 'g-line g-' + d.year; })
+    //             .attr('x1', function(d, i) { return xScale(d.pct_change); })
+    //             .attr('x2', function(d) { return xScale(d.pct_change); })
+    //             .attr('y1', y)
+    //             .attr('y2', y + rectHeight)
+    //             .on('mouseover', function(d){
+    //                 var selectedClass = (d3.select(this).attr('class')).split(' ')[1];
+    //                 d3.selectAll('line.' + selectedClass)
+    //                     .style('stroke', '#3D5AFE');
+    //
+    //                 d3.selectAll('text.' + selectedClass)
+    //                     .style('fill', '#3D5AFE');
+    //             })
+    //             .on('mouseout', function(d){
+    //                 var selectedClass = (d3.select(this).attr('class')).split(' ')[1];
+    //
+    //                 d3.selectAll('line.' + selectedClass)
+    //                     .style('stroke', '#757575');
+    //
+    //                 d3.selectAll('text.' + selectedClass)
+    //                     .style('fill', 'none');
+    //             });
+    //
+    //
+    //         var text = svg.selectAll('text.percent')
+    //             .data(rectData)
+    //             .enter()
+    //             .append('text')
+    //             .attr('class', function(d) { return 'g-text g-' + d.year; })
+    //             .attr('x', function(d) { return xScale(d.pct_change); })
+    //             .attr('y', y - 3)
+    //             // .text(function(d) { return d.year + ': ' + d.pct_change + '%'; });
+    //             .text(function(d) { return d.year });
+    //
+    //
+    //         y += rectHeight + rectPadding;
+    //     }//for-in
+    //
+    //     return div.node();
+    //     // console.log('---------------------');
+    // }//drawTooltipChart()
 
 
     function drawBarCodeChart(container, data, type){
@@ -1034,6 +1051,268 @@ var View = function(model){
         // console.log('---------------------');
     }//drawBarCodeChart()
 
+
+    function drawTooltipChart(container, data, type){
+        var div = d3.create('div')
+                .attr('id', 'tooltip-chart')
+                .attr('class', 'tooltip-line-chart')
+                .attr('width', 300)
+                .attr('height', 200);
+
+        var margin = {top: 10, right: 10, bottom: 25, left: 40};
+
+        var constHeight = 200;
+        var constWidth = 300;
+
+        var width = constWidth - margin.left - margin.right,
+            height = constHeight - margin.top - margin.bottom;
+
+        //append svg to chart container div
+        var svg = div.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom )
+            .attr('id', 'barcode-svg-' + type)
+            .append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        var xScale = d3.scaleTime().range([0, width]).domain([2010, 2017]);
+        var yScale;
+
+        var min = 999999, max = -10; // random initialization
+        for (var prop in data){
+            var min_temp = d3.min(data[prop], function(d) { return d.pop_share; });
+            var max_temp = d3.max(data[prop], function(d) { return d.pop_share; });
+
+            if(min_temp < min) min = min_temp;
+            if(max_temp > max) max = max_temp;
+        }//for
+
+        if(type === 'race'){
+            yScale = d3.scaleLog().range([height, 0]).domain([1e-6, max]);
+            // yScale = d3.scaleLinear().range([height, 0]).domain([min, max]);
+        }
+        else {
+            yScale = d3.scaleLinear().range([height, 0]).domain([min, max]);
+        }
+
+        var lineGenerator = d3.line()
+            .x(function(d) { return xScale(d.year) })
+            .y(function(d) {
+                // console.log(d.pop_share, yScale(d.pop_share));
+                if(yScale(d.pop_share) === Infinity){
+                    return height;
+                }
+                else return yScale(d.pop_share)
+            });
+
+
+        // for each line do the following
+        for (var prop in data){
+            var propData = data[prop];
+            console.log(prop, data[prop]);
+
+            svg.append('path')
+                .data([propData])
+                .attr('class', function(d) { return 'g-line g-' + prop })
+                .attr('stroke', function(d) {
+                    return getLegendColor(prop, type);
+                })
+                .attr('d', lineGenerator)
+        }//for
+
+        var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .tickFormat(d3.format(""));
+
+        const format = d3.format("");
+
+        var yAxis = d3.axisLeft()
+            .scale(yScale);
+            // .tickValues([0.05, 1, 20, Math.round(max)])
+            // // .tickValues(d3.scaleLinear().domain(yScale.domain()).ticks(3))
+            // .tickFormat(d => format(d));
+
+
+        if(type === 'race'){
+            yAxis.tickValues([0.05, 1, 20, Math.round(max)])
+                .tickFormat(d => format(d));
+        }
+        else {
+            yAxis.tickSize(0)
+            .ticks(6)
+            .tickPadding(8)
+            .tickFormat(d3.format(""));
+        }
+
+
+        //add x-axis
+        var xAxisGroup = svg.append('g')
+            .attr('class', 'x-axis')
+            .attr('transform', 'translate(0,' + height + ')')
+            .call(xAxis);
+
+        //add y-axis
+        var yAxisGroup = svg.append('g')
+            .attr('class', 'y-axis')
+            .call(yAxis);
+
+        // text label for the y axis
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x",0 - (height / 2))
+            .attr("dy", "1.5em")
+            .attr('class', 'y-axis-label')
+            .style("text-anchor", "middle")
+            .text("Population Share (%)");
+
+        yAxisGroup.select('.domain').attr('stroke', 'none');
+        yAxisGroup.selectAll(".tick line")
+            .attr("stroke", "#E0E0E0")
+            .attr("x2", width);
+        // .attr("stroke-dasharray", "2,2");
+
+
+        return div.node();
+    }
+
+
+    function drawLineChart(container, data, type){
+        var margin = {top: 10, right: 10, bottom: 25, left: 40};
+
+        var constHeight = $('.demogr-plot').height() - 40;
+        var constWidth = 370;
+
+
+        var legendText = [];
+        var min = 999999, max = -10; // random initialization
+        for (var prop in data){
+            var min_temp = d3.min(data[prop], function(d) { return d.pop_share; });
+            var max_temp = d3.max(data[prop], function(d) { return d.pop_share; });
+
+            if(min_temp < min) min = min_temp;
+            if(max_temp > max) max = max_temp;
+            legendText.push(getLegendText(prop, type));
+        }//for
+
+
+        //legend
+        d3.select('#' + container).append('div')
+            .attr('class', function() { return 'legend legend-' + type });
+
+        var legend = d3.select('.legend-' + type).selectAll('legend')
+            .data(legendText)
+            .enter()
+            .append('div')
+            .attr('class', 'legend-component');
+
+        var p = legend.append('p')
+            .attr('class', 'demogr-sub-type');
+        p.append('span')
+            .attr("class","key-dot")
+            .style("background", function(d) { return getLegendColor(d.toLowerCase(), type) });
+        p.insert("text")
+            .text(function(d,i) { return d } );
+
+
+        var width = constWidth - margin.left - margin.right,
+            height = constHeight - margin.top - margin.bottom;
+
+        //append svg to chart container div
+        var svg = d3.select('#' + container)
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom )
+            .attr('id', 'barcode-svg-' + type)
+            .append('g')
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        var xScale = d3.scaleTime().range([0, width]).domain([2010, 2017]);
+        var yScale;
+
+        if(type === 'race'){
+            yScale = d3.scaleLog().range([height, 0]).domain([1e-6, max])
+        }
+        else {
+            yScale = d3.scaleLinear().range([height, 0]).domain([min, max]);
+        }
+
+
+        var lineGenerator = d3.line()
+            .x(function(d) { return xScale(d.year) })
+            .y(function(d) {
+                // console.log(d.pop_share, yScale(d.pop_share));
+                if(yScale(d.pop_share) === Infinity){
+                    return height;
+                }
+                else return yScale(d.pop_share)
+            });
+
+
+        // for each line do the following
+        for (var prop in data){
+            var propData = data[prop];
+            // console.log(prop, data[prop]);
+
+            svg.append('path')
+                .data([propData])
+                .attr('class', function(d) { return 'g-line g-' + prop })
+                .attr('stroke', function(d) {
+                    return getLegendColor(prop, type);
+                })
+                .attr('d', lineGenerator)
+        }//for
+
+        var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .tickFormat(d3.format(""));
+
+        const format = d3.format("");
+
+        var yAxis = d3.axisLeft()
+            .scale(yScale);
+
+        if(type === 'race'){
+            yAxis.tickValues([0.05, 1, 20, Math.round(max)])
+                .tickFormat(d => format(d));
+        }
+        else {
+            yAxis.tickSize(0)
+                .ticks(6)
+                .tickPadding(8)
+                .tickFormat(d3.format(""));
+        }
+
+
+        //add x-axis
+        var xAxisGroup = svg.append('g')
+            .attr('class', 'x-axis')
+            .attr('transform', 'translate(0,' + height + ')')
+            .call(xAxis);
+
+        //add y-axis
+        var yAxisGroup = svg.append('g')
+            .attr('class', 'y-axis')
+            .call(yAxis);
+
+        // text label for the y axis
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x",0 - (height / 2))
+            .attr("dy", "1.5em")
+            .attr('class', 'y-axis-label')
+            .style("text-anchor", "middle")
+            .text("Population Share (%)");
+
+        yAxisGroup.select('.domain').attr('stroke', 'none');
+        yAxisGroup.selectAll(".tick line")
+            .attr("stroke", "#E0E0E0")
+            .attr("x2", width);
+        // .attr("stroke-dasharray", "2,2");
+    }
+
+
     function getLegendText(prop, type){
         if(type === 'race'){
             if(prop === 'white') return 'white';
@@ -1045,10 +1324,10 @@ var View = function(model){
         }
         else if(type === 'income'){
             if(prop === 'less_than_10000') return '<10,000';
-            else if(prop === 'bw_10000_and_24999') return '[10,000 - 24,999]';
-            else if(prop === 'bw_25000_and_49999') return '[25,000 - 49,999]';
-            else if(prop === 'bw_50000_and_99999') return '[50,000 - 99,999]';
-            else if(prop === 'bw_100000_and_199999') return '[100,000 - 199,999]';
+            else if(prop === 'bw_10000_and_24999') return '10,000 - 24,999';
+            else if(prop === 'bw_25000_and_49999') return '25,000 - 49,999';
+            else if(prop === 'bw_50000_and_99999') return '50,000 - 99,999';
+            else if(prop === 'bw_100000_and_199999') return '100,000 - 199,999';
             else if(prop === 'more_than_200000') return '>200,000';
         }
         else if(type === 'age_gender'){
@@ -1057,32 +1336,34 @@ var View = function(model){
 
     }
 
+
     function getLegendColor(prop, type){
         if(type === 'race'){
             if(prop === 'white') return '#D50000';
-            else if(prop === 'black_or_african_american') return '#9FA8DA';
+            else if(prop === 'black_or_african_american' || prop === 'black') return '#9FA8DA';
             else if(prop === 'asian') return '#F7B32B';
-            else if(prop === 'native_hawaiian_other_pacific_islander') return '#A9E5BB';
-            else if(prop === 'american_indian_and_alaska_native') return '#880E4F';
+            else if(prop === 'native_hawaiian_other_pacific_islander' || prop === 'nh/pi') return '#A9E5BB';
+            else if(prop === 'american_indian_and_alaska_native' || prop === 'ai/an') return '#880E4F';
             else if(prop === 'others') return 'black';
         }
         else if(type === 'income'){
-            if(prop === 'less_than_10000') return '#5679a3';
-            else if(prop === 'bw_10000_and_24999') return '#e59244';
-            else if(prop === 'bw_25000_and_49999') return '#d2605d';
-            else if(prop === 'bw_50000_and_99999') return '#84b5b2';
-            else if(prop === 'bw_100000_and_199999') return '#6a9f58';
-            else if(prop === 'more_than_200000') return '#977662';
+            if(prop === 'less_than_10000' || prop === '<10,000') return '#fcbba1';
+            else if(prop === 'bw_10000_and_24999' || prop === '10,000 - 24,999') return '#fb6a4a';
+            else if(prop === 'bw_25000_and_49999' || prop === '25,000 - 49,999') return '#ef3b2c';
+            else if(prop === 'bw_50000_and_99999' || prop === '50,000 - 99,999') return '#cb181d';
+            else if(prop === 'bw_100000_and_199999' || prop === '100,000 - 199,999') return '#a50f15';
+            else if(prop === 'more_than_200000' || prop === '>200,000') return '#52000a';
         }
         else if(type === 'age_gender'){
-            if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#33a02c';
-            else if(prop === 'total_5_to_14' || prop === 'male_5_to_14' || prop === 'female_5_to_14') return '#bf5b17';
-            else if(prop === 'total_15_to_24' || prop === 'male_15_to_24' || prop === 'female_15_to_24') return '#fb8072';
-            else if(prop === 'total_25_to_54' || prop === 'male_25_to_54' || prop === 'female_25_to_54') return '#80b1d3';
-            else if(prop === 'total_55_to_64' || prop === 'male_55_to_64' || prop === 'female_55_to_64') return '#fdb462';
-            else if(prop === 'total_65_and_over' || prop === 'male_65_and_over' || prop === 'female_65_and_over') return '#b3de69';
+            if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#9ebcda';
+            else if(prop === 'total_5_to_14' || prop === 'male_5_to_14' || prop === 'female_5_to_14') return '#8c96c6';
+            else if(prop === 'total_15_to_24' || prop === 'male_15_to_24' || prop === 'female_15_to_24') return '#8c6bb1';
+            else if(prop === 'total_25_to_54' || prop === 'male_25_to_54' || prop === 'female_25_to_54') return '#88419d';
+            else if(prop === 'total_55_to_64' || prop === 'male_55_to_64' || prop === 'female_55_to_64') return '#810f7c';
+            else if(prop === 'total_65_and_over' || prop === 'male_65_and_over' || prop === 'female_65_and_over') return '#4d004b';
         }
     }
+
 
     function clearInterface() {
         if(map.hasLayer(schoolGroup)){
@@ -1107,6 +1388,7 @@ var View = function(model){
 
         $('#secondary-controls-container').hide();
     }
+
 
     self.showContentForIndex = function(index) {
         var content = $('.story-content');

@@ -367,6 +367,99 @@ var Model = function() {
     }
 
 
+    function computePopShare(data){
+        var result = {
+            race: {},
+            age_gender: {
+                total:{},
+                female: {},
+                male: {}
+            },
+            income: {
+            }
+        };
+
+        var counter = 0;
+
+        for (var prop in data){
+            //population share for race
+            var raceData = data[prop].race.one_race;
+
+            for (var race in raceData){
+                if(counter === 0) result.race[race] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pop_share: popShare(raceData[race], data[prop].total_population)
+                };
+
+                result.race[race].push(temp);
+            }//for
+
+
+            //population share for income
+            var incomeData = data[prop].income.income_groups;
+
+            for (var incomeGroup in incomeData){
+                if(counter === 0) result.income[incomeGroup] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pop_share: popShare(incomeData[incomeGroup], data[prop].income.total_households)
+                };
+
+                result.income[incomeGroup].push(temp);
+            }//for
+
+            //population share for age-gender: total
+            var ageGenderData = data[prop].age_gender.total;
+
+            for (var ageGroup in ageGenderData){
+                if(counter === 0) result.age_gender.total[ageGroup] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female + data[prop].age_gender.total_population_male)
+                };
+
+                result.age_gender.total[ageGroup].push(temp);
+            }//for
+
+            //population share for age-gender: female
+            var ageGenderData = data[prop].age_gender.female;
+
+            for (var ageGroup in ageGenderData){
+                if(counter === 0) result.age_gender.female[ageGroup] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female + data[prop].age_gender.total_population_male)
+                };
+
+                result.age_gender.female[ageGroup].push(temp);
+            }//for
+
+            //population share for age-gender: male
+            var ageGenderData = data[prop].age_gender.male;
+
+            for (var ageGroup in ageGenderData){
+                if(counter === 0) result.age_gender.male[ageGroup] = [];
+
+                var temp = {
+                    year: prop.split('_')[1],
+                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female + data[prop].age_gender.total_population_male)
+                };
+
+                result.age_gender.male[ageGroup].push(temp);
+            }//for
+
+            counter = 1;
+        }//for
+
+        return result;
+    }
+
+
     function popShare(value, total){
         var result;
 
@@ -411,7 +504,8 @@ var Model = function() {
         getFilteredServices: getFilteredServices,
         getFilteredGreenSpaces: getFilteredGreenSpaces,
         getDemographicsData: getDemographicsData,
-        computePercentChange: computePercentChange
+        computePercentChange: computePercentChange,
+        computePopShare: computePopShare
     }
 
 };
