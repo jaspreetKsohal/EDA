@@ -451,7 +451,7 @@ body {
         z-index: 500;
 
         background-color: #dddddd;
-        opacity: 0.8;
+        opacity: 0.9;
         align-items: center;
     }
 
@@ -621,7 +621,7 @@ body {
     .g-line {
         fill: none;
         /*stroke: steelblue;*/
-        stroke-width: 2px;
+        stroke-width: 2.5px;
     }
 
     .x-axis text, .y-axis text {
@@ -822,6 +822,18 @@ body {
 
     .tooltip-text {
         text-align: center;
+    }
+
+    .tooltip-header{
+        width: 100%;
+        min-height: 80px;
+        overflow: hidden;
+        padding-left: 11%;
+    }
+
+    .tooltip-info {
+        color: #9E9E9E;
+        font-size: 11px;
     }
 
     .btn-width{

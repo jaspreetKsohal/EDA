@@ -31,6 +31,7 @@ var Model = function() {
 
         d3.json('data/overview_demographics.json', function(data){
             overviewDemographicsData.push(data);
+            // console.log(data);
         })
     }
 
@@ -505,7 +506,8 @@ var Model = function() {
         getFilteredGreenSpaces: getFilteredGreenSpaces,
         getDemographicsData: getDemographicsData,
         computePercentChange: computePercentChange,
-        computePopShare: computePopShare
+        computePopShare: computePopShare,
+        pctChange: pctChange
     }
 
 };

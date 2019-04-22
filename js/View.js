@@ -502,7 +502,7 @@ var View = function(model){
             }
             else finalData = popShareData[demogrType];
 
-            var tooltip = drawTooltipChart('tooltip-chart', finalData, demogrType);
+            var tooltip = drawTooltipChart('tooltip-chart', finalData, demogrType, layerData, year);
 
             return tooltip;
         });
@@ -541,7 +541,7 @@ var View = function(model){
                 .attr('transform' , function(d){
                     return 'rotate(45, '+ map.latLngToLayerPoint([d.center[1], d.center[0]]).x +',' + map.latLngToLayerPoint([d.center[1], d.center[0]]).y +') ';
                 })
-                .attr("opacity","0.6")
+                .attr("opacity","0.7")
                 .style('fill', function(d, index){
                     getSlices(index, year, demogrType, d, circleSvg, genderFilter);
                     return 'url(#grad'+ index +')';
@@ -627,23 +627,23 @@ var View = function(model){
             var stop6 = pct_age_gender_g6 + pct_age_gender_g5 + pct_age_gender_g4 + pct_age_gender_g3 + pct_age_gender_g2 + "%";
             var stop7 = pct_age_gender_g6 + pct_age_gender_g5 + pct_age_gender_g4 + pct_age_gender_g3 + pct_age_gender_g2 + pct_age_gender_g1 + "%";
 
-            grad.append("stop").attr("offset", stop1).style("stop-color", "#4d004b");
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#4d004b");
+            grad.append("stop").attr("offset", stop1).style("stop-color", "#291f3b");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#291f3b");
 
-            grad.append("stop").attr("offset", stop2).style("stop-color", "#810f7c");
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#810f7c");
+            grad.append("stop").attr("offset", stop2).style("stop-color", "#594c5f");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#594c5f");
 
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#88419d");
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#88419d");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#897884");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#897884");
 
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#8c6bb1");
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#8c6bb1");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#a9969c");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#a9969c");
 
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#8c96c6");
-            grad.append("stop").attr("offset", stop6).style("stop-color", "#8c96c6");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#c9b4b4");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#c9b4b4");
 
-            grad.append("stop").attr("offset", stop6).style("stop-color", "#9ebcda");
-            grad.append("stop").attr("offset", stop7).style("stop-color", "#9ebcda");
+            grad.append("stop").attr("offset", stop6).style("stop-color", "#e9d2cc");
+            grad.append("stop").attr("offset", stop7).style("stop-color", "#e9d2cc");
         }
         else if(demogrType === 'income'){
             var total_households = path.total_households;
@@ -1052,8 +1052,41 @@ var View = function(model){
     }//drawBarCodeChart()
 
 
-    function drawTooltipChart(container, data, type){
-        var div = d3.create('div')
+    function drawTooltipChart(container, data, type, layerDetails, year){
+        // console.log('tooltip data', layerDetails);
+        var finalDiv = d3.create('div')
+            .attr('id', 'tooltip-container-div');
+
+        var tooltipText;
+
+        if(type === 'income'){
+            tooltipText = "<b>" + layerDetails['year_' + year].geography.split(',')[0] + "</b>" + "</br></br>" +
+                "Total Households (" + year + "): &emsp; " + layerDetails['year_' + year].income.total_households.toLocaleString() + "</br>" +
+                "Median Income (2010): &emsp;&emsp; $" + layerDetails['year_' + 2010].income.median_income.toLocaleString() + "</br>" +
+                "Median Income (2017): &emsp;&emsp; $" + layerDetails['year_' + year].income.median_income.toLocaleString() + "</br>" +
+                "<span class='tooltip-info'>(Data is by households not individuals)</span>"
+        }
+        else if(type === 'age_gender') {
+            tooltipText = "<b>" + layerDetails['year_' + year].geography.split(',')[0] + "</b>" + "</br></br>" +
+                "Total Population (" + year + "): &emsp; " + layerDetails['year_' + year].total_population.toLocaleString() + "</br>" +
+                "Change since 2010: &emsp;&emsp;&emsp; " + model.pctChange(layerDetails['year_'+ year].total_population, layerDetails['year_2010'].total_population) + '%' + "</br></br>" +
+                "Total Population Female (2017): &emsp; " + layerDetails['year_'+year].age_gender.total_population_female.toLocaleString() + "</br>" +
+                "Total Population Male (2017): &emsp;&emsp; " + layerDetails['year_'+year].age_gender.total_population_male.toLocaleString() + "</br>";
+        }
+        else {
+            tooltipText = "<b>" + layerDetails['year_' + year].geography.split(',')[0] + "</b>" + "</br></br>" +
+                "Total Population (" + year + "): &emsp; " + layerDetails['year_' + year].total_population.toLocaleString() + "</br>" +
+                "Change since 2010: &emsp;&emsp;&emsp; " + model.pctChange(layerDetails['year_'+ year].total_population, layerDetails['year_2010'].total_population) + '%';
+        }
+
+        // tooltip header details
+        finalDiv.append('div')
+            .attr('class', 'tooltip-header')
+            .html(tooltipText);
+
+
+        // line chart
+        var div = finalDiv.append('div')
                 .attr('id', 'tooltip-chart')
                 .attr('class', 'tooltip-line-chart')
                 .attr('width', 300)
@@ -1095,31 +1128,6 @@ var View = function(model){
             yScale = d3.scaleLinear().range([height, 0]).domain([min, max]);
         }
 
-        var lineGenerator = d3.line()
-            .x(function(d) { return xScale(d.year) })
-            .y(function(d) {
-                // console.log(d.pop_share, yScale(d.pop_share));
-                if(yScale(d.pop_share) === Infinity){
-                    return height;
-                }
-                else return yScale(d.pop_share)
-            });
-
-
-        // for each line do the following
-        for (var prop in data){
-            var propData = data[prop];
-            console.log(prop, data[prop]);
-
-            svg.append('path')
-                .data([propData])
-                .attr('class', function(d) { return 'g-line g-' + prop })
-                .attr('stroke', function(d) {
-                    return getLegendColor(prop, type);
-                })
-                .attr('d', lineGenerator)
-        }//for
-
         var xAxis = d3.axisBottom()
             .scale(xScale)
             .tickFormat(d3.format(""));
@@ -1128,9 +1136,9 @@ var View = function(model){
 
         var yAxis = d3.axisLeft()
             .scale(yScale);
-            // .tickValues([0.05, 1, 20, Math.round(max)])
-            // // .tickValues(d3.scaleLinear().domain(yScale.domain()).ticks(3))
-            // .tickFormat(d => format(d));
+        // .tickValues([0.05, 1, 20, Math.round(max)])
+        // // .tickValues(d3.scaleLinear().domain(yScale.domain()).ticks(3))
+        // .tickFormat(d => format(d));
 
 
         if(type === 'race'){
@@ -1139,9 +1147,9 @@ var View = function(model){
         }
         else {
             yAxis.tickSize(0)
-            .ticks(6)
-            .tickPadding(8)
-            .tickFormat(d3.format(""));
+                .ticks(6)
+                .tickPadding(8)
+                .tickFormat(d3.format(""));
         }
 
 
@@ -1157,14 +1165,17 @@ var View = function(model){
             .call(yAxis);
 
         // text label for the y axis
-        svg.append("text")
+        var txt = svg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - margin.left)
             .attr("x",0 - (height / 2))
             .attr("dy", "1.5em")
             .attr('class', 'y-axis-label')
-            .style("text-anchor", "middle")
-            .text("Population Share (%)");
+            .style("text-anchor", "middle");
+
+
+        if(type === 'income') txt.text("Share (%)");
+        else txt.text("Population Share (%)");
 
         yAxisGroup.select('.domain').attr('stroke', 'none');
         yAxisGroup.selectAll(".tick line")
@@ -1172,8 +1183,32 @@ var View = function(model){
             .attr("x2", width);
         // .attr("stroke-dasharray", "2,2");
 
+        var lineGenerator = d3.line()
+            .x(function(d) { return xScale(d.year) })
+            .y(function(d) {
+                // console.log(d.pop_share, yScale(d.pop_share));
+                if(yScale(d.pop_share) === Infinity){
+                    return height;
+                }
+                else return yScale(d.pop_share)
+            });
 
-        return div.node();
+
+        // for each line do the following
+        for (var prop in data){
+            var propData = data[prop];
+            // console.log(prop, data[prop]);
+
+            svg.append('path')
+                .data([propData])
+                .attr('class', function(d) { return 'g-line g-' + prop })
+                .attr('stroke', function(d) {
+                    return getLegendColor(prop, type);
+                })
+                .attr('d', lineGenerator)
+        }//for
+
+        return finalDiv.node();
     }
 
 
@@ -1238,31 +1273,6 @@ var View = function(model){
         }
 
 
-        var lineGenerator = d3.line()
-            .x(function(d) { return xScale(d.year) })
-            .y(function(d) {
-                // console.log(d.pop_share, yScale(d.pop_share));
-                if(yScale(d.pop_share) === Infinity){
-                    return height;
-                }
-                else return yScale(d.pop_share)
-            });
-
-
-        // for each line do the following
-        for (var prop in data){
-            var propData = data[prop];
-            // console.log(prop, data[prop]);
-
-            svg.append('path')
-                .data([propData])
-                .attr('class', function(d) { return 'g-line g-' + prop })
-                .attr('stroke', function(d) {
-                    return getLegendColor(prop, type);
-                })
-                .attr('d', lineGenerator)
-        }//for
-
         var xAxis = d3.axisBottom()
             .scale(xScale)
             .tickFormat(d3.format(""));
@@ -1296,20 +1306,48 @@ var View = function(model){
             .call(yAxis);
 
         // text label for the y axis
-        svg.append("text")
+        var txt = svg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - margin.left)
             .attr("x",0 - (height / 2))
             .attr("dy", "1.5em")
             .attr('class', 'y-axis-label')
-            .style("text-anchor", "middle")
-            .text("Population Share (%)");
+            .style("text-anchor", "middle");
+
+        if(type === 'income') txt.text("Share (%)");
+        else txt.text("Population Share (%)");
 
         yAxisGroup.select('.domain').attr('stroke', 'none');
         yAxisGroup.selectAll(".tick line")
             .attr("stroke", "#E0E0E0")
             .attr("x2", width);
         // .attr("stroke-dasharray", "2,2");
+
+
+        var lineGenerator = d3.line()
+            .x(function(d) { return xScale(d.year) })
+            .y(function(d) {
+                // console.log(d.pop_share, yScale(d.pop_share));
+                if(yScale(d.pop_share) === Infinity){
+                    return height;
+                }
+                else return yScale(d.pop_share)
+            });
+
+
+        // for each line do the following
+        for (var prop in data){
+            var propData = data[prop];
+            // console.log(prop, data[prop]);
+
+            svg.append('path')
+                .data([propData])
+                .attr('class', function(d) { return 'g-line g-' + prop })
+                .attr('stroke', function(d) {
+                    return getLegendColor(prop, type);
+                })
+                .attr('d', lineGenerator)
+        }//for
     }
 
 
@@ -1355,12 +1393,12 @@ var View = function(model){
             else if(prop === 'more_than_200000' || prop === '>200,000') return '#52000a';
         }
         else if(type === 'age_gender'){
-            if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#9ebcda';
-            else if(prop === 'total_5_to_14' || prop === 'male_5_to_14' || prop === 'female_5_to_14') return '#8c96c6';
-            else if(prop === 'total_15_to_24' || prop === 'male_15_to_24' || prop === 'female_15_to_24') return '#8c6bb1';
-            else if(prop === 'total_25_to_54' || prop === 'male_25_to_54' || prop === 'female_25_to_54') return '#88419d';
-            else if(prop === 'total_55_to_64' || prop === 'male_55_to_64' || prop === 'female_55_to_64') return '#810f7c';
-            else if(prop === 'total_65_and_over' || prop === 'male_65_and_over' || prop === 'female_65_and_over') return '#4d004b';
+            if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#e9d2cc';
+            else if(prop === 'total_5_to_14' || prop === 'male_5_to_14' || prop === 'female_5_to_14') return '#c9b4b4';
+            else if(prop === 'total_15_to_24' || prop === 'male_15_to_24' || prop === 'female_15_to_24') return '#a9969c';
+            else if(prop === 'total_25_to_54' || prop === 'male_25_to_54' || prop === 'female_25_to_54') return '#897884';
+            else if(prop === 'total_55_to_64' || prop === 'male_55_to_64' || prop === 'female_55_to_64') return '#594c5f';
+            else if(prop === 'total_65_and_over' || prop === 'male_65_and_over' || prop === 'female_65_and_over') return '#291f3b';
         }
     }
 
@@ -1770,6 +1808,15 @@ var View = function(model){
         isDemogrTypeActive: function(){
             var temp = d3.select('#map').select('#demographics-circular-charts');
             return temp.empty();
+        },
+
+        removeDemogrPopup: function(){
+            censusLayer.closePopup();
+            censusLayer.unbindPopup();
+            if(elClicked){
+                elClicked.feature.properties.isSelected = false;
+                elClicked.setStyle(style.default);
+            }
         }
 
     };

@@ -217,9 +217,9 @@ var Controller = function(model, view){
                 view.showOverviewPlots(result);
             } else {
                 $('.demogr-plot').empty();
-                $('#tooltip-chart').empty();
+                $('#tooltip-container-div').empty();
+                view.removeDemogrPopup();
             }
-
         }
 
 
