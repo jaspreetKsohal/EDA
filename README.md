@@ -1,6 +1,1 @@
-# CS594-EDH
-Englewood Data Hub(EDH) - tool for assessing social services, demographics and crimes data in Englewood
-
-Englewood Data Hub is an exploratory tool that allow policy makers to analyze social services, demographics and crimes data in Englewood. The main objective of this tool is to support evidence-driven policy making, that is to assist policy makers in gaining insights from data to form better informed decisions to ensure safety and development in Englewood.
-
-[Project Document](https://docs.google.com/document/d/1-H5TDLFceyEkiWw-L20L17qynhr-KiDxsuJKL-uYuiI/edit?usp=sharing)
+With Englewood being consistently ranked as one of the most dangerous neighborhoods in the city of Chicago, policy makers are looking for ways to improve the conditions of the area. So, Englewood Data Hub visualizes community’s data like demographics, vacant lots, services, green spaces etc. in order to provide sound evidence that can lead to effective public policies ensuring the development of the area. In addition to that, this tool also raises awareness among people by showcasing community’s assets and thus provides a positive disruption to the constant portrayal of the community in bad light.
