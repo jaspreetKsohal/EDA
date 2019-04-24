@@ -551,6 +551,144 @@ var View = function(model){
     };
 
 
+    self.displayCircularChart2 = function(year, demogrType, data, genderFilter) {
+
+        censusLayer.bindPopup(function(layer){
+            // var tract = "<b>" + layer.feature.properties.geoid10 + "</b></br>";
+            //
+            // tract += "<div id='tooltip-chart' class='tooltip-barcode-plot'></div>";
+
+            var layerData = layer.feature.properties.demographics;
+            // var pctChangeData = model.computePercentChange(layerData, 2010);
+            var popShareData = model.computePopShare(layerData);
+
+            var finalData;
+            if(demogrType === 'age_gender') {
+                finalData = popShareData[demogrType][genderFilter];
+            }
+            else finalData = popShareData[demogrType];
+
+            var tooltip = drawTooltipChart('tooltip-chart', finalData, demogrType, layerData, year);
+
+            return tooltip;
+        });
+
+        data.features.forEach(function(d, index){
+            //computing center of geometry
+            var center = turf.center(d).geometry.coordinates; /* [longitude, latitude] */
+
+            //adding center to the data
+            data.features[index].center = center;
+        });//forEach()
+
+        // console.log('circular chart - circular slices ', data.features);
+
+
+        var circleSvg = d3.select('#map')
+            .select('svg')
+            .append('g')
+            .attr('id', 'demographics-circular-charts');
+
+        var circleRadius = 34;
+
+        data.features.forEach(function(d){
+            console.log('tract: ', d.properties.name10);
+            var x1 = map.latLngToLayerPoint([d.center[1], d.center[0]]).x;
+            var y1 = map.latLngToLayerPoint([d.center[1], d.center[0]]).y;
+
+            console.log('(x1, y1)', x1, y1);
+
+            var popShareData = model.computePopShare(d.properties.demographics);
+            // console.log(popShareData[demogrType]);
+
+            var demogrTypeData;
+            if(demogrType === 'age_gender'){
+                demogrTypeData = popShareData[demogrType][genderFilter];
+            }
+            else {
+                demogrTypeData = popShareData[demogrType];
+            }
+
+            var pctPopShareValues = [];
+            for (var prop in demogrTypeData){
+                // console.log(prop, demogrTypeData[prop]);
+
+                demogrTypeData[prop].forEach(function(i){
+                    if (i.year == year) pctPopShareValues.push({
+                        prop: prop,
+                        pop_share: i.pop_share
+                    });
+                });
+            }//for
+
+
+            //sorting determines the shift by value
+            if(demogrType === 'race'){
+                pctPopShareValues.sort(function(x, y){
+                    return d3.descending(x.pop_share, y.pop_share);
+                });
+            }
+            else if(demogrType === 'age_gender'){
+                pctPopShareValues.reverse();
+            }
+
+
+            // console.log(pctPopShareValues);
+            circleSvg.append('clipPath')
+                .attr('id', function() { return 'base-circle-' + d.properties.name10 })
+                .append('circle')
+                    .attr('cx', x1)
+                    .attr('cy', y1)
+                    .attr('r', circleRadius);
+
+            var shift = [];
+            var shiftBy = 0;
+            pctPopShareValues.forEach(function(value, i){
+                shiftBy += (value.pop_share * (2 * circleRadius)) / 100;
+                var y2 = y1 + (2 * circleRadius) - shiftBy;
+
+                shift.push({
+                    prop: value.prop,
+                    pop_share: value.pop_share,
+                    shiftBy: shiftBy,
+                    y2: y2
+                })
+            });
+
+            console.log(shift);
+
+            //sorting determines the order in which the circles are drawn over each other
+            if(demogrType === 'race'){
+                shift.sort(function(x, y){
+                    return d3.ascending(x.pop_share, y.pop_share);
+                });
+            }
+            else if(demogrType === 'income' || demogrType === 'age_gender'){
+                shift.reverse();
+            }
+
+
+            shift.forEach(function(value, i){
+                circleSvg.append('circle')
+                    .attr('cx', x1)
+                    .attr('cy', value.y2)
+                    .attr('r', circleRadius)
+                    .attr('class', function() { return 'slices-' + d.properties.name10 })
+                    .attr('clip-path', function() { return 'url(#base-circle-' + d.properties.name10 + ')' })
+                    .attr('fill', function(i){
+                        return getLegendColor(value.prop, demogrType);
+                    });
+            });
+
+            d3.selectAll('.slices-' + d.properties.name10)
+                .attr('transform', 'rotate(45,' + x1 + ',' + y1 + ')');
+        });
+
+
+        // map.on('moveend', updateCircularChartPosition);
+    };
+
+
     function getSlices(index, year, demogrType, data, circleSvg, genderFilter){
         // console.log(year, demogrType, data);
 
@@ -686,17 +824,17 @@ var View = function(model){
 
 
     function updateCircularChartPosition() {
-        d3.selectAll('.circular-chart')
-            .attr('cx', function(d) {
-                // console.log(d.center);
-                return map.latLngToLayerPoint([d.center[1], d.center[0]]).x
-            })
-            .attr('cy', function(d) {
-                return map.latLngToLayerPoint([d.center[1], d.center[0]]).y
-            })
-            .attr('transform' , function(d){
-                return 'rotate(45, '+ map.latLngToLayerPoint([d.center[1], d.center[0]]).x +',' + map.latLngToLayerPoint([d.center[1], d.center[0]]).y +') ';
-            })
+        // d3.selectAll('.circular-chart')
+        //     .attr('cx', function(d) {
+        //         console.log(d);
+        //         return map.latLngToLayerPoint([d.center[1], d.center[0]]).x
+        //     })
+        //     .attr('cy', function(d) {
+        //         return map.latLngToLayerPoint([d.center[1], d.center[0]]).y
+        //     })
+        //     .attr('transform' , function(d){
+        //         return 'rotate(45, '+ map.latLngToLayerPoint([d.center[1], d.center[0]]).x +',' + map.latLngToLayerPoint([d.center[1], d.center[0]]).y +') ';
+        //     })
     }
 
 
@@ -1379,10 +1517,10 @@ var View = function(model){
         if(type === 'race'){
             if(prop === 'white') return '#D50000';
             else if(prop === 'black_or_african_american' || prop === 'black') return '#9FA8DA';
-            else if(prop === 'asian') return '#F7B32B';
+            else if(prop === 'asian') return '#F9A825';
             else if(prop === 'native_hawaiian_other_pacific_islander' || prop === 'nh/pi') return '#A9E5BB';
             else if(prop === 'american_indian_and_alaska_native' || prop === 'ai/an') return '#880E4F';
-            else if(prop === 'others') return 'black';
+            else if(prop === 'others') return '#424242';
         }
         else if(type === 'income'){
             if(prop === 'less_than_10000' || prop === '<10,000') return '#fcbba1';
@@ -1393,12 +1531,19 @@ var View = function(model){
             else if(prop === 'more_than_200000' || prop === '>200,000') return '#52000a';
         }
         else if(type === 'age_gender'){
-            if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#e9d2cc';
-            else if(prop === 'total_5_to_14' || prop === 'male_5_to_14' || prop === 'female_5_to_14') return '#c9b4b4';
-            else if(prop === 'total_15_to_24' || prop === 'male_15_to_24' || prop === 'female_15_to_24') return '#a9969c';
-            else if(prop === 'total_25_to_54' || prop === 'male_25_to_54' || prop === 'female_25_to_54') return '#897884';
-            else if(prop === 'total_55_to_64' || prop === 'male_55_to_64' || prop === 'female_55_to_64') return '#594c5f';
-            else if(prop === 'total_65_and_over' || prop === 'male_65_and_over' || prop === 'female_65_and_over') return '#291f3b';
+            // if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#e9d2cc';
+            // else if(prop === 'total_5_to_14' || prop === 'male_5_to_14' || prop === 'female_5_to_14') return '#c9b4b4';
+            // else if(prop === 'total_15_to_24' || prop === 'male_15_to_24' || prop === 'female_15_to_24') return '#a9969c';
+            // else if(prop === 'total_25_to_54' || prop === 'male_25_to_54' || prop === 'female_25_to_54') return '#897884';
+            // else if(prop === 'total_55_to_64' || prop === 'male_55_to_64' || prop === 'female_55_to_64') return '#594c5f';
+            // else if(prop === 'total_65_and_over' || prop === 'male_65_and_over' || prop === 'female_65_and_over') return '#291f3b';
+
+            if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#291f3b';
+            else if(prop === 'total_5_to_14' || prop === 'male_5_to_14' || prop === 'female_5_to_14') return '#594c5f';
+            else if(prop === 'total_15_to_24' || prop === 'male_15_to_24' || prop === 'female_15_to_24') return '#897884';
+            else if(prop === 'total_25_to_54' || prop === 'male_25_to_54' || prop === 'female_25_to_54') return '#a9969c';
+            else if(prop === 'total_55_to_64' || prop === 'male_55_to_64' || prop === 'female_55_to_64') return '#c9b4b4';
+            else if(prop === 'total_65_and_over' || prop === 'male_65_and_over' || prop === 'female_65_and_over') return '#e9d2cc';
         }
     }
 
@@ -1769,7 +1914,8 @@ var View = function(model){
 
         addDemographicsData: function(year, demogrType, data, genderFilter){
             // self.displayDotDistribution(year, demogrType, data);
-            self.displayCircularChart(year, demogrType, data, genderFilter);
+            // self.displayCircularChart(year, demogrType, data, genderFilter);
+            self.displayCircularChart2(year, demogrType, data, genderFilter);
         },
 
         removeDemographics: function() {

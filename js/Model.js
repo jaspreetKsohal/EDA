@@ -434,7 +434,7 @@ var Model = function() {
 
                 var temp = {
                     year: prop.split('_')[1],
-                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female + data[prop].age_gender.total_population_male)
+                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female )
                 };
 
                 result.age_gender.female[ageGroup].push(temp);
@@ -448,7 +448,7 @@ var Model = function() {
 
                 var temp = {
                     year: prop.split('_')[1],
-                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_female + data[prop].age_gender.total_population_male)
+                    pop_share: popShare(ageGenderData[ageGroup], data[prop].age_gender.total_population_male)
                 };
 
                 result.age_gender.male[ageGroup].push(temp);
