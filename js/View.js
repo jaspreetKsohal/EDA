@@ -583,7 +583,6 @@ var View = function(model){
 
         // console.log('circular chart - circular slices ', data.features);
 
-
         var circleSvg = d3.select('#map')
             .select('svg')
             .append('g')
@@ -592,11 +591,11 @@ var View = function(model){
         var circleRadius = 34;
 
         data.features.forEach(function(d){
-            console.log('tract: ', d.properties.name10);
+            // console.log('tract: ', d.properties.name10);
             var x1 = map.latLngToLayerPoint([d.center[1], d.center[0]]).x;
             var y1 = map.latLngToLayerPoint([d.center[1], d.center[0]]).y;
 
-            console.log('(x1, y1)', x1, y1);
+            // console.log('(x1, y1)', x1, y1);
 
             var popShareData = model.computePopShare(d.properties.demographics);
             // console.log(popShareData[demogrType]);
@@ -639,7 +638,9 @@ var View = function(model){
                 .append('circle')
                     .attr('cx', x1)
                     .attr('cy', y1)
-                    .attr('r', circleRadius);
+                    .attr('r', circleRadius)
+                    // .attr('class', 'clip-circle');
+                    .attr('class', function() { return 'clip-circle-' + d.properties.name10 });
 
             var shift = [];
             var shiftBy = 0;
@@ -655,7 +656,7 @@ var View = function(model){
                 })
             });
 
-            console.log(shift);
+            // console.log(shift);
 
             //sorting determines the order in which the circles are drawn over each other
             if(demogrType === 'race'){
@@ -685,7 +686,7 @@ var View = function(model){
         });
 
 
-        // map.on('moveend', updateCircularChartPosition);
+        map.on('zoom', updateCircularChartPosition2);
     };
 
 
@@ -824,17 +825,33 @@ var View = function(model){
 
 
     function updateCircularChartPosition() {
-        // d3.selectAll('.circular-chart')
-        //     .attr('cx', function(d) {
-        //         console.log(d);
-        //         return map.latLngToLayerPoint([d.center[1], d.center[0]]).x
-        //     })
-        //     .attr('cy', function(d) {
-        //         return map.latLngToLayerPoint([d.center[1], d.center[0]]).y
-        //     })
-        //     .attr('transform' , function(d){
-        //         return 'rotate(45, '+ map.latLngToLayerPoint([d.center[1], d.center[0]]).x +',' + map.latLngToLayerPoint([d.center[1], d.center[0]]).y +') ';
-        //     })
+        d3.selectAll('.circular-chart')
+            .attr('cx', function(d) {
+                console.log(d);
+                return map.latLngToLayerPoint([d.center[1], d.center[0]]).x
+            })
+            .attr('cy', function(d) {
+                return map.latLngToLayerPoint([d.center[1], d.center[0]]).y
+            })
+            .attr('transform' , function(d){
+                return 'rotate(45, '+ map.latLngToLayerPoint([d.center[1], d.center[0]]).x +',' + map.latLngToLayerPoint([d.center[1], d.center[0]]).y +') ';
+            })
+    }
+
+    function updateCircularChartPosition2() {
+        console.log('update chart positions');
+        d3.selectAll('clipPath').each(function(d){
+           var baseCircle = d3.select(this).select('circle');
+           var tract = baseCircle.attr('class').split('-')[2];
+           console.log(tract);
+
+           var cx = baseCircle.attr('cx');
+           var cy = baseCircle.attr('cy');
+
+           console.log(cx, cy);
+
+
+        });
     }
 
 
