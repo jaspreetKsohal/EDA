@@ -2,6 +2,8 @@
 
 "use strict";
 
+// import {circle} from "../leaflet/leaflet-src.esm";
+
 var App = App || {};
 
 var View = function(model){
@@ -15,6 +17,7 @@ var View = function(model){
     var markergroup1 = L.layerGroup();
     var markergroup2 = L.layerGroup();
 
+    var circleRadius = 34, circleSvg;
 
     var colorScale = d3.scaleSequential(d3.interpolateReds)
         .domain([0, 5]);
@@ -552,7 +555,7 @@ var View = function(model){
 
 
     self.displayCircularChart2 = function(year, demogrType, data, genderFilter) {
-
+        console.log('displaying Circular Chart...');
         censusLayer.bindPopup(function(layer){
             // var tract = "<b>" + layer.feature.properties.geoid10 + "</b></br>";
             //
@@ -581,113 +584,120 @@ var View = function(model){
             data.features[index].center = center;
         });//forEach()
 
-        // console.log('circular chart - circular slices ', data.features);
+        var clipPath = circleSvg.selectAll('path')
+            .data(data.features)
+            .enter()
+            .append('clipPath')
+            .attr('id', function(d) { return 'base-circle-' + d.properties.name10 })
+            .append('circle')
+                .attr('cx', function(d) { return  map.latLngToLayerPoint([d.center[1], d.center[0]]).x; })
+                .attr('cy', function(d) { return  map.latLngToLayerPoint([d.center[1], d.center[0]]).y; })
+                .attr('r', circleRadius)
+                .attr('class', function(d) { return 'clip-path clip-circle-' + d.properties.name10 });
 
-        var circleSvg = d3.select('#map')
-            .select('svg')
-            .append('g')
-            .attr('id', 'demographics-circular-charts');
-
-        var circleRadius = 34;
-
-        data.features.forEach(function(d){
-            // console.log('tract: ', d.properties.name10);
-            var x1 = map.latLngToLayerPoint([d.center[1], d.center[0]]).x;
-            var y1 = map.latLngToLayerPoint([d.center[1], d.center[0]]).y;
-
-            // console.log('(x1, y1)', x1, y1);
-
-            var popShareData = model.computePopShare(d.properties.demographics);
-            // console.log(popShareData[demogrType]);
-
-            var demogrTypeData;
-            if(demogrType === 'age_gender'){
-                demogrTypeData = popShareData[demogrType][genderFilter];
-            }
-            else {
-                demogrTypeData = popShareData[demogrType];
-            }
-
-            var pctPopShareValues = [];
-            for (var prop in demogrTypeData){
-                // console.log(prop, demogrTypeData[prop]);
-
-                demogrTypeData[prop].forEach(function(i){
-                    if (i.year == year) pctPopShareValues.push({
-                        prop: prop,
-                        pop_share: i.pop_share
-                    });
-                });
-            }//for
-
-
-            //sorting determines the shift by value
-            if(demogrType === 'race'){
-                pctPopShareValues.sort(function(x, y){
-                    return d3.descending(x.pop_share, y.pop_share);
-                });
-            }
-            else if(demogrType === 'age_gender'){
-                pctPopShareValues.reverse();
-            }
-
-
-            // console.log(pctPopShareValues);
-            circleSvg.append('clipPath')
-                .attr('id', function() { return 'base-circle-' + d.properties.name10 })
-                .append('circle')
-                    .attr('cx', x1)
-                    .attr('cy', y1)
-                    .attr('r', circleRadius)
-                    // .attr('class', 'clip-circle');
-                    .attr('class', function() { return 'clip-circle-' + d.properties.name10 });
-
-            var shift = [];
-            var shiftBy = 0;
-            pctPopShareValues.forEach(function(value, i){
-                shiftBy += (value.pop_share * (2 * circleRadius)) / 100;
-                var y2 = y1 + (2 * circleRadius) - shiftBy;
-
-                shift.push({
-                    prop: value.prop,
-                    pop_share: value.pop_share,
-                    shiftBy: shiftBy,
-                    y2: y2
-                })
-            });
-
-            // console.log(shift);
-
-            //sorting determines the order in which the circles are drawn over each other
-            if(demogrType === 'race'){
-                shift.sort(function(x, y){
-                    return d3.ascending(x.pop_share, y.pop_share);
-                });
-            }
-            else if(demogrType === 'income' || demogrType === 'age_gender'){
-                shift.reverse();
-            }
-
-
-            shift.forEach(function(value, i){
-                circleSvg.append('circle')
-                    .attr('cx', x1)
-                    .attr('cy', value.y2)
-                    .attr('r', circleRadius)
-                    .attr('class', function() { return 'slices-' + d.properties.name10 })
-                    .attr('clip-path', function() { return 'url(#base-circle-' + d.properties.name10 + ')' })
-                    .attr('fill', function(i){
-                        return getLegendColor(value.prop, demogrType);
-                    });
-            });
-
-            d3.selectAll('.slices-' + d.properties.name10)
-                .attr('transform', 'rotate(45,' + x1 + ',' + y1 + ')');
+        clipPath.each(function(d){
+            var pctPopShareValues = prepareCircularChartData(d, demogrType, genderFilter, year);
+            shiftCircles(pctPopShareValues,
+                map.latLngToLayerPoint([d.center[1], d.center[0]]).x,
+                map.latLngToLayerPoint([d.center[1], d.center[0]]).y,
+                demogrType, circleSvg, d.properties.name10);
         });
 
-
-        map.on('zoom', updateCircularChartPosition2);
+        map.on('moveend', function(){
+            updateCircularChartPosition2(year, demogrType, data, genderFilter);
+        });
     };
+
+
+    function prepareCircularChartData(d, demogrType, genderFilter, year) {
+        var popShareData = model.computePopShare(d.properties.demographics);
+        // console.log(popShareData[demogrType]);
+
+
+        var demogrTypeData;
+        if(demogrType === 'age_gender'){
+            demogrTypeData = popShareData[demogrType][genderFilter];
+        }
+        else {
+            demogrTypeData = popShareData[demogrType];
+        }
+
+        // console.log('demogrTypeData', demogrTypeData);
+
+        var pctPopShareValues = [];
+        for (var prop in demogrTypeData){
+            // console.log(prop, demogrTypeData[prop]);
+
+            demogrTypeData[prop].forEach(function(i){
+                if (i.year == year) pctPopShareValues.push({
+                    prop: prop,
+                    pop_share: i.pop_share
+                });
+            });
+        }//for
+
+
+        //sorting determines the shift by value
+        if(demogrType === 'race'){
+            pctPopShareValues.sort(function(x, y){
+                return d3.descending(x.pop_share, y.pop_share);
+            });
+        }
+        else if(demogrType === 'age_gender'){
+            pctPopShareValues.reverse();
+        }
+
+        return pctPopShareValues;
+    }
+
+
+    // function shiftCircles(pctPopShareValues, x1, y1, demogrType, circleSvg, d) {
+    function shiftCircles(pctPopShareValues, x1, y1, demogrType, circleSvg, tract) {
+
+        // console.log(pctPopShareValues, x1, y1, demogrType, circleSvg, d);
+        var shift = [];
+        var shiftBy = 0;
+        pctPopShareValues.forEach(function(value, i){
+            shiftBy += (value.pop_share * (2 * circleRadius)) / 100;
+            var y2 = y1 + (2 * circleRadius) - shiftBy;
+            var x2 = x1;
+
+            shift.push({
+                prop: value.prop,
+                pop_share: value.pop_share,
+                shiftBy: shiftBy,
+                x2: x2,
+                y2: y2,
+                latLng: map.layerPointToLatLng(L.point(x2, y2))
+            })
+        });
+
+        //sorting determines the order in which the circles are drawn over each other
+        if(demogrType === 'race'){
+            shift.sort(function(x, y){
+                return d3.ascending(x.pop_share, y.pop_share);
+            });
+        }
+        else if(demogrType === 'income' || demogrType === 'age_gender'){
+            shift.reverse();
+        }
+
+        circleSvg.selectAll('circles')
+            .data(shift)
+            .enter()
+            .append('circle')
+            .attr('cx', function(d) { return d.x2; })
+            .attr('cy', function(d) { return d.y2; })
+            .attr('r', circleRadius)
+            .attr('class', function(d) { return 'slices slices-' + tract })
+            .attr('clip-path', function() { return 'url(#base-circle-' + tract + ')' })
+            .attr('fill', function(d){
+                return getLegendColor(d.prop, demogrType);
+            });
+
+        d3.selectAll('.slices-' + tract)
+            .attr('transform', 'rotate(45,' + x1 + ',' + y1 + ')');
+    }
 
 
     function getSlices(index, year, demogrType, data, circleSvg, genderFilter){
@@ -827,7 +837,6 @@ var View = function(model){
     function updateCircularChartPosition() {
         d3.selectAll('.circular-chart')
             .attr('cx', function(d) {
-                console.log(d);
                 return map.latLngToLayerPoint([d.center[1], d.center[0]]).x
             })
             .attr('cy', function(d) {
@@ -838,20 +847,28 @@ var View = function(model){
             })
     }
 
-    function updateCircularChartPosition2() {
+
+    function updateCircularChartPosition2(year, demogrType, data, genderFilter) {
         console.log('update chart positions');
-        d3.selectAll('clipPath').each(function(d){
-           var baseCircle = d3.select(this).select('circle');
-           var tract = baseCircle.attr('class').split('-')[2];
-           console.log(tract);
 
-           var cx = baseCircle.attr('cx');
-           var cy = baseCircle.attr('cy');
+        d3.selectAll('.clip-path')
+            .attr('cx', function(d) {
+                return map.latLngToLayerPoint([d.center[1], d.center[0]]).x
+            })
+            .attr('cy', function(d) {
+                return map.latLngToLayerPoint([d.center[1], d.center[0]]).y
+            });
 
-           console.log(cx, cy);
-
-
+        d3.selectAll('.clip-path').each(function(d){
+            var pctPopShareValues = prepareCircularChartData(d, demogrType, genderFilter, year);
+            shiftCircles(pctPopShareValues,
+                map.latLngToLayerPoint([d.center[1], d.center[0]]).x,
+                map.latLngToLayerPoint([d.center[1], d.center[0]]).y,
+                demogrType, d3.select('#demographics-circular-charts'), d.properties.name10);
         });
+
+        // d3.select('#demographics-circular-charts').remove();
+        // self.displayCircularChart2(year, demogrType, data, genderFilter);
     }
 
 
@@ -1930,6 +1947,10 @@ var View = function(model){
         },
 
         addDemographicsData: function(year, demogrType, data, genderFilter){
+            circleSvg = d3.select('#map')
+                .select('svg')
+                .append('g')
+                .attr('id', 'demographics-circular-charts');
             // self.displayDotDistribution(year, demogrType, data);
             // self.displayCircularChart(year, demogrType, data, genderFilter);
             self.displayCircularChart2(year, demogrType, data, genderFilter);
