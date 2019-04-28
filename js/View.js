@@ -879,9 +879,9 @@ var View = function(model){
         // drawBarCodeChart('income-barcode-plot', data.income, 'income');
         // drawBarCodeChart('age-gender-barcode-plot', data.age_gender.total, 'age_gender')
 
-        drawLineChart('race-line-plot', data.race, 'race');
-        drawLineChart('age-gender-line-plot', data.age_gender.total, 'age_gender');
         drawLineChart('income-line-plot', data.income, 'income');
+        drawLineChart('age-gender-line-plot', data.age_gender.total, 'age_gender');
+        drawLineChart('race-line-plot', data.race, 'race');
     };
 
 
@@ -1781,6 +1781,7 @@ var View = function(model){
                                 container1.on('click', '#honroe', function() {
                                     honroe.closePopup();
                                     yale.openPopup();
+                                    map.setView(new L.latLng(41.793736, -87.640470), 14.5);
                                 });
 
                                 container1.html(
@@ -1793,16 +1794,28 @@ var View = function(model){
                                 );
 
                                 honroe.bindPopup(container1[0], {closeOnClick: false,  autoClose: false}).openPopup();
-                                map.setView(new L.latLng(41.775805, -87.671119), 14.5);
+                                map.setView(new L.latLng(41.794121, -87.677519), 14.5);
 
                                 var container2 = $('<div class="tooltip-wrapper"/>');
 
+                                container2.html(
+                                    '<img src="images/YaleApartments.jpg" width="100%" height="100%" id="yale" /> <br>' +
+                                    '<h2 class="tooltip-title">Yale Building</h2>' +
+                                    '<p class="tooltip-text custom-margin">Lot of work went into restoring this building which now serves as home to ' +
+                                    'senior citizens.  It features a large, open atrium and sprawling glass arcade that fills the building with natural light. ' +
+                                    'A remarkable example of transformation.</p><br>' +
+                                    '<button id="yale" class="btn-width btn">Next</button>'
+                                );
+
+                                yale.bindPopup(container2[0], {closeOnClick: false, autoClose: false});
+
                                 container2.on('click', '#yale', function() {
+                                    map.setView([41.774876, -87.659901], 14.5);
                                     step5 = false;
                                     yale.closePopup();
 
                                     map.removeLayer(markergroup2);
-                                    map.setView(new L.latLng(41.774876, -87.656801), 14.5);
+                                    // map.setView(new L.latLng(41.762582, -87.639271), 14.5);
 
                                     $('#numberVacantLots').remove();
                                     $('#vacant-lots').parent().removeClass('highlight');
@@ -1825,65 +1838,54 @@ var View = function(model){
 
                                     $('body').append('<div id="selectFilters" class="instructions-tooltip"> Select the Schools and Safe-Passages filter</div>');
 
-                                    // $('#selectFilters').css({top: crimeTop, left: filtersWidth + 10});
+                                    $('#selectFilters').css({top: schoolTop, left: filtersWidth + 10});
 
                                     var filtersSelected=[], step6 = true;
                                     $('td').on('click', function(){
-                                       if(story && step6){
-                                           var filter = $(event.currentTarget).find(':first-child').attr('id');
+                                        if(story && step6){
+                                            var filter = $(event.currentTarget).find(':first-child').attr('id');
 
-                                           if(filter == 'safe-passage' || filter == 'school') {
-                                               if(!filtersSelected.includes(filter)) {
-                                                   filtersSelected.push(filter);
-                                               }
-                                               else {
-                                                   var index = filtersSelected.indexOf(filter);
-                                                   if (index !== -1) filtersSelected.splice(index, 1);
-                                               }
-                                           }
+                                            if(filter == 'safe-passage' || filter == 'school') {
+                                                if(!filtersSelected.includes(filter)) {
+                                                    filtersSelected.push(filter);
+                                                }
+                                                else {
+                                                    var index = filtersSelected.indexOf(filter);
+                                                    if (index !== -1) filtersSelected.splice(index, 1);
+                                                }
+                                            }
 
-                                           if(filtersSelected.length == 2){
-                                               $('#schools-pulse').remove();
-                                               $('#passages-pulse').remove();
-                                               $('#selectFilters').remove();
-                                               story = false;
-                                               step6 = false;
+                                            if(filtersSelected.length == 2){
+                                                $('#schools-pulse').remove();
+                                                $('#passages-pulse').remove();
+                                                $('#selectFilters').remove();
+                                                story = false;
+                                                step6 = false;
 
-                                               $('body').append(
-                                                   '<div id="step6"><div>' +
-                                                        '<h2 class="tooltip-title">Safe Passage Program</h2>' +
-                                                        '<p class="tooltip-text">This program not only allows safe passage to students to and from schools but also provides ' +
-                                                        'opportunities to parents and residents to get involved in the community as a safe passage worker.</p>' +
-                                                        '<button id="passage" class="btn-width btn">Next</button>' +
-                                                   '</div></div>'
-                                               );
+                                                $('body').append(
+                                                    '<div id="step6"><div>' +
+                                                    '<h2 class="tooltip-title">Safe Passage Program</h2>' +
+                                                    '<p class="tooltip-text">This program not only allows safe passage to students to and from schools but also provides ' +
+                                                    'opportunities to parents and residents to get involved in the community as a safe passage worker.</p>' +
+                                                    '<button id="passage" class="btn-width btn">Next</button>' +
+                                                    '</div></div>'
+                                                );
 
-                                               $('#step6').css({top: 0 , right: 0});
+                                                $('#step6').css({top: 0 , right: 0});
 
-                                               $('#passage').on('click', function(){
+                                                $('#passage').on('click', function(){
                                                     clearInterface();
 
-                                                   $('#step6').remove();
-                                                   $('.overlay').fadeIn('slow');
-                                                   self.showContentForIndex(6);
-                                               });
-                                           }//if
+                                                    $('#step6').remove();
+                                                    $('.overlay').fadeIn('slow');
+                                                    self.showContentForIndex(6);
+                                                });
+                                            }//if
 
-                                       }//if-story
+                                        }//if-story
 
                                     });
                                 });
-
-                                container2.html(
-                                    '<img src="images/YaleApartments.jpg" width="100%" height="100%" id="yale" /> <br>' +
-                                    '<h2 class="tooltip-title">Yale Building</h2>' +
-                                    '<p class="tooltip-text custom-margin">Lot of work went into restoring this building which now serves as home to ' +
-                                    'senior citizens.  It features a large, open atrium and sprawling glass arcade that fills the building with natural light. ' +
-                                    'A remarkable example of transformation.</p><br>' +
-                                    '<button id="yale" class="btn-width btn">Next</button>'
-                                );
-
-                                yale.bindPopup(container2[0], {closeOnClick: false, autoClose: false});
                             }
                         }
                     });
@@ -1906,6 +1908,8 @@ var View = function(model){
                 $('#final-step-btn').on('click', function(){
                     console.log('final-step');
                     $('.overlay').fadeOut('slow');
+                    $('#schools-flex-item').hide();
+                    $('#vacant-lots-flex-item').hide();
                 });
                 break;
             }
