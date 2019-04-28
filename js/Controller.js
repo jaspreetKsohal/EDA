@@ -16,6 +16,8 @@ var Controller = function(model, view){
     var year = 2017;
     var baseYear = 2010; //with respect to which percent change will be computed
     var allLayers = ['green-spaces, historic-sites, service, school, safe-passage, vacant-lots, demographics'];
+    var greenSpaces = ['gs-community-garden', 'gs-school-garden', 'gs-parks', 'gs-urban-farm', 'gs-green-roofs', 'gs-other'];
+    var services = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'VP', 'YE'];
 
     //about button
     $('#about').css({width: $('.filters')[0].getBoundingClientRect().width});
@@ -72,7 +74,20 @@ var Controller = function(model, view){
             view.removeGreenSpaces();
         }
 
-        view.addGreenSpaces(model.getFilteredGreenSpaces(arr));
+        if(subType === 'gs-all'){
+            if($('#gs-all').hasClass('gs-selected')){
+                $('.gs-inner-flex').addClass('gs-selected');
+                view.addGreenSpaces(model.getFilteredGreenSpaces(greenSpaces));
+            }
+            else {
+                $('.gs-inner-flex').removeClass('gs-selected');
+                view.addGreenSpaces(model.getFilteredGreenSpaces([]));
+            }
+        }
+        else {
+            $('#gs-all').removeClass('gs-selected');
+            view.addGreenSpaces(model.getFilteredGreenSpaces(arr));
+        }
     });
 
 
@@ -91,7 +106,20 @@ var Controller = function(model, view){
             view.removeServices();
         }
 
-        view.addServices(model.getFilteredServices(arrServices));
+        if(subService === 'services-all'){
+            if($('#services-all').hasClass('srv-selected')){
+                $('.services-inner-flex').addClass('srv-selected');
+                view.addServices(model.getFilteredServices(services));
+            } else {
+                $('.services-inner-flex').removeClass('srv-selected');
+                view.addServices(model.getFilteredServices([]));
+            }
+        }
+        else {
+            $('#services-all').removeClass('srv-selected');
+            view.addServices(model.getFilteredServices(arrServices));
+        }
+
     });
 
 
@@ -212,8 +240,9 @@ var Controller = function(model, view){
 
             if($('#demographics-flex-item').hasClass('show-demographics-controls')){
                 var result = model.computePopShare(model.getOverviewDemographicsData());
-                // var result = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
-                // console.log('result', result);
+                // var resultPctChange = model.computePercentChange(model.getOverviewDemographicsData(), baseYear);
+                // console.log(model.getOverviewDemographicsData());
+                // console.log('result', resultPctChange);
                 view.showOverviewPlots(result);
             } else {
                 $('.demogr-plot').empty();
