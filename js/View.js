@@ -237,7 +237,7 @@ var View = function(model){
 
         serviceData.forEach(function(s){
             var latlng = L.latLng(s.latitude, s.longitude);
-            L.circle(latlng, {radius: 25, color: '#e57287',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
+            L.circle(latlng, {radius: 25, color: '#311B92',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
                 .bindPopup("<b>" + s['name'] + "</b></br>" +
                     "<i><p class='service-description'>" + s['description'] + "</p></i></br>" +
                     "<a href='" + s['website'] + "' target='_blank'>Website</a></br>" +
@@ -1520,6 +1520,36 @@ var View = function(model){
                 })
                 .attr('d', lineGenerator)
         }//for
+
+        createMapLegend(legendText, type);
+
+
+    }
+
+
+    var legend;
+    function createMapLegend(legendText, type){
+        if($('.' + type).length){
+            $('.' + type + ' span').each(function(i){
+                $(this).text(legendText[i]);
+            })
+        }
+        else {
+            legend = L.control({position: 'bottomright'});
+
+            legend.onAdd = function (map) {
+                var div = L.DomUtil.create('div', 'legend-info map-legend ' + type);
+
+                for (var i = 0; i < legendText.length; i++) {
+                    div.innerHTML +=
+                        '<i style="background:' + getLegendColor((legendText[i]).toLowerCase(), type) + '"></i>'+ '<span>' + legendText[i] + '</span>' + ' </br>';
+                }
+
+                return div;
+            };
+
+            legend.addTo(map);
+        }
     }
 
 
@@ -1557,12 +1587,12 @@ var View = function(model){
             else if(prop === 'others') return '#424242';
         }
         else if(type === 'income'){
-            if(prop === 'less_than_10000' || prop === '<10,000') return '#fcbba1';
-            else if(prop === 'bw_10000_and_24999' || prop === '10,000 - 24,999') return '#fb6a4a';
-            else if(prop === 'bw_25000_and_49999' || prop === '25,000 - 49,999') return '#ef3b2c';
-            else if(prop === 'bw_50000_and_99999' || prop === '50,000 - 99,999') return '#cb181d';
-            else if(prop === 'bw_100000_and_199999' || prop === '100,000 - 199,999') return '#a50f15';
-            else if(prop === 'more_than_200000' || prop === '>200,000') return '#52000a';
+            if(prop === 'less_than_10000' || prop === '<10,000') return '#fee8c8';
+            else if(prop === 'bw_10000_and_24999' || prop === '10,000 - 24,999') return '#fdbb84';
+            else if(prop === 'bw_25000_and_49999' || prop === '25,000 - 49,999') return '#fc8d59';
+            else if(prop === 'bw_50000_and_99999' || prop === '50,000 - 99,999') return '#ef6548';
+            else if(prop === 'bw_100000_and_199999' || prop === '100,000 - 199,999') return '#d7301f';
+            else if(prop === 'more_than_200000' || prop === '>200,000') return '#7f0000';
         }
         else if(type === 'age_gender'){
             // if(prop === 'total_0_to_4' || prop === 'male_0_to_4' || prop === 'female_0_to_4') return '#e9d2cc';
@@ -2001,6 +2031,8 @@ var View = function(model){
                 elClicked.feature.properties.isSelected = false;
                 elClicked.setStyle(style.default);
             }
+
+            $('.map-legend').remove();
         }
 
     };
