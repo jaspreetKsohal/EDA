@@ -18,6 +18,7 @@ var View = function(model){
     var markergroup2 = L.layerGroup();
 
     var circleRadius = 34, circleSvg;
+    var legend;
 
     var colorScale = d3.scaleSequential(d3.interpolateReds)
         .domain([0, 5]);
@@ -584,6 +585,24 @@ var View = function(model){
             data.features[index].center = center;
         });//forEach()
 
+        var temp = data.features[0].properties.demographics['year_'+year][demogrType];
+        console.log(temp);
+        var legendData;
+        if(demogrType === 'race') legendData = temp.one_race;
+        else if(demogrType === 'age_gender') {
+            if(genderFilter === 'total') legendData = temp.total;
+            else if(genderFilter === 'male') legendData = temp.male;
+            else legendData = temp.female;
+        }
+        else legendData = temp.income_groups;
+        var legendText = [];
+        for (var prop in legendData){
+            legendText.push(getLegendText(prop, demogrType));
+        }//for
+        console.log(legendText);
+
+        createMapLegend2(legendText, demogrType);
+
         var clipPath = circleSvg.selectAll('path')
             .data(data.features)
             .enter()
@@ -651,7 +670,6 @@ var View = function(model){
     }
 
 
-    // function shiftCircles(pctPopShareValues, x1, y1, demogrType, circleSvg, d) {
     function shiftCircles(pctPopShareValues, x1, y1, demogrType, circleSvg, tract) {
 
         // console.log(pctPopShareValues, x1, y1, demogrType, circleSvg, d);
@@ -1521,13 +1539,41 @@ var View = function(model){
                 .attr('d', lineGenerator)
         }//for
 
-        createMapLegend(legendText, type);
+        // createMapLegend(legendText, type);
 
 
     }
 
 
-    var legend;
+    function createMapLegend2(legendText, type){
+        if($('.map-legend').length){
+            var legendContent = '';
+            for (var i = 0; i < legendText.length; i++) {
+                legendContent +=  '<i style="background:' + getLegendColor((legendText[i]).toLowerCase(), type) + '"></i>'+ '<span>' + legendText[i] + '</span>' + ' </br>';
+            }
+
+            $('.map-legend').html(legendContent);
+
+        }
+        else {
+            legend = L.control({position: 'bottomright'});
+
+            legend.onAdd = function (map) {
+                var div = L.DomUtil.create('div', 'legend-info map-legend');
+
+                for (var i = 0; i < legendText.length; i++) {
+                    div.innerHTML +=
+                        '<i style="background:' + getLegendColor((legendText[i]).toLowerCase(), type) + '"></i>'+ '<span>' + legendText[i] + '</span>' + ' </br>';
+                }
+
+                return div;
+            };
+
+            legend.addTo(map);
+        }
+    }
+
+
     function createMapLegend(legendText, type){
         if($('.' + type).length){
             $('.' + type + ' span').each(function(i){
