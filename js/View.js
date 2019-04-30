@@ -238,7 +238,7 @@ var View = function(model){
 
         serviceData.forEach(function(s){
             var latlng = L.latLng(s.latitude, s.longitude);
-            L.circle(latlng, {radius: 25, color: '#311B92',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
+            L.circle(latlng, {radius: 25, color: '#e57287',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
                 .bindPopup("<b>" + s['name'] + "</b></br>" +
                     "<i><p class='service-description'>" + s['description'] + "</p></i></br>" +
                     "<a href='" + s['website'] + "' target='_blank'>Website</a></br>" +
@@ -586,7 +586,7 @@ var View = function(model){
         });//forEach()
 
         var temp = data.features[0].properties.demographics['year_'+year][demogrType];
-        console.log(temp);
+        // console.log(temp);
         var legendData;
         if(demogrType === 'race') legendData = temp.one_race;
         else if(demogrType === 'age_gender') {
@@ -599,7 +599,7 @@ var View = function(model){
         for (var prop in legendData){
             legendText.push(getLegendText(prop, demogrType));
         }//for
-        console.log(legendText);
+        // console.log(legendText);
 
         createMapLegend2(legendText, demogrType);
 

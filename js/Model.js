@@ -58,6 +58,8 @@ var Model = function() {
         d3.json("data/lots.geojson", function(d){
            lotsData.push(d);
         });
+
+        // console.log(lotsData);
     }
 
 
@@ -118,7 +120,7 @@ var Model = function() {
         }).done(function(data) {
             safePassagesData.push(data);
         });
-
+        // console.log(safePassagesData);
     }
 
 
@@ -180,6 +182,8 @@ var Model = function() {
                 filteredServices.push(s);
             }//if
         });//loop
+
+        console.log(filteredServices);
         return filteredServices;
     }
 
@@ -231,6 +235,7 @@ var Model = function() {
 
 
     function getServiceData(){
+        console.log(servicesData);
         return servicesData;
     }
 
@@ -251,6 +256,7 @@ var Model = function() {
 
 
     function getDemographicsData() {
+        console.log(censusTractsData[0]);
         return censusTractsData[0];
     }
 

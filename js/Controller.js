@@ -187,9 +187,10 @@ var Controller = function(model, view){
         if(filter === 'green-spaces'){
             if(view.isLayerActive(filter)){
                 view.removeGreenSpaces();
-                // $('.gs-inner-flex').addClass('gs-selected');
+                $('.gs-inner-flex').removeClass('gs-selected');
             } else {
                 // view.addGreenSpaces(model.getGreenSpaceData());
+                $('#gs-community-garden').addClass('gs-selected');
                 view.addGreenSpaces(model.getFilteredGreenSpaces(['gs-community-garden']));
             }
         }
@@ -202,10 +203,11 @@ var Controller = function(model, view){
         }
         else if(filter === 'service'){
             if(view.isLayerActive(filter)){
-                // $('.services-inner-flex').addClass('srv-selected');
                 view.removeServices();
+                $('.services-inner-flex').removeClass('srv-selected');
             } else {
                 // view.addServices(model.getServiceData());
+                $('#BN').addClass('srv-selected');
                 view.addServices(model.getFilteredServices(['BN']));
             }
         }//if-service
