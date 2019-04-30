@@ -545,7 +545,7 @@ var View = function(model){
                 .attr('transform' , function(d){
                     return 'rotate(45, '+ map.latLngToLayerPoint([d.center[1], d.center[0]]).x +',' + map.latLngToLayerPoint([d.center[1], d.center[0]]).y +') ';
                 })
-                .attr("opacity","0.7")
+                .attr("opacity","1")
                 .style('fill', function(d, index){
                     getSlices(index, year, demogrType, d, circleSvg, genderFilter);
                     return 'url(#grad'+ index +')';
@@ -672,6 +672,7 @@ var View = function(model){
 
     function shiftCircles(pctPopShareValues, x1, y1, demogrType, circleSvg, tract) {
 
+
         // console.log(pctPopShareValues, x1, y1, demogrType, circleSvg, d);
         var shift = [];
         var shiftBy = 0;
@@ -756,11 +757,11 @@ var View = function(model){
             grad.append("stop").attr("offset", stop2).style("stop-color", "#9FA8DA");
             grad.append("stop").attr("offset", stop3).style("stop-color", "#9FA8DA");
 
-            grad.append("stop").attr("offset", stop3).style("stop-color", "#F7B32B");
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#F7B32B");
+            grad.append("stop").attr("offset", stop3).style("stop-color", "#5ebc97");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#5ebc97");
 
-            grad.append("stop").attr("offset", stop4).style("stop-color", "#A9E5BB");
-            grad.append("stop").attr("offset", stop5).style("stop-color", "#A9E5BB");
+            grad.append("stop").attr("offset", stop4).style("stop-color", "#F7B32B");
+            grad.append("stop").attr("offset", stop5).style("stop-color", "#F7B32B");
 
             grad.append("stop").attr("offset", stop5).style("stop-color", "#880E4F");
             grad.append("stop").attr("offset", stop6).style("stop-color", "#880E4F");
@@ -877,12 +878,14 @@ var View = function(model){
                 return map.latLngToLayerPoint([d.center[1], d.center[0]]).y
             });
 
+        d3.selectAll('.slices').remove();
+
         d3.selectAll('.clip-path').each(function(d){
             var pctPopShareValues = prepareCircularChartData(d, demogrType, genderFilter, year);
             shiftCircles(pctPopShareValues,
                 map.latLngToLayerPoint([d.center[1], d.center[0]]).x,
                 map.latLngToLayerPoint([d.center[1], d.center[0]]).y,
-                demogrType, d3.select('#demographics-circular-charts'), d.properties.name10);
+                demogrType, d3.select('#demographics-circular-charts'), d.properties.name10, true);
         });
 
         // d3.select('#demographics-circular-charts').remove();
@@ -1627,8 +1630,8 @@ var View = function(model){
         if(type === 'race'){
             if(prop === 'white') return '#D50000';
             else if(prop === 'black_or_african_american' || prop === 'black') return '#9FA8DA';
-            else if(prop === 'asian') return '#F9A825';
-            else if(prop === 'native_hawaiian_other_pacific_islander' || prop === 'nh/pi') return '#A9E5BB';
+            else if(prop === 'asian') return '#5ebc97';
+            else if(prop === 'native_hawaiian_other_pacific_islander' || prop === 'nh/pi') return '#F9A825';
             else if(prop === 'american_indian_and_alaska_native' || prop === 'ai/an') return '#880E4F';
             else if(prop === 'others') return '#424242';
         }
