@@ -21,6 +21,7 @@
         <!--<script src="leaflet_cluster/leaflet.markercluster.js"></script>-->
         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
         <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+        <script src="https://unpkg.com/d3-simple-slider"></script>
     </head>
 
     <body onload="App.start();">
@@ -160,6 +161,7 @@
                     </div>
 
                     <div id="demographics-flex-item" class="flex-item">
+
                         <span class="icon-demographics"></span>
                         &nbsp;&nbsp;
                         Demographics Over Time
@@ -168,6 +170,8 @@
                             <li class="demographics-inner-flex" id="age_gender">Age & Gender</li>
                             <li class="demographics-inner-flex" id="income">Income</li>
                         </ul>
+
+                        <div id="timeSlider"></div>
 
                         </br>
 
@@ -258,6 +262,8 @@
             </div>
             <!--end filters-->
 
+            <div id="yearSelected">2010</div>
+
             <div class="map" id="map"></div>
             <!--end map-->
 
@@ -273,7 +279,7 @@
                 <h2>Englewood Data Hub</h2>
                 <p class="about-text">Englewood Data Hub is a tool that allow policy makers to analyze social services, demographics and crimes data in
                     Englewood. The main objective of this tool is to support evidence-driven policy making.</p> <br>
-                <p class="about-text">This project is a part of Visual Data Science graduate course at University of Illinois at Chicago.</p>
+<!--                <p class="about-text">This project is a part of Visual Data Science graduate course at University of Illinois at Chicago.</p>-->
                 <br>
 
                 <b>Tools Used: </b> 
@@ -287,20 +293,23 @@
 
                 <b>Data: </b>
                 <p>
-                    Public datasets used are: Vacant Lots, Safe Passages and Crimes from
+                    Public datasets used are: Vacant Lots, Safe Passages and Schools from
                     <a href="https://data.cityofchicago.org/" target="_blank" class="links">Chicago Data Portal</a> <br>
                     Integrated US Census Data publicly available from
                     <a href="https://factfinder.census.gov/faces/nav/jsf/pages/index.xhtml" target="_blank" class="links">US Census Bureau</a>
-                    <br> Schools and Services datasets were provided by the
-                    consultant.
+                    <br> Services datasets were provided by the consultant.
                 </p>
 
-                <b>Team: </b>
+<!--                <b>Team: </b>-->
                 <p>
-                    University of Illinois Urbana-Champaign Team (Prof. Ruby Mendenhall, Kiel Gilleade and other members)- Consultants <br>
-                    Joshua Castor- Consultant <br>
-                    Prof. G. Elisabeta Marai- Course Instructor <br>
-                    Jaspreet Kaur Sohal, Sai Phaltankar- Developers
+                    Advisor - Prof. G. Elisabeta Marai </br>
+<!--                    University of Illinois Urbana-Champaign Team (Prof. Ruby Mendenhall and Kiel Gilleade)- Consultants <br>-->
+<!--                    Joshua Castor- Consultant <br>-->
+<!--                    Prof. G. Elisabeta Marai- Course Instructor <br>-->
+                    Developer - Jaspreet Kaur Sohal </br></br>
+
+                    Collaborators - Prof. Ruby Mendenhall and Kiel Gilleade from University of Illinois Urbana-Champaign, Joshua Castor, Sai Phaltankar
+
                 </p>
 
                 <b>Image and Content Credits: </b>

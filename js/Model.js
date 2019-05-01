@@ -256,7 +256,7 @@ var Model = function() {
 
 
     function getDemographicsData() {
-        console.log(censusTractsData[0]);
+        // console.log(censusTractsData[0]);
         return censusTractsData[0];
     }
 

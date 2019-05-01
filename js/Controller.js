@@ -13,7 +13,7 @@ var Controller = function(model, view){
     var storyIndex = 0;
 
     //demographics data year
-    var year = 2017;
+    var year = 2010;
     var baseYear = 2010; //with respect to which percent change will be computed
     var allLayers = ['green-spaces, historic-sites, service, school, safe-passage, vacant-lots, demographics'];
     var greenSpaces = ['gs-community-garden', 'gs-school-garden', 'gs-parks', 'gs-urban-farm', 'gs-green-roofs', 'gs-other'];
@@ -131,6 +131,25 @@ var Controller = function(model, view){
     }
 
 
+    $(document).on('yearChanged', function(e, yearSelected){
+        // console.log('year changed..', yearSelected);
+
+        year = yearSelected;
+
+        $('#yearSelected').text(yearSelected);
+
+        var demogrType = $('.demogr-selected').attr('id');
+        var genderFilter = $('input[name=radioBtn]:checked').val();
+
+        if(!view.isDemogrTypeActive()){
+            view.removeDemographics();
+        }
+
+        view.addDemographicsData(year, demogrType, model.getDemographicsData(), genderFilter);
+
+    });
+
+
     //on clicking sub categories of demographics - race, age_gender, income
     $('.demographics-inner-flex').on('click', function(event){
         var demogrType = event.target.id;
@@ -175,7 +194,6 @@ var Controller = function(model, view){
        }
 
     });
-
 
 
     $('td').on('click', function(event){
@@ -233,6 +251,7 @@ var Controller = function(model, view){
             }
         }
         else if(filter === 'demographics'){
+            $('#yearSelected').show();
             $('#demographics-flex-item').toggleClass('show-demographics-controls');
 
             if(!view.isDemogrTypeActive()){
@@ -250,6 +269,7 @@ var Controller = function(model, view){
                 $('.demogr-plot').empty();
                 $('#tooltip-container-div').empty();
                 view.removeDemogrPopup();
+                $('#yearSelected').hide();
             }
         }
 

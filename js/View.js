@@ -19,6 +19,7 @@ var View = function(model){
 
     var circleRadius = 34, circleSvg;
     var legend;
+    var sliderTime;
 
     var colorScale = d3.scaleSequential(d3.interpolateReds)
         .domain([0, 5]);
@@ -68,6 +69,7 @@ var View = function(model){
         // };
 
         // info.addTo(map);
+        drawSlider();
     };
 
 
@@ -671,8 +673,6 @@ var View = function(model){
 
 
     function shiftCircles(pctPopShareValues, x1, y1, demogrType, circleSvg, tract) {
-
-
         // console.log(pctPopShareValues, x1, y1, demogrType, circleSvg, d);
         var shift = [];
         var shiftBy = 0;
@@ -900,10 +900,45 @@ var View = function(model){
         // drawBarCodeChart('income-barcode-plot', data.income, 'income');
         // drawBarCodeChart('age-gender-barcode-plot', data.age_gender.total, 'age_gender')
 
+
         drawLineChart('income-line-plot', data.income, 'income');
         drawLineChart('age-gender-line-plot', data.age_gender.total, 'age_gender');
         drawLineChart('race-line-plot', data.race, 'race');
     };
+
+
+    function drawSlider(){
+        var dataTime = d3.range(0, 8).map(function(d) {
+            return new Date(2010 + d, 10, 3);
+        });
+
+        sliderTime = d3
+            .sliderBottom()
+            .min(d3.min(dataTime))
+            .max(d3.max(dataTime))
+            .step(1000 * 60 * 60 * 24 * 365)
+            .width(300)
+            .tickFormat(d3.timeFormat('%Y'))
+            .tickValues(dataTime)
+            .default(new Date(1998, 10, 3))
+            .on('end', val => {
+                var yearSelected = d3.timeFormat('%Y')(val);
+                // d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
+                $(document).trigger('yearChanged', yearSelected);
+            });
+
+        var gTime = d3
+            .select('div#timeSlider')
+            .append('svg')
+            .attr('width', 370)
+            .attr('height', 100)
+            .append('g')
+            .attr('transform', 'translate(30,30)');
+
+        gTime.call(sliderTime);
+
+        // d3.select('p#value-time').text(d3.timeFormat('%Y')(sliderTime.value()));
+    }
 
 
     self.updateAgeGenderPlot = function(data, filter){
