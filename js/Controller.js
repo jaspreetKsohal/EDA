@@ -13,7 +13,7 @@ var Controller = function(model, view){
     var storyIndex = 0;
 
     //demographics data year
-    var year = 2010;
+    var year = 2017;
     var baseYear = 2010; //with respect to which percent change will be computed
     var allLayers = ['green-spaces, historic-sites, service, school, safe-passage, vacant-lots, demographics'];
     var greenSpaces = ['gs-community-garden', 'gs-school-garden', 'gs-parks', 'gs-urban-farm', 'gs-green-roofs', 'gs-other'];

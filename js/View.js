@@ -920,7 +920,7 @@ var View = function(model){
             .width(300)
             .tickFormat(d3.timeFormat('%Y'))
             .tickValues(dataTime)
-            .default(new Date(1998, 10, 3))
+            .default(new Date(2017, 10, 3))
             .on('end', val => {
                 var yearSelected = d3.timeFormat('%Y')(val);
                 // d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
@@ -1291,15 +1291,15 @@ var View = function(model){
             tooltipText = "<b>" + layerDetails['year_' + year].geography.split(',')[0] + "</b>" + "</br></br>" +
                 "Total Households (" + year + "): &emsp; " + layerDetails['year_' + year].income.total_households.toLocaleString() + "</br>" +
                 "Median Income (2010): &emsp;&emsp; $" + layerDetails['year_' + 2010].income.median_income.toLocaleString() + "</br>" +
-                "Median Income (2017): &emsp;&emsp; $" + layerDetails['year_' + year].income.median_income.toLocaleString() + "</br>" +
+                "Median Income (" + year + "): &emsp;&emsp; $" + layerDetails['year_' + year].income.median_income.toLocaleString() + "</br>" +
                 "<span class='tooltip-info'>(Data is by households not individuals)</span>"
         }
         else if(type === 'age_gender') {
             tooltipText = "<b>" + layerDetails['year_' + year].geography.split(',')[0] + "</b>" + "</br></br>" +
                 "Total Population (" + year + "): &emsp; " + layerDetails['year_' + year].total_population.toLocaleString() + "</br>" +
                 "Change since 2010: &emsp;&emsp;&emsp; " + model.pctChange(layerDetails['year_'+ year].total_population, layerDetails['year_2010'].total_population) + '%' + "</br></br>" +
-                "Total Population Female (2017): &emsp; " + layerDetails['year_'+year].age_gender.total_population_female.toLocaleString() + "</br>" +
-                "Total Population Male (2017): &emsp;&emsp; " + layerDetails['year_'+year].age_gender.total_population_male.toLocaleString() + "</br>";
+                "Total Population Female (" + year + "): &emsp; " + layerDetails['year_'+year].age_gender.total_population_female.toLocaleString() + "</br>" +
+                "Total Population Male (" + year + "): &emsp;&emsp; " + layerDetails['year_'+year].age_gender.total_population_male.toLocaleString() + "</br>";
         }
         else {
             tooltipText = "<b>" + layerDetails['year_' + year].geography.split(',')[0] + "</b>" + "</br></br>" +
