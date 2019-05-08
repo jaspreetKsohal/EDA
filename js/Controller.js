@@ -196,6 +196,14 @@ var Controller = function(model, view){
     });
 
 
+    //on clicking crime types - narcotics, non-index-crimes, violent crimes and property crimes
+    $('.crimes-inner-flex').on('click', function(event){
+        var crimeType = evet.target.id;
+
+        // view.addCrimesData()
+    });
+
+
     $('td').on('click', function(event){
 
         var filter = $(event.currentTarget).find(':first-child').attr('id');
@@ -270,6 +278,13 @@ var Controller = function(model, view){
                 $('#tooltip-container-div').empty();
                 view.removeDemogrPopup();
                 $('#yearSelected').hide();
+            }
+        }
+        else if(filter === 'crimes'){
+            $('#crimes-flex-item').toggleClass('show-crimes-controls');
+
+            if($('#crimes-flex-item').hasClass('show-crimes-controls')){
+
             }
         }
 

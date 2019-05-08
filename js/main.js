@@ -18,6 +18,7 @@ var App = App || {};
 
         view.initialize();
         model.loadCensusTractsData();
+        model.loadCrimesData();
         model.loadLotsData();
         model.loadHistoricSitesData();
         model.loadGreenSpacesData();

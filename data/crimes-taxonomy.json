@@ -1,0 +1,8 @@
+{
+  "Narcotics": "narcotics",
+  "Non-Index Crimes": ["concealed carry license violation", "criminal damage", "criminal trespass", "deceptive practice", "gambling", "interference with public officer",
+    "intimidation", "liquor law violation", "non-criminal", "non-criminal (subject specified)", "obscenity", "other offense", "prostitution", "public indecency",
+    "public peace violation", "sex offense", "stalking", "weapons violation"],
+  "Property Crimes": ["arson", "burglary", "motor vehicle theft", "theft"],
+  "Violent Crimes": ["assault", "battery", "crim sexual assault", "homicide", "kidnapping", "offense involving children", "robbery"]
+}

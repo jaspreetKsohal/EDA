@@ -6,24 +6,12 @@ var App = App || {};
 
 var Model = function() {
     var censusTractsData = [], lotsData = [], parksData = [], greenRoofsData = [], cuampData = [], historicSitesData = [], schoolData = [], servicesData = [], safePassagesData = [],
-        overviewDemographicsData = [];
+        overviewDemographicsData = [], crimesData = {};
     var serviceTypes = ['BN', 'EC', 'ED', 'EM', 'FS', 'HW', 'HH', 'VP', 'YE'];
     var cuampGreenSpaceTypes = ['gs-community-garden', 'gs-school-garden', 'gs-urban-farm', 'gs-other'];
 
 
     function loadCensusTractsData() {
-        // $.ajax({
-        //     url: "https://data.cityofchicago.org/resource/74p9-q2aq.geojson?$where=commarea in('67','68')",
-        //     type: "GET",
-        //     data: {
-        //         "$limit" : 5000,
-        //         // "$$app_token" : "YOURAPPTOKENHERE"
-        //     }
-        // }).done(function(data) {
-        //     censusTractsData.push(data);
-        //     $(document).trigger('loadCensus');
-        // });
-
         d3.queue()
             .defer(d3.json, "data/census-tracts.geojson")
             .defer(d3.json, "data/demographics.json")
@@ -32,7 +20,9 @@ var Model = function() {
         d3.json('data/overview_demographics.json', function(data){
             overviewDemographicsData.push(data);
             // console.log(data);
-        })
+        });
+
+        // console.log(censusTractsData);
     }
 
 
@@ -60,6 +50,89 @@ var Model = function() {
         });
 
         // console.log(lotsData);
+    }
+
+
+    function loadCrimesData() {
+        d3.queue()
+            .defer(d3.json, "data/crimes-taxonomy.json")
+            .defer(d3.csv, "data/crimes-data.csv")
+            .await(restructureCrimesData);
+    }
+
+
+    function restructureCrimesData(error, taxonomy, crimes) {
+        var groupByTract = d3.nest()
+            .key(function(d) { return (d.FIPS).substring(5, 9) })
+            .object(crimes);
+
+        // console.log(groupByTract);
+
+        for (var prop in groupByTract){
+            // console.log(prop);
+            // console.log(prop, groupByTract[prop]);
+
+            crimesData[prop] = {
+                "narcotics": [],
+                "non-index-crimes": [],
+                "property-crimes": [],
+                "violent-crimes": []
+            };
+
+            var crimesInTract = groupByTract[prop];
+
+            crimesInTract.forEach(function(crime){
+                // console.log(crime);
+               if((crime.primary_type).toLowerCase() === taxonomy.Narcotics){
+                   // console.log('narcotics')
+                   crimesData[prop]['narcotics'].push(crime);
+               }
+               else if(taxonomy['Non-Index Crimes'].includes((crime.primary_type).toLowerCase())){
+                   // console.log('non-index crimes')
+                   crimesData[prop]['non-index-crimes'].push(crime);
+               }
+               else if(taxonomy['Property Crimes'].includes((crime.primary_type).toLowerCase())){
+                   // console.log('property crimes')
+                   crimesData[prop]['property-crimes'].push(crime);
+               }
+               else if(taxonomy['Violent Crimes'].includes((crime.primary_type).toLowerCase())){
+                   // console.log('violent crimes')
+                   crimesData[prop]['violent-crimes'].push(crime);
+               }
+               else {
+                   console.log('others');
+               }
+            });
+        }//for each tract
+
+        for (var prop in crimesData){
+            for (var crimeType in crimesData[prop]){
+                var res = d3.nest()
+                    .key(function(d) { return d.primary_type; })
+                    .object(crimesData[prop][crimeType]);
+
+                crimesData[prop][crimeType] = res;
+            }
+        }
+
+
+        // console.log(crimesData);
+        combineCrimesAndCensus();
+    }
+
+
+    function combineCrimesAndCensus(){
+        // console.log(censusTractsData[0]);
+        // console.log(crimesData);
+
+        for (var i = 0; i < censusTractsData[0].features.length; i++) {
+            for (var prop in crimesData){
+                if(prop === censusTractsData[0].features[i].properties.name10){
+                    censusTractsData[0].features[i].properties['crimes'] = crimesData[prop];
+                    break;
+                }
+            }//inner loop
+        }//outer loop
     }
 
 
@@ -491,9 +564,15 @@ var Model = function() {
     }
 
 
+    function getCrimesData() {
+        return crimesData;
+    }
+
+
     return {
         loadCensusTractsData: loadCensusTractsData,
         loadLotsData: loadLotsData,
+        loadCrimesData: loadCrimesData,
         loadGreenSpacesData: loadGreenSpacesData,
         loadHistoricSitesData: loadHistoricSitesData,
         loadSchoolData: loadSchoolData,
@@ -513,7 +592,8 @@ var Model = function() {
         getDemographicsData: getDemographicsData,
         computePercentChange: computePercentChange,
         computePopShare: computePopShare,
-        pctChange: pctChange
+        pctChange: pctChange,
+        getCrimesData: getCrimesData
     }
 
 };
