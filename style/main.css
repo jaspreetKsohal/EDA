@@ -620,7 +620,7 @@ body {
         background: rgba(178, 178, 178, 0.3);
     }
 
-    .demogr-selected {
+    .demogr-selected, .crimes-selected {
         background: rgba(178, 178, 178, 0.9);
     }
 

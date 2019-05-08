@@ -198,9 +198,17 @@ var Controller = function(model, view){
 
     //on clicking crime types - narcotics, non-index-crimes, violent crimes and property crimes
     $('.crimes-inner-flex').on('click', function(event){
-        var crimeType = evet.target.id;
+        var crimeType = event.target.id;
 
-        // view.addCrimesData()
+        var currentlyActive = $('.crimes-selected').attr('id');
+
+        if(currentlyActive !== crimeType){
+            view.removeCrimes();
+            $('#'+currentlyActive).removeClass('crimes-selected');
+
+            view.addCrimesData(model.getCensusTractsData(), crimeType);
+            $('#'+ crimeType).addClass('crimes-selected');
+        }
     });
 
 
@@ -284,7 +292,13 @@ var Controller = function(model, view){
             $('#crimes-flex-item').toggleClass('show-crimes-controls');
 
             if($('#crimes-flex-item').hasClass('show-crimes-controls')){
-
+                $('#narcotics').addClass('crimes-selected');
+                view.addCrimesData(model.getCensusTractsData(), 'narcotics');
+            }
+            else {
+                view.removeCrimes();
+                var currentlyActive = $('.crimes-selected').attr('id');
+                $('#' + currentlyActive).removeClass('crimes-selected');
             }
         }
 

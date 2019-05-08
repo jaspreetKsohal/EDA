@@ -12,7 +12,7 @@ var View = function(model){
 
     var self = this;
     var map;
-    var greenSpacesGroup, historicSitesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer, lotsGroup, demographicsGroup;
+    var greenSpacesGroup, historicSitesGroup, schoolGroup, serviceGroup, vacantLotGroup, safePassageGroup, censusLayer, lotsGroup, demographicsGroup, crimesGroup;
 
     var markergroup1 = L.layerGroup();
     var markergroup2 = L.layerGroup();
@@ -21,8 +21,7 @@ var View = function(model){
     var legend;
     var sliderTime;
 
-    var colorScale = d3.scaleSequential(d3.interpolateReds)
-        .domain([0, 5]);
+    var colorScale = d3.scaleSequential(d3.interpolateReds);
 
 
     var greenSpacesIcon = L.icon({
@@ -314,6 +313,59 @@ var View = function(model){
                 return popup_text;
             });
         map.addLayer(lotsGroup);
+    };
+
+
+    function getCrimesColor(data){
+        var crimeTypeData = data[crimeCategory];
+
+        var size = 0;
+
+        if(crimeCategory === 'narcotics'){
+            size = crimeTypeData.NARCOTICS.length;
+        }
+        else if(crimeCategory === 'non-index-crimes' || crimeCategory === 'property-crimes' || crimeCategory === 'violent-crimes'){
+            for (var prop in crimeTypeData){
+                size += crimeTypeData[prop].length;
+            }
+        }
+
+        return colorScale(size);
+    }
+
+
+    function crimesStyle(feature){
+        return {
+            fillColor: getCrimesColor(feature.properties.crimes),
+            weight: 0,
+            fillOpacity: 0.7
+        };
+    }
+
+    var crimeCategory;
+
+    self.displayCrimesData = function(data, crimeType){
+        crimesGroup = L.featureGroup();
+        crimeCategory = crimeType;
+
+        var max = 0;
+        data.features.forEach(function(d){
+            var temp = d.properties.crimes[crimeType];
+
+            var size = 0;
+            for (var prop in temp){
+                size += temp[prop].length;
+            }
+
+            if(size > max){
+                max = size;
+            }
+        });
+
+        colorScale.domain([0, max]);
+        L.geoJson(data, {style: crimesStyle}).addTo(crimesGroup);
+
+        map.addLayer(crimesGroup);
     };
 
 
@@ -2078,6 +2130,14 @@ var View = function(model){
             d3.select('#demographics-circular-charts').remove();
         },
 
+        addCrimesData: function(data, crimeType) {
+            self.displayCrimesData(data, crimeType);
+        },
+
+        removeCrimes: function(){
+            map.removeLayer(crimesGroup);
+        },
+
         showOverviewPlots: function(data){
           self.displayOverviewPlots(data);
         },
@@ -2121,6 +2181,10 @@ var View = function(model){
             }
 
             $('.map-legend').remove();
+        },
+
+        isCrimesLayerActive: function(){
+            return map.hasLayer(crimesGroup);
         }
 
     };
