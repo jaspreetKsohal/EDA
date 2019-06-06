@@ -22,6 +22,7 @@ var View = function(model){
     var sliderTime;
 
     var colorScale = d3.scaleSequential(d3.interpolateReds);
+    var tooltipCrimesColorScale = d3.scaleSequential(d3.interpolateOranges);
 
 
     var greenSpacesIcon = L.icon({
@@ -388,10 +389,22 @@ var View = function(model){
 
                 popup_text = popup_text + "<table id='tooltipCrimesTable'>";
 
+                var maxCrimeType = 0;
+                for (var prop in crime) {
+                    if(crime[prop].length > maxCrimeType) maxCrimeType = crime[prop].length;
+                }
+                tooltipCrimesColorScale.domain([0, maxCrimeType]);
+
+                // console.log(tooltipCrimesColorScale(22));
                 for (var prop in crime){
+                    var color = tooltipCrimesColorScale(crime[prop].length);
+
+                    color = rgb2hex(color);
+
                     popup_text = popup_text + "<tr>" +
                         "<td>" + prop.toLowerCase() + "</td>" +
-                        "<td>" + crime[prop].length + "</td>" +
+                        // "<td bgcolor='rgb(255, 0, 0)'>" + crime[prop].length + "</td>" +
+                        "<td bgcolor= \'" + color + "\'>" + crime[prop].length + "</td>" +
                         "</tr>"
 
                 }
@@ -403,6 +416,15 @@ var View = function(model){
 
         map.addLayer(crimesGroup);
     };
+
+
+    function rgb2hex(rgb){
+        rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        return (rgb && rgb.length === 4) ? "#" +
+            ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+    }
 
 
     function getNoOfCrimes(data, crimeType) {
