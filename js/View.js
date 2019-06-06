@@ -345,6 +345,7 @@ var View = function(model){
     var crimeCategory;
 
     self.displayCrimesData = function(data, crimeType){
+        // console.log('crimes data: ', data, crimeType);
         crimesGroup = L.featureGroup();
         crimeCategory = crimeType;
 
@@ -362,11 +363,63 @@ var View = function(model){
             }
         });
 
+        $('#narcotics > span').text(getNoOfCrimes(data, 'narcotics'));
+        $('#non-index-crimes > span').text(getNoOfCrimes(data, 'non-index-crimes'));
+        $('#property-crimes > span').text(getNoOfCrimes(data, 'property-crimes'));
+        $('#violent-crimes > span').text(getNoOfCrimes(data, 'violent-crimes'));
+
         colorScale.domain([0, max]);
         L.geoJson(data, {style: crimesStyle}).addTo(crimesGroup);
 
+        crimesGroup.bindPopup(function(layer){
+            console.log(layer.feature);
+            var temp = layer.feature.properties;
+            var popup_text = '<b>' + temp.namelsad10 + '</b></br></br>';
+
+            var crime = temp.crimes[crimeType];
+            var total = 0;
+            for(var prop in crime){
+                total += crime[prop].length;
+            }
+            popup_text = popup_text + "Total number of " + crimeType + ": " + total + "</br>";
+
+            if(crimeType != 'narcotics'){
+                popup_text += "</br>";
+
+                popup_text = popup_text + "<table id='tooltipCrimesTable'>";
+
+                for (var prop in crime){
+                    popup_text = popup_text + "<tr>" +
+                        "<td>" + prop.toLowerCase() + "</td>" +
+                        "<td>" + crime[prop].length + "</td>" +
+                        "</tr>"
+
+                }
+                popup_text = popup_text + "</table>";
+            }
+
+            return popup_text;
+        });
+
         map.addLayer(crimesGroup);
     };
+
+
+    function getNoOfCrimes(data, crimeType) {
+        // console.log(data);
+
+        var result = 0;
+        data.features.forEach(function(d){
+            var temp = d.properties.crimes[crimeType];
+
+            for (var prop in temp){
+                // console.log(prop, temp[prop]);
+                result += temp[prop].length;
+            }
+        });
+
+        return result;
+    }
 
 
     function dotColor(demogrType, prop) {

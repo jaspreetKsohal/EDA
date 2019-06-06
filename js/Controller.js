@@ -200,11 +200,15 @@ var Controller = function(model, view){
     $('.crimes-inner-flex').on('click', function(event){
         var crimeType = event.target.id;
 
+        if (!crimeType) {
+            crimeType = $(this).attr('id');
+        }
+
         var currentlyActive = $('.crimes-selected').attr('id');
 
         if(currentlyActive !== crimeType){
             view.removeCrimes();
-            $('#'+currentlyActive).removeClass('crimes-selected');
+            $('#'+ currentlyActive).removeClass('crimes-selected');
 
             view.addCrimesData(model.getCensusTractsData(), crimeType);
             $('#'+ crimeType).addClass('crimes-selected');

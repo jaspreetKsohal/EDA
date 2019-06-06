@@ -406,19 +406,19 @@ body {
         font-size: 30px;
     }
 
-    table {
+    #filter-options {
         width: 100%;
         position: relative;
         /*top: 15vh;*/
         z-index: 1550;
     }
 
-    td {
+    #filter-options td {
         text-align: center;
         padding-bottom: 25px;
     }
 
-    tr:hover {
+    #filter-options tr:hover {
         color: #ffecd2;
         cursor: pointer;
     }
@@ -756,8 +756,12 @@ body {
         background: rgba(64, 64, 64, 0.6);
     }
 
-    .numLots {
+    .numLots, .numCrimes {
         font-size: 14px;
+        float: right;
+    }
+
+    .tooltipNumCrimes {
         float: right;
     }
 
@@ -1022,5 +1026,23 @@ body {
     .tooltip-icon {
         font-size: 20px;
         padding: 2px;
+    }
+
+    #tooltipCrimesTable {
+        /*align: center;*/
+        margin: 0 auto;
+    }
+
+    #tooltipCrimesTable > td {
+        padding-bottom: 5px;
+    }
+
+    #tooltipCrimesTable td:nth-child(2) {
+        text-align: right;
+        width: 18%;
+    }
+
+    #tooltipCrimesTable td:nth-child(1) {
+        width: 82%;
     }
 /*tooltip ends*/
