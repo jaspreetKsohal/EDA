@@ -373,6 +373,10 @@ body {
         align-items: center;
         justify-content: center;
     }
+
+    #crimes {
+        font-size: 40px;
+    }
 /*end layout structure*/
 
 
@@ -1044,5 +1048,11 @@ body {
 
     #tooltipCrimesTable td:nth-child(1) {
         width: 82%;
+    }
+
+    .highlight-table {
+        color: black;
+        padding-right: 3px;
+        opacity: 0.7;
     }
 /*tooltip ends*/

@@ -373,7 +373,7 @@ var View = function(model){
         L.geoJson(data, {style: crimesStyle}).addTo(crimesGroup);
 
         crimesGroup.bindPopup(function(layer){
-            console.log(layer.feature);
+            // console.log(layer.feature);
             var temp = layer.feature.properties;
             var popup_text = '<b>' + temp.namelsad10 + '</b></br></br>';
 
@@ -403,10 +403,8 @@ var View = function(model){
 
                     popup_text = popup_text + "<tr>" +
                         "<td>" + prop.toLowerCase() + "</td>" +
-                        // "<td bgcolor='rgb(255, 0, 0)'>" + crime[prop].length + "</td>" +
-                        "<td bgcolor= \'" + color + "\'>" + crime[prop].length + "</td>" +
-                        "</tr>"
-
+                        "<td class=\'highlight-table\' bgcolor= \'" + color + "\'>" + crime[prop].length + "</td>" +
+                        "</tr>";
                 }
                 popup_text = popup_text + "</table>";
             }

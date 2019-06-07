@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?s909iu');
-  src:  url('fonts/icomoon.eot?s909iu#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?s909iu') format('truetype'),
-    url('fonts/icomoon.woff?s909iu') format('woff'),
-    url('fonts/icomoon.svg?s909iu#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?y687l');
+  src:  url('fonts/icomoon.eot?y687l#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?y687l') format('truetype'),
+    url('fonts/icomoon.woff?y687l') format('woff'),
+    url('fonts/icomoon.svg?y687l#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-crimes:before {
+  content: "\e90b";
+}
 .icon-vacant-lots2:before {
   content: "\e90a";
 }
@@ -53,12 +56,12 @@
   content: "\e902";
   color: #e5a551;
 }
-.icon-circle:before {
-  content: "\e90e";
-}
 .icon-school:before {
   content: "\e901";
 }
 .icon-green-spaces:before {
   content: "\e900";
+}
+.icon-circle:before {
+  content: "\e90e";
 }
