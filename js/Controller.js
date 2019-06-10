@@ -200,6 +200,8 @@ var Controller = function(model, view){
     $('.crimes-inner-flex').on('click', function(event){
         var crimeType = event.target.id;
 
+        $('#crimesTitle').text(titleCase(crimeType));
+
         if (!crimeType) {
             crimeType = $(this).attr('id');
         }
@@ -214,6 +216,16 @@ var Controller = function(model, view){
             $('#'+ crimeType).addClass('crimes-selected');
         }
     });
+
+    function titleCase(str) {
+        var res = str.replace(/-/g, " ");
+
+        res = res.replace(/(?:^|\s)\w/g, function(match) {
+            return match.toUpperCase();
+        });
+
+        return res + ' - 2018';
+    }
 
 
     $('td').on('click', function(event){
@@ -293,6 +305,7 @@ var Controller = function(model, view){
             }
         }
         else if(filter === 'crimes'){
+            $('#crimesTitle').show();
             $('#crimes-flex-item').toggleClass('show-crimes-controls');
 
             if($('#crimes-flex-item').hasClass('show-crimes-controls')){
@@ -303,6 +316,9 @@ var Controller = function(model, view){
                 view.removeCrimes();
                 var currentlyActive = $('.crimes-selected').attr('id');
                 $('#' + currentlyActive).removeClass('crimes-selected');
+                $('#crimesLegend').remove();
+                $('#crimesTitle').text('narcotics');
+                $('#crimesTitle').hide();
             }
         }
 

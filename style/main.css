@@ -729,6 +729,25 @@ body {
         display: none;
     }
 
+    #crimesTitle {
+        position: absolute;
+        top: 10px;
+        margin: 0 auto;
+        z-index: 450;
+        color: black;
+        font-size: 16px;
+        width: 100%;
+        text-align: center;
+        display: none;
+    }
+
+    #crimesLegend {
+        z-index: 450;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
     #demogr-main-heading {
         text-align: center;
         padding-bottom: 15px;

@@ -22,7 +22,7 @@ var View = function(model){
     var sliderTime;
 
     var colorScale = d3.scaleSequential(d3.interpolateReds);
-    var tooltipCrimesColorScale = d3.scaleSequential(d3.interpolateOranges);
+    var tooltipCrimesColorScale = d3.scaleSequential(d3.interpolateReds);
 
 
     var greenSpacesIcon = L.icon({
@@ -343,8 +343,8 @@ var View = function(model){
         };
     }
 
-    var crimeCategory;
 
+    var crimeCategory;
     self.displayCrimesData = function(data, crimeType){
         // console.log('crimes data: ', data, crimeType);
         crimesGroup = L.featureGroup();
@@ -370,6 +370,8 @@ var View = function(model){
         $('#violent-crimes > span').text(getNoOfCrimes(data, 'violent-crimes'));
 
         colorScale.domain([0, max]);
+        createCrimeChoroplethLegend(colorScale);
+
         L.geoJson(data, {style: crimesStyle}).addTo(crimesGroup);
 
         crimesGroup.bindPopup(function(layer){
@@ -414,6 +416,79 @@ var View = function(model){
 
         map.addLayer(crimesGroup);
     };
+
+
+    function createCrimeChoroplethLegend(colorscale){
+        $('#crimesLegend').remove();
+
+        $('#map').append('<div id="crimesLegend"></div>');
+
+        var selector_id = '#crimesLegend';
+
+        var legendheight = 200,
+            legendwidth = 80,
+            margin = {top: 10, right: 60, bottom: 10, left: 2};
+
+        var canvas = d3.select(selector_id)
+            .style("height", legendheight + "px")
+            .style("width", legendwidth + "px")
+            // .style("position", "relative")
+            .append("canvas")
+            .attr("height", legendheight - margin.top - margin.bottom)
+            .attr("width", 1)
+            .style("height", (legendheight - margin.top - margin.bottom) + "px")
+            .style("width", (legendwidth - margin.left - margin.right) + "px")
+            .style("border", "1px solid #000")
+            .style("position", "absolute")
+            .style("top", (margin.top) + "px")
+            .style("left", (margin.left) + "px")
+            .node();
+
+        var ctx = canvas.getContext("2d");
+
+        var legendscale = d3.scaleLinear()
+            .range([1, legendheight - margin.top - margin.bottom])
+            .domain(colorscale.domain());
+
+        // image data hackery based on http://bl.ocks.org/mbostock/048d21cf747371b11884f75ad896e5a5
+        var image = ctx.createImageData(1, legendheight);
+        d3.range(legendheight).forEach(function(i) {
+            var c = d3.rgb(colorscale(legendscale.invert(i)));
+            image.data[4*i] = c.r;
+            image.data[4*i + 1] = c.g;
+            image.data[4*i + 2] = c.b;
+            image.data[4*i + 3] = 255;
+        });
+        ctx.putImageData(image, 0, 0);
+
+        // A simpler way to do the above, but possibly slower. keep in mind the legend width is stretched because the width attr of the canvas is 1
+        // See http://stackoverflow.com/questions/4899799/whats-the-best-way-to-set-a-single-pixel-in-an-html5-canvas
+        /*
+        d3.range(legendheight).forEach(function(i) {
+          ctx.fillStyle = colorscale(legendscale.invert(i));
+          ctx.fillRect(0,i,1,1);
+        });
+        */
+
+        var legendaxis = d3.axisRight()
+            .scale(legendscale)
+            .tickSize(6)
+            .ticks(8);
+
+        var svg = d3.select(selector_id)
+            .append("svg")
+            .attr("height", (legendheight) + "px")
+            .attr("width", (legendwidth) + "px")
+            .style("position", "absolute")
+            .style("left", "0px")
+            .style("top", "0px");
+
+        svg
+            .append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + (legendwidth - margin.left - margin.right + 3) + "," + (margin.top) + ")")
+            .call(legendaxis);
+    }
 
 
     function rgb2hex(rgb){
@@ -1716,12 +1791,11 @@ var View = function(model){
             }
 
             $('.map-legend').html(legendContent);
-
         }
         else {
             legend = L.control({position: 'bottomright'});
 
-            legend.onAdd = function (map) {
+            legend.onAdd = function () {
                 var div = L.DomUtil.create('div', 'legend-info map-legend');
 
                 for (var i = 0; i < legendText.length; i++) {
