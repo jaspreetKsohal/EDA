@@ -490,7 +490,7 @@ body {
     }
 
     #services-flex-item > span.icon-circle {
-        color: #e57287;
+        color: #AD1457;
     }
 
     #schools-flex-item > span.icon-circle {
@@ -564,11 +564,11 @@ body {
     }
 
     .services-inner-flex:hover {
-        background: rgba(229, 114, 135, 0.4);
+        background: rgba(173, 20, 87, 0.3);
     }
 
     .srv-selected {
-        background: rgba(229, 114, 135, 0.8);
+        background: rgba(173, 20, 87, 0.5);
     }
 
     .vl-inner-flex {
@@ -744,7 +744,7 @@ body {
     #crimesLegend {
         z-index: 450;
         position: absolute;
-        bottom: 10px;
+        bottom: 150px;
         right: 10px;
     }
 

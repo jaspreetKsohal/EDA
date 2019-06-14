@@ -179,6 +179,7 @@ var View = function(model){
             });
 
             map.addLayer(greenSpacesGroup);
+            greenSpacesGroup.bringToFront();
         }
 
 
@@ -213,6 +214,7 @@ var View = function(model){
         });
 
         map.addLayer(historicSitesGroup);
+        historicSitesGroup.bringToFront();
     };
 
 
@@ -229,6 +231,7 @@ var View = function(model){
         });
 
         map.addLayer(schoolGroup);
+        schoolGroup.bringToFront();
     };
 
 
@@ -240,7 +243,7 @@ var View = function(model){
 
         serviceData.forEach(function(s){
             var latlng = L.latLng(s.latitude, s.longitude);
-            L.circle(latlng, {radius: 25, color: '#e57287',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
+            L.circle(latlng, {radius: 25, color: '#AD1457',weight: 0, fillOpacity: 1}).addTo(serviceGroup)
                 .bindPopup("<b>" + s['name'] + "</b></br>" +
                     "<i><p class='service-description'>" + s['description'] + "</p></i></br>" +
                     "<a href='" + s['website'] + "' target='_blank'>Website</a></br>" +
@@ -249,6 +252,7 @@ var View = function(model){
         });
 
         map.addLayer(serviceGroup);
+        serviceGroup.bringToFront();
     };
 
 
@@ -262,6 +266,7 @@ var View = function(model){
         });
 
         map.addLayer(safePassageGroup);
+        safePassageGroup.bringToFront();
     };
 
 
@@ -314,6 +319,7 @@ var View = function(model){
                 return popup_text;
             });
         map.addLayer(lotsGroup);
+        lotsGroup.bringToFront();
     };
 
 
@@ -415,6 +421,7 @@ var View = function(model){
         });
 
         map.addLayer(crimesGroup);
+        crimesGroup.bringToBack();
     };
 
 
