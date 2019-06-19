@@ -378,10 +378,11 @@ var View = function(model){
         colorScale.domain([0, max]);
         createCrimeChoroplethLegend(colorScale);
 
+
         L.geoJson(data, {style: crimesStyle}).addTo(crimesGroup);
 
         crimesGroup.bindPopup(function(layer){
-            // console.log(layer.feature);
+            console.log(layer.feature);
             var temp = layer.feature.properties;
             var popup_text = '<b>' + temp.namelsad10 + '</b></br></br>';
 
@@ -421,7 +422,7 @@ var View = function(model){
         });
 
         map.addLayer(crimesGroup);
-        crimesGroup.bringToBack();
+        // crimesGroup.bringToBack();
     };
 
 
